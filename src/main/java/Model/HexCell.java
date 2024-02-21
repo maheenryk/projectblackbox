@@ -10,20 +10,22 @@ package Model;
 
 
 public class HexCell {
-    //instance variables
-    //define our xyz co-ords
-    private int x;
-    private int y;
-    private int z;
+    /* 1.define instance variables
+       2.make them immutable so they cannot be changed once set.
+    */
+    private final int x;
+    private final int y;
+    private final int z;
 
-    // hexagon with atom present or not first it
-    private boolean hasAtom;
+    // hexagon with atom present or not.
+    // also final as once game starts twe cannot add or remove atoms once they have been set.
+    private final boolean hasAtom;
 
     //constructor
-    public HexCell(int x,int  y,int z, boolean hasAtom ){
+    public HexCell(int x, int y, int z, boolean hasAtom) {
         //error handling for co-ords the sum must always add to 0
-        if((x + y +z) != 0){
-            throw  new IllegalArgumentException("Invalid sum must be equal to 0");
+        if ((x + y + z) != 0) {
+            throw new IllegalArgumentException("Invalid sum of coordinates must be equal to 0");
         }
         this.x = x;
         this.y = y;
@@ -50,25 +52,9 @@ public class HexCell {
         return hasAtom;
     }
 
-    public String getCoOrdinates(){
+    public String getCoOrdinates() {
         return "[" + x + "," + y + "," + z + "]";
     }
 
 
-    //set co-ords
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-    }
-
-    public void setHasAtom(boolean hasAtom) {
-        this.hasAtom = hasAtom;
-    }
 }
