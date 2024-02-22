@@ -43,4 +43,3 @@ public class Atom {
     //will update as game logic progresses
 
 }
-
