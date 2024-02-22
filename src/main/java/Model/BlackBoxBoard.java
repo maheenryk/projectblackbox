@@ -1,5 +1,8 @@
 package Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BlackBoxBoard {
     public static class Point3D {
         public final int x;
@@ -12,3 +15,13 @@ public class BlackBoxBoard {
             this.z = z;
         }
 }
+
+    private Map<Point3D, HexCell> board;
+
+    public BlackBoxBoard() {
+        this.board = new HashMap<>();
+        initializeBoard();
+    }
+    private void initializeBoard() {
+
+    }
