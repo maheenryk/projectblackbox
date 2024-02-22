@@ -40,7 +40,7 @@ public class Atom {
                 '}';
     }
 
-    //will update as game logic progresses
+    //will update as game logic progresses.
 
 }
 
