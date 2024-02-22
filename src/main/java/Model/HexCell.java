@@ -10,7 +10,7 @@ package Model;
 
 public class HexCell {
     /* 1.define instance variables
-       2.make them immutable, so they cannot be changed once set.
+       2. make them immutable, so they cannot be changed once set.
     */
 
     /*private final int x;

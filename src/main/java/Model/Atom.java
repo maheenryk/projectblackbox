@@ -33,7 +33,7 @@ public class Atom {
 
     @Override
     public String toString() {
-        return "Atom{" +
+        return "Atom{"+
                 "x=" + x +
                 ", y=" + y +
                 ", z=" + z +
