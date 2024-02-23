@@ -47,7 +47,7 @@ public class HexCell {
          }else{
             atomCheck ="atom is present";
          }
-         return  "HexCell: " + atomCheck;
+         return  "HexCell; " + atomCheck;
     }
 
 
