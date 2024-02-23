@@ -46,6 +46,7 @@ public class BlackBoxBoard {
     }
 
 
+
     //defining board as Map structure with co-ords as key and hex cell as value.
     private final Map<Point3D, HexCell> board;
 
@@ -61,7 +62,7 @@ public class BlackBoxBoard {
           for (int x = -3; x <= 3; x++) {
             for (int y = -3; y <= 3; y++) {
 
-                if(x + y + z == 0) {
+                if(x + y + z == 0) { // valid co-ords must sum to 0
                     Point3D point = new Point3D(x, y, z);
                     HexCell cell = new HexCell();
                     board.put(point, cell);
