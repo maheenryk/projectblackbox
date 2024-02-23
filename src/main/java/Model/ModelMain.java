@@ -9,5 +9,5 @@ public class ModelMain {
         BlackBoxBoard bbBoard = new BlackBoxBoard();
         System.out.println(bbBoard.getBoardSize());*/
     }
-}
+
 
