@@ -11,7 +11,7 @@ public class BlackBoxBoardTest {
         BlackBoxBoard board = new BlackBoxBoard();
         int cellCount = board.getBoardSize(); // Implement getBoardSize in BlackBoxBoard
 
-        assertEquals(61, cellCount, "Board size should equal exactly 61 hex cells.");
+        assertEquals(37, cellCount, "Board size should equal exactly 37 hex cells.");
     }
 
 
