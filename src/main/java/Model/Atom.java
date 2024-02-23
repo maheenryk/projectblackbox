@@ -42,7 +42,7 @@ public class Atom {
      1.using a hast set
      2. good it has methods contains and add to prevent atom duplicates(prevents atoms beig added to cells that already contain atom) and to add atoms
      3. we can check ray interactions  that happen to our atom super easily especially if we are using hashmap for our  board
-      */
+       */
 
 
 
