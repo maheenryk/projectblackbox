@@ -35,6 +35,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 1550, 800);
         root.setStyle("-fx-background-color: #84847f;");
+        primaryStage.setTitle("BlackBox+");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
