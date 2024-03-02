@@ -1,23 +1,232 @@
 package com.example.blackbox;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class Main extends Application {
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Main.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+
+    private static final int MAX_ATOMS = 6;
+    private int atomCount = 0;
+    public static void main(String[] args) {
+        launch(args);
     }
 
-    public static void main(String[] args) {
-        launch();
+    @Override
+    public void start(Stage primaryStage) {
+        AnchorPane root = new AnchorPane();
+
+        generateHexCells(root);
+
+        generateRayCircles(root);
+
+        generateText(root);
+
+        generateReadyButton(root);
+
+        Scene scene = new Scene(root, 1550, 800);
+        root.setStyle("-fx-background-color: #84847f;");
+        primaryStage.setTitle("BlackBox+");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    int xStartHex = 567;
+    int yStartHex = 130;
+    private void generateHexCells(AnchorPane root) {
+        int XVal = 68;
+
+        int col = 5;
+        for (int j = 1; j <= 5; j++) {
+            for (int i = 1; i <= col; i++) {
+                Polygon hexagon = createHexCell(xStartHex+(i*XVal), yStartHex);
+                addHoverEffectHex(hexagon);
+                hexagon.setOnMouseClicked(this::handleHexagonClick);
+                root.getChildren().add(hexagon);
+            }
+            col += 1;
+            xStartHex -= (int) 34.5;
+            yStartHex += 59;
+        }
+
+        xStartHex += 68;
+        col = 8;
+        for (int j = 1; j <= 4; j++) {
+            for (int i = 1; i <= col; i++) {
+                Polygon hexagon = createHexCell(xStartHex+(i*XVal), yStartHex);
+                addHoverEffectHex(hexagon);
+                hexagon.setOnMouseClicked(this::handleHexagonClick);
+                root.getChildren().add(hexagon);
+            }
+            col -= 1;
+            xStartHex += (int) 34.5;
+            yStartHex += 59;
+        }
+    }
+
+    private Polygon createHexCell(double layoutX, double layoutY) {
+        Polygon hexagon = new Polygon(
+                0.0, 0.0,
+                34.64, 20.0,
+                34.64, 60.0,
+                0.0, 80.0,
+                -34.64, 60.0,
+                -34.64, 20.0
+        );
+        hexagon.setFill(Color.BLACK);
+        hexagon.setLayoutX(layoutX);
+        hexagon.setLayoutY(layoutY);
+        hexagon.setStroke(Color.web("#ab8641"));
+        hexagon.setStrokeWidth(2);
+        hexagon.setStrokeType(StrokeType.INSIDE);
+        return hexagon;
+    }
+
+    private void handleHexagonClick(MouseEvent event) {
+        if (atomCount < MAX_ATOMS) {
+            Polygon clickedHexagon = (Polygon) event.getSource();
+            AnchorPane root = (AnchorPane) clickedHexagon.getParent();
+
+            // Check if the hexagon already contains an atom
+            Circle existingAtom = findAtomInHexagon(root, clickedHexagon);
+            if (existingAtom == null) {
+                // If no atom exists, get the center coordinates of the clicked hexagon
+                double centerX = clickedHexagon.getLayoutX();
+                double centerY = clickedHexagon.getLayoutY() + 40;
+
+                // Create an atom and add it to the root
+                Circle atom = createAtom(centerX, centerY);
+                ((AnchorPane) clickedHexagon.getParent()).getChildren().add(atom);
+
+                // Increment the atom count
+                atomCount++;
+
+                // Add an event handler to the atom for removing itself when clicked
+                atom.setOnMouseClicked(atomEvent -> {
+                    ((AnchorPane) atom.getParent()).getChildren().remove(atom);
+                    // Decrement the atom count when an atom is removed
+                    atomCount--;
+                });
+            }
+        }
+    }
+
+    private Circle findAtomInHexagon(AnchorPane root, Polygon hexagon) {
+        // Iterate through the children of the root to find an atom in the same hexagon
+        for (javafx.scene.Node node : root.getChildren()) {
+            if (node instanceof Circle atom) {
+                if (isPointInHexagon(atom.getLayoutX(), atom.getLayoutY(), hexagon)) {
+                    return atom;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isPointInHexagon(double x, double y, Polygon hexagon) {
+        // Check if the point (x, y) is inside the bounds of the hexagon
+        return hexagon.getBoundsInParent().contains(x, y);
+    }
+
+    private Circle createAtom(double centerX, double centerY) {
+        Circle atom = new Circle(20, Color.RED);
+        atom.setLayoutX(centerX);
+        atom.setLayoutY(centerY);
+        return atom;
+    }
+
+    private void addHoverEffectHex(Polygon hexagon) {
+        hexagon.setOnMouseEntered(event -> hexagon.setFill(Color.YELLOW));
+        hexagon.setOnMouseExited(event -> hexagon.setFill(Color.BLACK));
+    }
+
+    private void addHoverEffectCirc(Circle atom) {
+        atom.setOnMouseEntered(event -> atom.setFill(Color.WHITE));
+        atom.setOnMouseExited(event -> atom.setFill(Color.web("#ab8641")));
+    }
+
+    private void generateRayCircles(AnchorPane root) {
+        double circleXStart = 584.32;
+        double circleYStart = 140;
+
+        for (int i = 1; i <= 10; i++) {
+            Circle circle = createRayCircle(circleXStart + (i*34), circleYStart);
+            addHoverEffectCirc(circle);
+            root.getChildren().add(circle);
+        }
+
+        circleXStart += 17;
+        circleYStart += 30;
+        int xDist = 10;
+        for (int j = 1; j <= 9; j++) {
+            for (int i = 0; i < 2; i++) {
+                Circle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
+                addHoverEffectCirc(circle);
+                root.getChildren().add(circle);
+            }
+            xDist += 1;
+            circleXStart -= 17;
+            circleYStart += 29.5;
+        }
+
+        xDist -= 2;
+        circleXStart += 34;
+        for (int j = 1; j <= 8; j++) {
+            for (int i = 0; i < 2; i++) {
+                Circle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
+                addHoverEffectCirc(circle);
+                root.getChildren().add(circle);
+            }
+            xDist -= 1;
+            circleXStart += 17;
+            circleYStart += 29.5;
+        }
+
+        circleXStart = 584.32;
+        for (int i = 1; i <= 10; i++) {
+            Circle circle = createRayCircle(circleXStart + (i*34), circleYStart);
+            addHoverEffectCirc(circle);
+            root.getChildren().add(circle);
+        }
+    }
+
+    private Circle createRayCircle(double layoutX, double layoutY) {
+        Circle circle = new Circle(10.0, Color.web("#ab8641"));
+        circle.setLayoutX(layoutX);
+        circle.setLayoutY(layoutY);
+        circle.setStroke(Color.BLACK);
+        circle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
+        return circle;
+    }
+
+    private void generateText(AnchorPane root) {
+        Text text = new Text("You are the setter");
+        text.setFont(Font.font("Franklin Gothic Book", 34.0));
+        text.setLayoutX(594.0);
+        text.setLayoutY(77.0);
+        text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        text.setStrokeWidth(0.0);
+        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        text.setWrappingWidth(357.26251220703125);
+
+        root.getChildren().add(text);
+    }
+
+    private void generateReadyButton(AnchorPane root) {
+        Button ready = new Button("READY");
+        ready.setFont(Font.font("Franklin Gothic Book", 26));
+        ready.setLayoutX(1300);
+        ready.setLayoutY(650);
+
+        root.getChildren().add(ready);
     }
 }
