@@ -1,33 +1,54 @@
 package Model;
-/*Atom Class:
-1.this will for now contain info about atoms position reference to Point3D
+/* Atom Class:
+1.This will for now contain info about atoms position.
 2.state management for later on ray hit tracking
 3.equals method
  */
 
 public class Atom {
-    //reference to co-ordinates
 
-    private final BlackBoxBoard.Point3D position;
+    private final int x;
+    private final int y;
+    private final int z;
 
 
-
-    public Atom( BlackBoxBoard.Point3D position) {
-        //validation is in point3D
-
-        this.position = position;
+    public Atom(int x, int y, int z) {
+        //more validation will be added as game progress
+        //only one atom per cell so if one cell is accidentally set with two atoms not allowed implement this in gameboard
+        //an atom can only be placed in a valid location where co-ord must sum to 0
+        if(x + y + z != 0){
+            throw  new IllegalArgumentException("Invalid co-ordinates");
+        }
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
-    public BlackBoxBoard.Point3D getPosition() {
-        return position;
+    public int getX() {
+        return x;
     }
 
+    public int getY() {
+        return y;
+    }
+
+    public int getZ() {
+        return z;
+    }
 
     @Override
     public String toString() {
-        // make sure  Point3D class has a proper toString implementation
-        return "Atom{ " + "position: " + position + "}";
+        return "Atom{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
     }
+
+
+}
+
+
 
 
     /*will update as game logic progresses.
@@ -46,5 +67,6 @@ public class Atom {
 
 
 
-}
+
+
 
