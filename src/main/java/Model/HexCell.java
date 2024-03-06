@@ -50,29 +50,4 @@ public class HexCell {
          return  "HexCell: " + atomCheck;
     }
 
-
-
-
-  /*  public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public boolean hasAtom() {
-        return hasAtom;
-
-    }
-
-      public String getCoOrdinates() {
-        return "[" + x + "," + y + "," + z + "]";
-    }
-    */
-
 }

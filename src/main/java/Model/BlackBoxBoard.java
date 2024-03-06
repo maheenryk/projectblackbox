@@ -1,7 +1,6 @@
 package Model;
+import java.util.*;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class BlackBoxBoard {
 
@@ -15,6 +14,9 @@ public class BlackBoxBoard {
 
         //Point3D constructor
         public Point3D(int x, int y, int z) {
+            if(x+y+z != 0){
+                throw new IllegalArgumentException("Invalid Co-Ordinates");
+            }
             this.x = x;
             this.y = y;
             this.z = z;
@@ -83,7 +85,30 @@ public class BlackBoxBoard {
     public int getBoardSize() {
         return this.board.size();
     }
- }
+
+    //method to place our atoms in cells randomly while staying withing boards range  at the start of game
+    public void placeRandomAtoms(int numberOfAtoms) {
+        // create a list from the keys of the board HashMap, which are the valid positions
+        List<Point3D> validPoints = new ArrayList<>(board.keySet());
+
+        // shuffle the list to randomise the order of points
+        Collections.shuffle(validPoints);
+
+        //we can loop through the shuffled list and take the first numberOfAtoms points to place atoms
+        for (int i = 0; i < numberOfAtoms; i++) {
+            Point3D point = validPoints.get(i);
+            // place an atom at this point if it doesn't already have one
+            if (!board.get(point).hasAtom()) {
+                board.get(point).setAtom(new Atom());
+                System.out.println("Placed an atom at: " + point);
+            }
+        }
+    }
+
+
+
+}
+
 
 
 
