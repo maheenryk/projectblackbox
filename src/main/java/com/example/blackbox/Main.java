@@ -125,7 +125,7 @@ public class Main extends Application {
         for (javafx.scene.Node node : root.getChildren()) {
             if (node instanceof Circle atom) {
                 if (isPointInHexagon(atom.getLayoutX(), atom.getLayoutY(), hexagon)) {
-                    return atom;
+                    return atom; // Adjust the margin as needed
                 }
             }
         }
@@ -133,8 +133,18 @@ public class Main extends Application {
     }
 
     private boolean isPointInHexagon(double x, double y, Polygon hexagon) {
-        // Check if the point (x, y) is inside the bounds of the hexagon
-        return hexagon.getBoundsInParent().contains(x, y);
+        // Get the bounds of the hexagon
+        javafx.geometry.Bounds hexagonBounds = hexagon.getBoundsInParent();
+
+        double margin = 20.0;
+        // Reduce the bounds by the margin because the ray circles were being detected as atoms
+        double minX = hexagonBounds.getMinX() + margin;
+        double minY = hexagonBounds.getMinY() + margin;
+        double maxX = hexagonBounds.getMaxX() - margin;
+        double maxY = hexagonBounds.getMaxY() - margin;
+
+        // Check if the point (x, y) is inside the modified bounds of the hexagon
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
     private Circle createAtom(double centerX, double centerY) {
