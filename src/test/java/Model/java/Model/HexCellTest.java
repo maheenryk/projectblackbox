@@ -17,7 +17,7 @@ class HexCellTest {
     @Test
     void toStringWithAtomTest() {
         HexCell cell = new HexCell();
-        Atom atom = new Atom(1, -1, 0); // Create an Atom with valid coordinates
+        Atom atom = new Atom(); // Create an Atom with valid coordinates
         cell.setAtom(atom);
         String expected = "HexCell: atom is present";
         assertEquals(expected, cell.toString(), "toString should match expected string when an atom is present");
