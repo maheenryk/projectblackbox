@@ -103,7 +103,7 @@ public class BlackBoxBoard {
                 System.out.println("Placed an atom at: " + point);
             }
         }
-    }
+   }
 
 
 
