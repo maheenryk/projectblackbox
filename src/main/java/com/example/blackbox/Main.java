@@ -18,6 +18,8 @@ public class Main extends Application {
 
     private static final int MAX_ATOMS = 6;
     private int atomCount = 0;
+
+    private RayPath rayPath;
     public static void main(String[] args) {
         launch(args);
     }
@@ -34,12 +36,16 @@ public class Main extends Application {
 
         generateReadyButton(root);
 
+        rayPath = new RayPath(100, 200, 500, 200);
+        root.getChildren().add(rayPath);
+
         Scene scene = new Scene(root, 1550, 800);
         root.setStyle("-fx-background-color: #84847f;");
         primaryStage.setTitle("BlackBox+");
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        rayPath.startAnimation();
 
     }
 
