@@ -86,7 +86,7 @@ public class Main extends Application {
         hexagon.setFill(Color.BLACK);
         hexagon.setLayoutX(layoutX);
         hexagon.setLayoutY(layoutY);
-        hexagon.setStroke(Color.web("#ab8641"));
+        hexagon.setStroke(Color.web("#4242ff"));
         hexagon.setStrokeWidth(2);
         hexagon.setStrokeType(StrokeType.INSIDE);
         return hexagon;
