@@ -54,11 +54,9 @@ public class Ray {
 
         } else {
             //assume ray exits directly opposite entry point if no atom is encountered
-            //
+
             BlackBoxBoard.Point3D exitPoint = calculateExitPoint(entryPoint);
-            if(exitPoint != null){
-                this.path.add(exitPoint);
-            }
+            this.path.add(exitPoint);
 
         }
 
