@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /* Ray class will contain :
-1.Entry point co-ordinates
-2.Path of ray on our board
-3.Result whether it was reflected, absorbed or direct hit ot passed straight through
-4.exit point
-*/
+1.stores entry point of a ray
+2.calculates and stores path if the ray
+3.determines if ray is absorbed
+4.checks for exit point for if not absorbed, at entry point */
 public class Ray {
     //reference to the game board for path and check for atoms
     private BlackBoxBoard board;
