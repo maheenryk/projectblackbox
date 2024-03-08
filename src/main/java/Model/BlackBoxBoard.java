@@ -110,7 +110,7 @@ public class BlackBoxBoard {
 
     // method to retrieve HexCell to use in ray class when interacts with board
     public HexCell getCell(BlackBoxBoard.Point3D point){
-        return this.board.get(point);
+       return this.board.get(point);
     }
 
 

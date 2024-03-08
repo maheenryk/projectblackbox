@@ -25,6 +25,8 @@ public class Ray {
         this.entryPoint = entryPoint; //starting point
         this.path = new ArrayList<>();
         this.isAbsorbed = false; //at the start ray is not absorbed
+        //call method to make sure every time a ray object is created its path is calculated immediately
+        calculatePath();
 
 
     }
