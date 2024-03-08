@@ -160,69 +160,114 @@ public class Main extends Application {
         hexagon.setOnMouseExited(event -> hexagon.setFill(Color.BLACK));
     }
 
-    private void addHoverEffectCirc(Circle atom) {
-        atom.setOnMouseEntered(event -> atom.setFill(Color.WHITE));
-        atom.setOnMouseExited(event -> atom.setFill(Color.web("#ab8641")));
-    }
+//    private void addHoverEffectCirc(Circle atom) {
+//        atom.setOnMouseEntered(event -> atom.setFill(Color.WHITE));
+//        atom.setOnMouseExited(event -> atom.setFill(Color.web("#ab8641")));
+//    }
 
 
-    private void generateRayCircles(AnchorPane root) {
-        double circleXStart = 584.32;
-        double circleYStart = 140;
+    private void generateRayCircles(AnchorPane root) { //method for generating nodes (ray circles)
+        //for loops using createRayCircle method to generate circles
+        //with ray numbers in circles stacked as text.
 
-        for (int i = 1; i <= 10; i++) {
-            RayCircle circle = createRayCircle(circleXStart + (i*34), circleYStart);
-            addHoverEffectCirc(circle);
+
+        //arrays containing ray numbers organised using compass directions for the 6 edges of the hexagon. each edge
+        //is filled using a seperate for loop.
+        int[] rayNumNorth = {1, 54, 53, 52, 51, 50, 49, 48, 47, 46};
+        int[] rayNumNorthWest = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int[] rayNumNorthEast = {45, 44, 43, 42, 41, 40, 39, 38, 37};
+        int[] rayNumSouthWest = {18, 17, 16, 15, 14, 13, 12, 11};
+        int[] rayNumSouthEast = {29, 30, 31, 32, 33, 34, 35, 36};
+        int[] rayNumSouth = {19, 20, 21, 22, 23, 24, 25, 26, 27, 28};
+
+        double circleXStartNorth = 605;
+        double circleYStartNorth = 130;
+
+        //generating circles for north edge of hexagon ------------
+        for (int i = 0; i < rayNumNorth.length; i++) {
+            int rayNumber = rayNumNorth[i];
+            RayCircle circle = createRayCircle(circleXStartNorth + (i*34), circleYStartNorth, rayNumber);
             root.getChildren().add(circle);
         }
 
-        circleXStart += 17;
-        circleYStart += 30;
-        int xDist = 10;
-        for (int j = 1; j <= 9; j++) {
-            for (int i = 0; i < 2; i++) {
-                RayCircle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
-                addHoverEffectCirc(circle);
-                root.getChildren().add(circle);
-            }
-            xDist += 1;
-            circleXStart -= 17;
-            circleYStart += 29.5;
+        //northwest edge----------------------------------------
+        double NWCircleXStart = circleXStartNorth - 17;
+        double NWCircleYStart = circleYStartNorth + 29.5;
+
+        for (int leftRayNumber : rayNumNorthWest) {
+            RayCircle circle = createRayCircle(NWCircleXStart, NWCircleYStart, leftRayNumber);
+            root.getChildren().add(circle);
+
+            NWCircleXStart -= 17;
+            NWCircleYStart += 29.5;
         }
 
-        xDist -= 2;
-        circleXStart += 34;
-        for (int j = 1; j <= 8; j++) {
-            for (int i = 0; i < 2; i++) {
-                RayCircle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
-                addHoverEffectCirc(circle);
-                root.getChildren().add(circle);
-            }
-            xDist -= 1;
-            circleXStart += 17;
-            circleYStart += 29.5;
+        //northeast edge----------------------------------------
+        double NECircleXStart = circleXStartNorth + ((rayNumNorth.length * 34) - 17); //starting at the rightmost node of north edge.
+        double NECircleYStart = circleYStartNorth + 29.5;
+
+        for (int rightRayNumber : rayNumNorthEast) {
+            RayCircle circle = createRayCircle(NECircleXStart, NECircleYStart, rightRayNumber);
+            root.getChildren().add(circle);
+
+            NECircleXStart += 17;
+            NECircleYStart += 29.5;
         }
 
-        circleXStart = 584.32;
-        for (int i = 1; i <= 10; i++) {
-            RayCircle circle = createRayCircle(circleXStart + (i*34), circleYStart);
-            addHoverEffectCirc(circle);
+        double circleXStartSouth = 605;
+        double circleYStartSouth = 659;
+
+        //south edge -----------------------------------------
+        for (int i = 0; i < rayNumSouth.length; i++) {
+            int rayNumber = rayNumSouth[i];
+            RayCircle circle = createRayCircle(circleXStartSouth + (i*34), circleYStartSouth, rayNumber);
             root.getChildren().add(circle);
         }
+
+        //southwest edge----------------------------------------
+        double SWCircleXStart = circleXStartSouth - 17;
+        double SWCircleYStart = circleYStartSouth - 29.5;
+
+        for (int leftRayNumber : rayNumSouthWest) {
+            RayCircle circle = createRayCircle(SWCircleXStart, SWCircleYStart, leftRayNumber);
+            root.getChildren().add(circle);
+
+            SWCircleXStart -= 17;
+            SWCircleYStart -= 29.5;
+        }
+
+        //southeast edge ----------------------------------------
+        double SECircleXStart = circleXStartSouth + (rayNumSouth.length * 34) - 17; //starting at the rightmost node of south edge.
+        double SECircleYStart = circleYStartSouth - 29.5;
+
+        for (int rightRayNumber : rayNumSouthEast) {
+            RayCircle circle = createRayCircle(SECircleXStart, SECircleYStart, rightRayNumber);
+            root.getChildren().add(circle);
+
+            SECircleXStart += 17;
+            SECircleYStart -= 29.5;
+        }
+
+
+
+
     }
 
-    private RayCircle createRayCircle(double layoutX, double layoutY) {
-        RayCircle circle = new RayCircle(10.0, Color.web("#ab8641"));
+
+    private RayCircle createRayCircle(double layoutX, double layoutY, int number) {
+        RayCircle circle = new RayCircle(12.0, Color.web("#4242ff"));
         circle.setLayoutX(layoutX);
         circle.setLayoutY(layoutY);
-        circle.setStroke(Color.BLACK);
-        circle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
+
+        // Set ray number text
+        circle.setRayText(String.valueOf(number));
+
         return circle;
     }
 
     private void generateText(AnchorPane root) {
-        Text text = new Text("You are the setter");
-        text.setFont(Font.font("Franklin Gothic Book", 34.0));
+        Text text = new Text("You are the setter.");
+        text.setFont(Font.font("Montserrat", 34.0));
         text.setLayoutX(594.0);
         text.setLayoutY(77.0);
         text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
