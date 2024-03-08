@@ -6,7 +6,7 @@ public class ModelMain {
         System.out.println("Before placing atoms:");
         blackBoxBoard.printBoard();
 
-        // Place atoms randomly
+        //  Place atoms randomly
         blackBoxBoard.placeRandomAtoms(6);
         System.out.println("After placing atoms:");
         blackBoxBoard.printBoard();
