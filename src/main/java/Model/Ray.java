@@ -31,6 +31,7 @@ public class Ray {
 
     }
     public boolean isAbsorbed() {
+
         return this.isAbsorbed;
     }
 
