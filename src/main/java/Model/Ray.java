@@ -77,8 +77,9 @@ public class Ray {
       // string representation of rays path
     public String getPath() {
         StringBuilder sb = new StringBuilder();
+        //iterate over points in path list
         for (BlackBoxBoard.Point3D point : this.path) {
-            sb.append(point.toString()).append(" : ");
+            sb.append(point.toString()).append(" -> ");
         }
         return sb.toString();
     }
