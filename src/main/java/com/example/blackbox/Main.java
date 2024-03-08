@@ -1,5 +1,6 @@
 package com.example.blackbox;
 
+import com.example.blackbox.viewutil.RayCircle;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -164,12 +165,13 @@ public class Main extends Application {
         atom.setOnMouseExited(event -> atom.setFill(Color.web("#ab8641")));
     }
 
+
     private void generateRayCircles(AnchorPane root) {
         double circleXStart = 584.32;
         double circleYStart = 140;
 
         for (int i = 1; i <= 10; i++) {
-            Circle circle = createRayCircle(circleXStart + (i*34), circleYStart);
+            RayCircle circle = createRayCircle(circleXStart + (i*34), circleYStart);
             addHoverEffectCirc(circle);
             root.getChildren().add(circle);
         }
@@ -179,7 +181,7 @@ public class Main extends Application {
         int xDist = 10;
         for (int j = 1; j <= 9; j++) {
             for (int i = 0; i < 2; i++) {
-                Circle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
+                RayCircle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
                 addHoverEffectCirc(circle);
                 root.getChildren().add(circle);
             }
@@ -192,7 +194,7 @@ public class Main extends Application {
         circleXStart += 34;
         for (int j = 1; j <= 8; j++) {
             for (int i = 0; i < 2; i++) {
-                Circle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
+                RayCircle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
                 addHoverEffectCirc(circle);
                 root.getChildren().add(circle);
             }
@@ -203,14 +205,14 @@ public class Main extends Application {
 
         circleXStart = 584.32;
         for (int i = 1; i <= 10; i++) {
-            Circle circle = createRayCircle(circleXStart + (i*34), circleYStart);
+            RayCircle circle = createRayCircle(circleXStart + (i*34), circleYStart);
             addHoverEffectCirc(circle);
             root.getChildren().add(circle);
         }
     }
 
-    private Circle createRayCircle(double layoutX, double layoutY) {
-        Circle circle = new Circle(10.0, Color.web("#ab8641"));
+    private RayCircle createRayCircle(double layoutX, double layoutY) {
+        RayCircle circle = new RayCircle(10.0, Color.web("#ab8641"));
         circle.setLayoutX(layoutX);
         circle.setLayoutY(layoutY);
         circle.setStroke(Color.BLACK);
