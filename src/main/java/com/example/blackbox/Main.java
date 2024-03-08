@@ -39,7 +39,10 @@ public class Main extends Application {
         primaryStage.setTitle("BlackBox+");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+
     }
+
 
     int xStartHex = 567;
     int yStartHex = 130;
@@ -286,4 +289,5 @@ public class Main extends Application {
 
         root.getChildren().add(ready);
     }
+
 }
