@@ -1,5 +1,6 @@
 package com.example.blackbox;
 
+// import all libraries needed
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,7 +16,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    // maximum amount of atoms placed is always 6
     private static final int MAX_ATOMS = 6;
+
+    // declare variable to keep track of atoms placed on the grid
     private int atomCount = 0;
     public static void main(String[] args) {
         launch(args);
@@ -25,6 +29,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         AnchorPane root = new AnchorPane();
 
+        // call the following functions in the root anchorpane
         generateHexCells(root);
 
         generateRayCircles(root);
@@ -33,6 +38,7 @@ public class Main extends Application {
 
         generateReadyButton(root);
 
+        // scene specifications
         Scene scene = new Scene(root, 1550, 800);
         root.setStyle("-fx-background-color: #84847f;");
         primaryStage.setTitle("BlackBox+");
@@ -40,37 +46,54 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    // the x value for vertex 1 of the first hexagon
     int xStartHex = 567;
+
+    // the y value for vertex 1 of the first hexagon
     int yStartHex = 130;
     private void generateHexCells(AnchorPane root) {
+
+        // the amount that the hexagons are being spaced by on the x-axis
         int XVal = 68;
 
+        // start with 5 columns and rows
+        int rows = 5;
         int col = 5;
-        for (int j = 1; j <= 5; j++) {
+
+        // generate 9 rows of hexagons
+        for (int j = 1; j <= 9; j++) {
             for (int i = 1; i <= col; i++) {
                 Polygon hexagon = createHexCell(xStartHex+(i*XVal), yStartHex);
                 addHoverEffectHex(hexagon);
                 hexagon.setOnMouseClicked(this::handleHexagonClick);
                 root.getChildren().add(hexagon);
             }
-            col += 1;
-            xStartHex -= (int) 34.5;
-            yStartHex += 59;
+
+            // decrease rows after a row has been generated
+            rows -= 1;
+            // keep increasing the columns until the first 5 rows are generated
+            if (rows > 0) {
+                col += 1;
+                xStartHex -= (int) 34.5;
+                yStartHex += 59;
+            }
+
+            // when the fifth row has been generated, change the variables to start generating the last 4 rows
+            else if (rows == 0){
+                xStartHex += (int) 34.5;
+                yStartHex += (int) 59;
+                col -= 1;
+            }
+
+            // generate the last 4 rows
+            else {
+                col -= 1;
+                xStartHex += (int) 34.5;
+                yStartHex += 59;
+            }
+
         }
 
-        xStartHex += 68;
-        col = 8;
-        for (int j = 1; j <= 4; j++) {
-            for (int i = 1; i <= col; i++) {
-                Polygon hexagon = createHexCell(xStartHex+(i*XVal), yStartHex);
-                addHoverEffectHex(hexagon);
-                hexagon.setOnMouseClicked(this::handleHexagonClick);
-                root.getChildren().add(hexagon);
-            }
-            col -= 1;
-            xStartHex += (int) 34.5;
-            yStartHex += 59;
-        }
     }
 
     private Polygon createHexCell(double layoutX, double layoutY) {
@@ -91,7 +114,7 @@ public class Main extends Application {
         return hexagon;
     }
 
-    private void handleHexagonClick(MouseEvent event) {
+    void handleHexagonClick(MouseEvent event) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();
             AnchorPane root = (AnchorPane) clickedHexagon.getParent();
@@ -238,5 +261,9 @@ public class Main extends Application {
         ready.setLayoutY(650);
 
         root.getChildren().add(ready);
+    }
+
+    public int getAtomCount() {
+        return atomCount;
     }
 }
