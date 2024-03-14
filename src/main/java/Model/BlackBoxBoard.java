@@ -86,8 +86,11 @@ public class BlackBoxBoard {
         return this.board.size();
     }
 
+
+
+
     //method to place our atoms in cells randomly while staying withing boards range  at the start of game
-    public void placeRandomAtoms(int numberOfAtoms) {
+  public void placeRandomAtoms(int numberOfAtoms) {
         // create a list from the keys of the board HashMap, which are the valid positions
         List<Point3D> validPoints = new ArrayList<>(board.keySet());
 
@@ -103,6 +106,11 @@ public class BlackBoxBoard {
                 System.out.println("Placed an atom at: " + point);
             }
         }
+    }
+
+    // method to retrieve HexCell to use in ray class when interacts with board
+    public HexCell getCell(BlackBoxBoard.Point3D point){
+       return this.board.get(point);
     }
 
 
