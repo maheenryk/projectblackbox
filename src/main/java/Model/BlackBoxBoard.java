@@ -60,9 +60,9 @@ public class BlackBoxBoard {
 
     //nested for loops iterate within [-3, 3] range and fill hashmap with key-value pairs.
     private void initializeBoard() {
-        for (int z = 3; z >= -3; z--)
-          for (int x = -3; x <= 3; x++) {
-            for (int y = -3; y <= 3; y++) {
+        for (int z = 4; z >= -4; z--)
+          for (int x = -4; x <= 4; x++) {
+            for (int y = -4; y <= 4; y++) {
 
                 if(x + y + z == 0) { // valid co-ords must sum to 0
                     Point3D point = new Point3D(x, y, z);
