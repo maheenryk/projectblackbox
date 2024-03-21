@@ -11,8 +11,10 @@ public class ModelMain {
         System.out.println("After placing atoms:");
         blackBoxBoard.printBoard();
 
+        blackBoxBoard.printCIPoints();
+
         // Define an entry point for the ray. Choose an edge coordinate.
-        BlackBoxBoard.Point3D entryPoint = new BlackBoxBoard.Point3D(-2, -1, 3); // Example edge point
+        BlackBoxBoard.Point3D entryPoint = new BlackBoxBoard.Point3D(4, 0, -4); // Example edge point
 
         // Create a ray with the entry point
         Ray ray = new Ray(blackBoxBoard, entryPoint);
@@ -21,5 +23,7 @@ public class ModelMain {
         System.out.println("Ray's Path: " + ray.getPath());
         // Check if the ray is absorbed and print the result
         System.out.println("Ray absorbed: " + ray.isAbsorbed());
+
+
     }
 }

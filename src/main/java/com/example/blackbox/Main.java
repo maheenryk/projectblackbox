@@ -103,8 +103,11 @@ public class Main extends Application {
 
     }
 
+
+    // class for each hexagon cell
     private Polygon createHexCell(double layoutX, double layoutY) {
         Polygon hexagon = new Polygon(
+                // x and y values for each of the 6 vertices relative to vertex 1 (0.0,0.0)
                 0.0, 0.0,
                 34.64, 20.0,
                 34.64, 60.0,
@@ -112,6 +115,8 @@ public class Main extends Application {
                 -34.64, 60.0,
                 -34.64, 20.0
         );
+
+        // specs for the hex cell
         hexagon.setFill(Color.BLACK);
         hexagon.setLayoutX(layoutX);
         hexagon.setLayoutY(layoutY);
@@ -121,6 +126,8 @@ public class Main extends Application {
         return hexagon;
     }
 
+
+    // method for handling when a hexagon is clicked on
     void handleHexagonClick(MouseEvent event) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();

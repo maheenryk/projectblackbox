@@ -10,6 +10,9 @@ public class Atom {
 
     public Atom() {
         //more validation will be added as game progress
+    }
+
+    public void CI() {
 
     }
 
