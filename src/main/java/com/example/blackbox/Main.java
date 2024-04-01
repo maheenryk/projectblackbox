@@ -1,11 +1,17 @@
 package com.example.blackbox;
 
 // import all libraries needed
+import com.example.blackbox.viewutil.RayCircle;
 import javafx.application.Application;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -13,101 +19,96 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.scene.text.FontWeight;
 public class Main extends Application {
 
-    // maximum amount of atoms placed is always 6
     private static final int MAX_ATOMS = 6;
-
-    // declare variable to keep track of atoms placed on the grid
     private int atomCount = 0;
 
-    private RayPath rayPath;
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        AnchorPane root = new AnchorPane();
 
-        // call the following functions in the root anchorpane
-        generateHexCells(root);
+        BorderPane root = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
+        Scene scene = new Scene(root);
+        StackPane centerStackPane = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
+        Group gridGroup = new Group(); //group for hex cells so grid can be manipulated as a unit (for layout purposes).
 
-        generateRayCircles(root);
+        generateHexCells(gridGroup); //adding hex cells to group.
+        generateRayCircles(gridGroup); //adding raycircles to same group.
 
-        generateText(root);
+        centerStackPane.getChildren().add(gridGroup);
+
+        Label turn = generateTopText();
+        //setting text to the centre in the root top container.
+        VBox topContainer = new VBox();
+        topContainer.getChildren().add(turn);
+        VBox.setMargin(turn, new Insets(50, 0, 0, 0)); // Top margin
+        topContainer.setAlignment(Pos.TOP_CENTER);
+
+
+        root.setTop(topContainer);
 
         generateReadyButton(root);
 
-        rayPath = new RayPath(100, 200, 500, 200);
-        root.getChildren().add(rayPath);
 
-        // scene specifications
-        Scene scene = new Scene(root, 1550, 800);
+        root.setCenter(centerStackPane);
+
+        //calculation for centre coordinates.
+
+
+
+
+
         root.setStyle("-fx-background-color: #84847f;");
         primaryStage.setTitle("BlackBox+");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
 
-        rayPath.startAnimation();
     }
 
-    // the x value for vertex 1 of the first hexagon
+
     int xStartHex = 567;
-
-    // the y value for vertex 1 of the first hexagon
     int yStartHex = 130;
-    private void generateHexCells(AnchorPane root) {
-
-        // the amount that the hexagons are being spaced by on the x-axis
+    private void generateHexCells(Group root) {
         int XVal = 68;
 
-        // start with 5 columns and rows
-        int rows = 5;
         int col = 5;
-
-        // generate 9 rows of hexagons
-        for (int j = 1; j <= 9; j++) {
+        for (int j = 1; j <= 5; j++) {
             for (int i = 1; i <= col; i++) {
                 Polygon hexagon = createHexCell(xStartHex+(i*XVal), yStartHex);
                 addHoverEffectHex(hexagon);
                 hexagon.setOnMouseClicked(this::handleHexagonClick);
                 root.getChildren().add(hexagon);
             }
-
-            // decrease rows after a row has been generated
-            rows -= 1;
-            // keep increasing the columns until the first 5 rows are generated
-            if (rows > 0) {
-                col += 1;
-                xStartHex -= (int) 34.5;
-                yStartHex += 59;
-            }
-
-            // when the fifth row has been generated, change the variables to start generating the last 4 rows
-            else if (rows == 0){
-                xStartHex += (int) 34.5;
-                yStartHex += (int) 59;
-                col -= 1;
-            }
-
-            // generate the last 4 rows
-            else {
-                col -= 1;
-                xStartHex += (int) 34.5;
-                yStartHex += 59;
-            }
-
+            col += 1;
+            xStartHex -= (int) 34.5;
+            yStartHex += 59;
         }
 
+        xStartHex += 68;
+        col = 8;
+        for (int j = 1; j <= 4; j++) {
+            for (int i = 1; i <= col; i++) {
+                Polygon hexagon = createHexCell(xStartHex+(i*XVal), yStartHex);
+                addHoverEffectHex(hexagon);
+                hexagon.setOnMouseClicked(this::handleHexagonClick);
+                root.getChildren().add(hexagon);
+            }
+            col -= 1;
+            xStartHex += (int) 34.5;
+            yStartHex += 59;
+        }
     }
 
-
-    // class for each hexagon cell
     private Polygon createHexCell(double layoutX, double layoutY) {
         Polygon hexagon = new Polygon(
-                // x and y values for each of the 6 vertices relative to vertex 1 (0.0,0.0)
                 0.0, 0.0,
                 34.64, 20.0,
                 34.64, 60.0,
@@ -115,49 +116,47 @@ public class Main extends Application {
                 -34.64, 60.0,
                 -34.64, 20.0
         );
-
-        // specs for the hex cell
         hexagon.setFill(Color.BLACK);
         hexagon.setLayoutX(layoutX);
         hexagon.setLayoutY(layoutY);
-        hexagon.setStroke(Color.web("#ab8641"));
+        hexagon.setStroke(Color.web("#4242ff"));
         hexagon.setStrokeWidth(2);
         hexagon.setStrokeType(StrokeType.INSIDE);
         return hexagon;
     }
 
-
-    // method for handling when a hexagon is clicked on
-    void handleHexagonClick(MouseEvent event) {
+    private void handleHexagonClick(MouseEvent event) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();
-            AnchorPane root = (AnchorPane) clickedHexagon.getParent();
+            Group gridGroup = (Group) clickedHexagon.getParent();
 
             // Check if the hexagon already contains an atom
-            Circle existingAtom = findAtomInHexagon(root, clickedHexagon);
+            Circle existingAtom = findAtomInHexagon(gridGroup, clickedHexagon);
             if (existingAtom == null) {
-                // If no atom exists, get the center coordinates of the clicked hexagon
-                double centerX = clickedHexagon.getLayoutX();
-                double centerY = clickedHexagon.getLayoutY() + 40;
+                // Calculating the center based on the hexagon's vertices
+                double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();
+                double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
 
-                // Create an atom and add it to the root
+                // Create an atom and add it to the gridGroup (same group as the hexagons)
                 Circle atom = createAtom(centerX, centerY);
-                ((AnchorPane) clickedHexagon.getParent()).getChildren().add(atom);
+                gridGroup.getChildren().add(atom);
 
-                // Increment the atom count
                 atomCount++;
 
-                // Add an event handler to the atom for removing itself when clicked
                 atom.setOnMouseClicked(atomEvent -> {
-                    ((AnchorPane) atom.getParent()).getChildren().remove(atom);
-                    // Decrement the atom count when an atom is removed
+                    gridGroup.getChildren().remove(atom);
                     atomCount--;
                 });
             }
         }
     }
 
-    private Circle findAtomInHexagon(AnchorPane root, Polygon hexagon) {
+    private void getCentreCoords(Polygon hexcell){
+        double centerX = hexcell.getLayoutBounds().getCenterX();
+        double centerY = hexcell.getLayoutBounds().getCenterY();
+    }
+
+    private Circle findAtomInHexagon(Group root, Polygon hexagon) {
         // Iterate through the children of the root to find an atom in the same hexagon
         for (javafx.scene.Node node : root.getChildren()) {
             if (node instanceof Circle atom) {
@@ -192,92 +191,141 @@ public class Main extends Application {
     }
 
     private void addHoverEffectHex(Polygon hexagon) {
-        hexagon.setOnMouseEntered(event -> hexagon.setFill(Color.YELLOW));
+        hexagon.setOnMouseEntered(event -> hexagon.setFill(Color.LIGHTGOLDENRODYELLOW));
         hexagon.setOnMouseExited(event -> hexagon.setFill(Color.BLACK));
     }
 
-    private void addHoverEffectCirc(Circle atom) {
-        atom.setOnMouseEntered(event -> atom.setFill(Color.WHITE));
-        atom.setOnMouseExited(event -> atom.setFill(Color.web("#ab8641")));
-    }
+//    private void addHoverEffectCirc(Circle atom) {
+//        atom.setOnMouseEntered(event -> atom.setFill(Color.WHITE));
+//        atom.setOnMouseExited(event -> atom.setFill(Color.web("#ab8641")));
+//    }
 
-    private void generateRayCircles(AnchorPane root) {
-        double circleXStart = 584.32;
-        double circleYStart = 140;
 
-        for (int i = 1; i <= 10; i++) {
-            Circle circle = createRayCircle(circleXStart + (i*34), circleYStart);
-            addHoverEffectCirc(circle);
+    private void generateRayCircles(Group root) { //method for generating nodes (ray circles)
+        //for loops using createRayCircle method to generate circles
+        //with ray numbers in circles stacked as text.
+
+
+        //arrays containing ray numbers organised using compass directions for the 6 edges of the main hexagon. each edge
+        //is filled using a separate for loop.
+        int[] rayNumNorth = {1, 54, 53, 52, 51, 50, 49, 48, 47, 46};
+        int[] rayNumNorthWest = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int[] rayNumNorthEast = {45, 44, 43, 42, 41, 40, 39, 38, 37};
+        int[] rayNumSouthWest = {18, 17, 16, 15, 14, 13, 12, 11};
+        int[] rayNumSouthEast = {29, 30, 31, 32, 33, 34, 35, 36};
+        int[] rayNumSouth = {19, 20, 21, 22, 23, 24, 25, 26, 27, 28};
+
+        double circleXStartNorth = 605;
+        double circleYStartNorth = 130;
+
+        //generating circles for north edge of hexagon ------------
+        for (int i = 0; i < rayNumNorth.length; i++) {
+            int rayNumber = rayNumNorth[i];
+            RayCircle circle = createRayCircle(circleXStartNorth + (i*34), circleYStartNorth, rayNumber);
             root.getChildren().add(circle);
         }
 
-        circleXStart += 17;
-        circleYStart += 30;
-        int xDist = 10;
-        for (int j = 1; j <= 9; j++) {
-            for (int i = 0; i < 2; i++) {
-                Circle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
-                addHoverEffectCirc(circle);
-                root.getChildren().add(circle);
-            }
-            xDist += 1;
-            circleXStart -= 17;
-            circleYStart += 29.5;
+        //northwest edge----------------------------------------
+        double NWCircleXStart = circleXStartNorth - 17;
+        double NWCircleYStart = circleYStartNorth + 29.5;
+
+        for (int leftRayNumber : rayNumNorthWest) {
+            RayCircle circle = createRayCircle(NWCircleXStart, NWCircleYStart, leftRayNumber);
+            root.getChildren().add(circle);
+
+            NWCircleXStart -= 17;
+            NWCircleYStart += 29.5;
         }
 
-        xDist -= 2;
-        circleXStart += 34;
-        for (int j = 1; j <= 8; j++) {
-            for (int i = 0; i < 2; i++) {
-                Circle circle = createRayCircle(circleXStart + (i * xDist * 34), circleYStart);
-                addHoverEffectCirc(circle);
-                root.getChildren().add(circle);
-            }
-            xDist -= 1;
-            circleXStart += 17;
-            circleYStart += 29.5;
+        //northeast edge----------------------------------------
+        double NECircleXStart = circleXStartNorth + ((rayNumNorth.length * 34) - 17); //starting at the rightmost node of north edge.
+        double NECircleYStart = circleYStartNorth + 29.5;
+
+        for (int rightRayNumber : rayNumNorthEast) {
+            RayCircle circle = createRayCircle(NECircleXStart, NECircleYStart, rightRayNumber);
+            root.getChildren().add(circle);
+
+            NECircleXStart += 17;
+            NECircleYStart += 29.5;
         }
 
-        circleXStart = 584.32;
-        for (int i = 1; i <= 10; i++) {
-            Circle circle = createRayCircle(circleXStart + (i*34), circleYStart);
-            addHoverEffectCirc(circle);
+        double circleXStartSouth = 605;
+        double circleYStartSouth = 659;
+
+        //south edge -----------------------------------------
+        for (int i = 0; i < rayNumSouth.length; i++) {
+            int rayNumber = rayNumSouth[i];
+            RayCircle circle = createRayCircle(circleXStartSouth + (i*34), circleYStartSouth, rayNumber);
             root.getChildren().add(circle);
         }
+
+        //southwest edge----------------------------------------
+        double SWCircleXStart = circleXStartSouth - 17;
+        double SWCircleYStart = circleYStartSouth - 29.5;
+
+        for (int leftRayNumber : rayNumSouthWest) {
+            RayCircle circle = createRayCircle(SWCircleXStart, SWCircleYStart, leftRayNumber);
+            root.getChildren().add(circle);
+
+            SWCircleXStart -= 17;
+            SWCircleYStart -= 29.5;
+        }
+
+        //southeast edge ----------------------------------------
+        double SECircleXStart = circleXStartSouth + (rayNumSouth.length * 34) - 17; //starting at the rightmost node of south edge.
+        double SECircleYStart = circleYStartSouth - 29.5;
+
+        for (int rightRayNumber : rayNumSouthEast) {
+            RayCircle circle = createRayCircle(SECircleXStart, SECircleYStart, rightRayNumber);
+            root.getChildren().add(circle);
+
+            SECircleXStart += 17;
+            SECircleYStart -= 29.5;
+        }
+
+
+
+
     }
 
-    private Circle createRayCircle(double layoutX, double layoutY) {
-        Circle circle = new Circle(10.0, Color.web("#ab8641"));
+//    private void handleRayCircleClick(RayCircle circle) {
+//        circle.setOnMouseClicked(event -> {
+//            if (circle.getFill().equals(Color.RED)) {
+//                // Change color to another color when clicked
+//                circle.setFill(Color.BLUE); // Change to your desired color
+//            } else {
+//                // Change color back to the original color when clicked again
+//                circle.setFill(Color.RED); // Change to your original color
+//            }
+//        });
+//    }
+
+    private RayCircle createRayCircle(double layoutX, double layoutY, int number) {
+        RayCircle circle = new RayCircle(12.0, Color.web("#4242ff"));
         circle.setLayoutX(layoutX);
         circle.setLayoutY(layoutY);
-        circle.setStroke(Color.BLACK);
-        circle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
+
+        // Set ray number text
+        circle.setRayText(String.valueOf(number));
+
         return circle;
     }
 
-    private void generateText(AnchorPane root) {
-        Text text = new Text("You are the setter");
-        text.setFont(Font.font("Franklin Gothic Book", 34.0));
-        text.setLayoutX(594.0);
-        text.setLayoutY(77.0);
-        text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text.setStrokeWidth(0.0);
-        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        text.setWrappingWidth(357.26251220703125);
+    private Label generateTopText() {
+        Label playerTurn = new Label("Setter's turn.");
+        playerTurn.setStyle("-fx-text-fill: darkred;");;
+        playerTurn.setFont(Font.font("Arial", FontWeight.BOLD, 45));
+        playerTurn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        BorderPane.setMargin(playerTurn, new Insets(100, 0, 0, 0));
 
-        root.getChildren().add(text);
+        return playerTurn;
     }
 
-    private void generateReadyButton(AnchorPane root) {
+    private void generateReadyButton(BorderPane root) {
         Button ready = new Button("READY");
-        ready.setFont(Font.font("Franklin Gothic Book", 26));
-        ready.setLayoutX(1300);
-        ready.setLayoutY(650);
-
+        StackPane.setAlignment(ready, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(ready, new Insets(150));
         root.getChildren().add(ready);
     }
 
-    public int getAtomCount() {
-        return atomCount;
-    }
 }
