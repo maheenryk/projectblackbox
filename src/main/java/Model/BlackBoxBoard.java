@@ -15,7 +15,7 @@ public class BlackBoxBoard {
         //Point3D constructor
         public Point3D(int x, int y, int z) {
             if(x+y+z != 0){
-                throw new IllegalArgumentException("Invalid Co-Ordinates");
+                throw new IllegalArgumentException("Invalid Co-Ordinates. Co-Ordinates must sum to 0.");
             }
             this.x = x;
             this.y = y;

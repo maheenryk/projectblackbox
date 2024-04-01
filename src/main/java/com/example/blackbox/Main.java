@@ -2,15 +2,23 @@ package com.example.blackbox;
 
 import com.example.blackbox.viewutil.RayCircle;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -19,40 +27,72 @@ public class Main extends Application {
     private static final int MAX_ATOMS = 6;
     private int atomCount = 0;
 
-    private RayPath rayPath;
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        AnchorPane root = new AnchorPane();
 
-        generateHexCells(root);
+       BorderPane root = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
+        Scene scene = new Scene(root);
+        StackPane centerStackPane = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
+        Group gridGroup = new Group(); //group for hex cells so grid can be manipulated as a unit (for layout purposes).
 
-        generateRayCircles(root);
+        generateHexCells(gridGroup); //adding hex cells to group.
+        generateRayCircles(gridGroup); //adding raycircles to same group.
 
-        generateText(root);
+        centerStackPane.getChildren().add(gridGroup);
+
+        Label turn = generateTopText();
+        //setting text to the centre in the root top container.
+        VBox topContainer = new VBox();
+        topContainer.getChildren().add(turn);
+        VBox.setMargin(turn, new Insets(50, 0, 0, 0)); // Top margin
+        topContainer.setAlignment(Pos.TOP_CENTER);
+
+
+        root.setTop(topContainer);
 
         generateReadyButton(root);
 
-        rayPath = new RayPath(100, 200, 500, 200);
-        root.getChildren().add(rayPath);
 
-        Scene scene = new Scene(root, 1550, 800);
+        root.setCenter(centerStackPane);
+
+        //calculation for centre coordinates.
+
+
+        // Ensure layout is updated
+//        gridGroup.applyCss();
+//        gridGroup.layout();
+//
+
+
         root.setStyle("-fx-background-color: #84847f;");
         primaryStage.setTitle("BlackBox+");
         primaryStage.setScene(scene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
 
-        rayPath.startAnimation();
+    }
 
+    public Point2D calculatePolygonCenter(Polygon polygon) {
+        double sumX = 0;
+        double sumY = 0;
+        int pointCount = polygon.getPoints().size() / 2; // Each point has two coordinates (X, Y)
+
+        for (int i = 0; i < polygon.getPoints().size(); i += 2) {
+            sumX += polygon.getPoints().get(i); // X coordinate
+            sumY += polygon.getPoints().get(i + 1); // Y coordinate
+        }
+
+        return new Point2D(sumX / pointCount, sumY / pointCount);
     }
 
 
     int xStartHex = 567;
     int yStartHex = 130;
-    private void generateHexCells(AnchorPane root) {
+    private void generateHexCells(Group root) {
         int XVal = 68;
 
         int col = 5;
@@ -104,33 +144,36 @@ public class Main extends Application {
     private void handleHexagonClick(MouseEvent event) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();
-            AnchorPane root = (AnchorPane) clickedHexagon.getParent();
+
+            Group gridGroup = (Group) clickedHexagon.getParent();
 
             // Check if the hexagon already contains an atom
-            Circle existingAtom = findAtomInHexagon(root, clickedHexagon);
+            Circle existingAtom = findAtomInHexagon(gridGroup, clickedHexagon);
             if (existingAtom == null) {
-                // If no atom exists, get the center coordinates of the clicked hexagon
-                double centerX = clickedHexagon.getLayoutX();
-                double centerY = clickedHexagon.getLayoutY() + 40;
+                // Calculating the center based on the hexagon's vertices
+                double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();
+                double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
 
-                // Create an atom and add it to the root
+                // Create an atom and add it to the gridGroup (same group as the hexagons)
                 Circle atom = createAtom(centerX, centerY);
-                ((AnchorPane) clickedHexagon.getParent()).getChildren().add(atom);
+                gridGroup.getChildren().add(atom);
 
-                // Increment the atom count
                 atomCount++;
 
-                // Add an event handler to the atom for removing itself when clicked
                 atom.setOnMouseClicked(atomEvent -> {
-                    ((AnchorPane) atom.getParent()).getChildren().remove(atom);
-                    // Decrement the atom count when an atom is removed
+                    gridGroup.getChildren().remove(atom);
                     atomCount--;
                 });
             }
         }
     }
 
-    private Circle findAtomInHexagon(AnchorPane root, Polygon hexagon) {
+    private void getCentreCoords(Polygon hexcell){
+        double centerX = hexcell.getLayoutBounds().getCenterX();
+        double centerY = hexcell.getLayoutBounds().getCenterY();
+    }
+
+    private Circle findAtomInHexagon(Group root, Polygon hexagon) {
         // Iterate through the children of the root to find an atom in the same hexagon
         for (javafx.scene.Node node : root.getChildren()) {
             if (node instanceof Circle atom) {
@@ -165,7 +208,7 @@ public class Main extends Application {
     }
 
     private void addHoverEffectHex(Polygon hexagon) {
-        hexagon.setOnMouseEntered(event -> hexagon.setFill(Color.YELLOW));
+        hexagon.setOnMouseEntered(event -> hexagon.setFill(Color.LIGHTGOLDENRODYELLOW));
         hexagon.setOnMouseExited(event -> hexagon.setFill(Color.BLACK));
     }
 
@@ -175,13 +218,13 @@ public class Main extends Application {
 //    }
 
 
-    private void generateRayCircles(AnchorPane root) { //method for generating nodes (ray circles)
+    private void generateRayCircles(Group root) { //method for generating nodes (ray circles)
         //for loops using createRayCircle method to generate circles
         //with ray numbers in circles stacked as text.
 
 
-        //arrays containing ray numbers organised using compass directions for the 6 edges of the hexagon. each edge
-        //is filled using a seperate for loop.
+        //arrays containing ray numbers organised using compass directions for the 6 edges of the main hexagon. each edge
+        //is filled using a separate for loop.
         int[] rayNumNorth = {1, 54, 53, 52, 51, 50, 49, 48, 47, 46};
         int[] rayNumNorthWest = {2, 3, 4, 5, 6, 7, 8, 9, 10};
         int[] rayNumNorthEast = {45, 44, 43, 42, 41, 40, 39, 38, 37};
@@ -262,6 +305,17 @@ public class Main extends Application {
 
     }
 
+//    private void handleRayCircleClick(RayCircle circle) {
+//        circle.setOnMouseClicked(event -> {
+//            if (circle.getFill().equals(Color.RED)) {
+//                // Change color to another color when clicked
+//                circle.setFill(Color.BLUE); // Change to your desired color
+//            } else {
+//                // Change color back to the original color when clicked again
+//                circle.setFill(Color.RED); // Change to your original color
+//            }
+//        });
+//    }
 
     private RayCircle createRayCircle(double layoutX, double layoutY, int number) {
         RayCircle circle = new RayCircle(12.0, Color.web("#4242ff"));
@@ -274,25 +328,20 @@ public class Main extends Application {
         return circle;
     }
 
-    private void generateText(AnchorPane root) {
-        Text text = new Text("You are the setter.");
-        text.setFont(Font.font("Montserrat", 34.0));
-        text.setLayoutX(594.0);
-        text.setLayoutY(77.0);
-        text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text.setStrokeWidth(0.0);
-        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        text.setWrappingWidth(357.26251220703125);
+    private Label generateTopText() {
+        Label playerTurn = new Label("Setter's turn.");
+        playerTurn.setStyle("-fx-text-fill: darkred;");;
+        playerTurn.setFont(Font.font("Arial", FontWeight.BOLD, 45));
+        playerTurn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        BorderPane.setMargin(playerTurn, new Insets(100, 0, 0, 0));
 
-        root.getChildren().add(text);
+        return playerTurn;
     }
 
-    private void generateReadyButton(AnchorPane root) {
+    private void generateReadyButton(BorderPane root) {
         Button ready = new Button("READY");
-        ready.setFont(Font.font("Franklin Gothic Book", 26));
-        ready.setLayoutX(1300);
-        ready.setLayoutY(650);
-
+        StackPane.setAlignment(ready, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(ready, new Insets(150));
         root.getChildren().add(ready);
     }
 

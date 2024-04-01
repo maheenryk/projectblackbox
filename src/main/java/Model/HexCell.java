@@ -37,14 +37,14 @@ public class HexCell {
         return this.atom != null;
       }
 
-      //returns a string rep of our HexCell
+    //returns a string rep of our HexCell
 
     @Override
     public String toString() {
          String atomCheck;
          if(this.atom == null){
            atomCheck= "atom is not present";
-         }else{
+         } else {
             atomCheck ="atom is present";
          }
          return  "HexCell: " + atomCheck;
