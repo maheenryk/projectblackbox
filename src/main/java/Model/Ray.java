@@ -19,19 +19,25 @@ public class Ray {
     //to check whether ray is absorbed by an atom
     private boolean isAbsorbed;
 
+    private boolean deflected60;
+
     public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint){
         this.board = board; //board ref
         this.entryPoint = entryPoint; //starting point
         this.path = new ArrayList<>();
         this.isAbsorbed = false; //at the start ray is not absorbed
+        this.deflected60 = false;
         //call method to make sure every time a ray object is created its path is calculated immediately
         calculatePath();
 
 
     }
     public boolean isAbsorbed() {
-
         return this.isAbsorbed;
+    }
+
+    public boolean isDeflected60() {
+        return this.deflected60;
     }
 
 
@@ -65,6 +71,7 @@ public class Ray {
     }
     private BlackBoxBoard.Point3D calculateExitPoint(BlackBoxBoard.Point3D entryPoint) {
         // Directly invert the entry point's coordinates to find the exit point
+
         int exitX = -entryPoint.x;
         int exitY = -entryPoint.y;
         int exitZ = -entryPoint.z;

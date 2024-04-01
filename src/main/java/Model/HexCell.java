@@ -8,6 +8,9 @@ package Model;
  */
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HexCell {
     /* 1.define instance variables
        2. make them immutable, so they cannot be changed once set.
@@ -23,28 +26,38 @@ public class HexCell {
     //create an instance variable of type atom.
      private Atom atom;
 
+    private List<BlackBoxBoard.Point3D> CIPoints;
+
      public HexCell() {
         //at the start all hex cells do not contain an atom
          this.atom = null;
-
+         this.CIPoints = new ArrayList<>();
      }
 
       //set atom
-      public void setAtom(Atom atom) {
-        this.atom = atom;
-      }
-      public boolean hasAtom() {
-        return this.atom != null;
-      }
+     public void setAtom(Atom atom) {
+         this.atom = atom;
+     }
+     public boolean hasAtom() {
+         return this.atom != null;
+     }
 
-    //returns a string rep of our HexCell
+    public void setCIPoints(BlackBoxBoard.Point3D CIPoint) {
+        this.CIPoints.add(CIPoint);
+    }
+
+    public List<BlackBoxBoard.Point3D> getCIPoints() {
+        return this.CIPoints;
+    }
+
+     //returns a string rep of our HexCell
 
     @Override
     public String toString() {
          String atomCheck;
          if(this.atom == null){
            atomCheck= "atom is not present";
-         } else {
+         }else{
             atomCheck ="atom is present";
          }
          return  "HexCell: " + atomCheck;
