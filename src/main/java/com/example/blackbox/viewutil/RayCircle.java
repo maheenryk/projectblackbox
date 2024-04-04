@@ -40,6 +40,7 @@ public class RayCircle extends StackPane {
         rayText.setOnMouseEntered((MouseEvent event) -> circle.setFill(hoverColor));
         rayText.setOnMouseExited((MouseEvent event) -> circle.setFill(originalColor));
     }
+
     public void setRayText(String text) {
         rayText.setText(text);
     }

@@ -1,7 +1,20 @@
 package Model;
 
+//import Controller.ViewModel;
+//import javafx.geometry.Point2D;
+//import Model.BlackBoxBoard.Point3D;
+
 public class ModelMain {
     public static void main(String[] args) {
+//
+//        BlackBoxBoard.Point3D cubicCoordinates = new Point3D(-3, 3, 0);
+//
+//        // Call cubicToCartesian method and get the result
+//        Point2D result = ViewModel.cubicToCartesian(cubicCoordinates);
+//        // Print the result
+//        System.out.println("Result: " + result);
+
+
         BlackBoxBoard blackBoxBoard = new BlackBoxBoard();
         System.out.println("Before placing atoms:");
         blackBoxBoard.printBoard();
