@@ -125,7 +125,7 @@ public class Main extends Application {
         return hexagon;
     }
 
-    private void handleHexagonClick(MouseEvent event) {
+    public void handleHexagonClick(MouseEvent event) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();
             Group gridGroup = (Group) clickedHexagon.getParent();
