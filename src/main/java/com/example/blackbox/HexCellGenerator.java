@@ -1,3 +1,10 @@
+/**
+ *
+ *  HexCellGenerator handles the creation and locating of the individual hexagonal cells in the main game board.
+ *  HexCellGenerator.java contains method generateHexCells which is called in the main method.
+ */
+
+
 package com.example.blackbox;
 
 import javafx.scene.Group;
@@ -7,10 +14,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 
+import static com.example.blackbox.AtomGenerator.*;
+
 public class HexCellGenerator {
 
-    private static final int MAX_ATOMS = 6;
-     private static int atomCount = 0;
 
      static private int xStartHex = 567;
      static private int yStartHex = 130;
@@ -88,40 +95,6 @@ public class HexCellGenerator {
                 });
             }
         }
-    }
-
-    static private Circle findAtomInHexagon(Group root, Polygon hexagon) {
-        // Iterate through the children of the root to find an atom in the same hexagon
-        for (javafx.scene.Node node : root.getChildren()) {
-            if (node instanceof Circle atom) {
-                if (isPointInHexagon(atom.getLayoutX(), atom.getLayoutY(), hexagon)) {
-                    return atom; // Adjust the margin as needed
-                }
-            }
-        }
-        return null;
-    }
-
-    private static boolean isPointInHexagon(double x, double y, Polygon hexagon) {
-        // Get the bounds of the hexagon
-        javafx.geometry.Bounds hexagonBounds = hexagon.getBoundsInParent();
-
-        double margin = 20.0;
-        // Reduce the bounds by the margin because the ray circles were being detected as atoms
-        double minX = hexagonBounds.getMinX() + margin;
-        double minY = hexagonBounds.getMinY() + margin;
-        double maxX = hexagonBounds.getMaxX() - margin;
-        double maxY = hexagonBounds.getMaxY() - margin;
-
-        // Check if the point (x, y) is inside the modified bounds of the hexagon
-        return x >= minX && x <= maxX && y >= minY && y <= maxY;
-    }
-
-    private static Circle createAtom(double centerX, double centerY) {
-        Circle atom = new Circle(20, Color.RED);
-        atom.setLayoutX(centerX);
-        atom.setLayoutY(centerY);
-        return atom;
     }
 
     private static void addHoverEffectHex(Polygon hexagon) {
