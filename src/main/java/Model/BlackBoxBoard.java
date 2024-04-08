@@ -85,7 +85,7 @@ public class BlackBoxBoard {
         return this.board.size();
     }
 
-    private boolean isValidCoordinate(int x, int y, int z) {
+    public boolean isValidCoordinate(int x, int y, int z) {
         return (x >= -4 && x <= 4) && (y >= -4 && y <= 4) && (z >= -4 && z <= 4);
     }
 

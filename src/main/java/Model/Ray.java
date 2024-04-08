@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/* Ray class will contain :
-1.stores entry point of a ray
-2.calculates and stores path if the ray
-3.determines if ray is absorbed
-4.checks for exit point for if not absorbed, at entry point */
+/* Ray class :
+*/
 public class Ray {
     //reference to the game board for path and check for atoms
     private BlackBoxBoard board;
@@ -54,16 +51,39 @@ public class Ray {
 
     //check for atom
     private boolean checkForAtom(BlackBoxBoard.Point3D point){
-        //use getHexCell method to check if a ray's current position has encountereed an atom
+        //use getHexCell method to check if a ray's current position has encountered an atom
         HexCell cell = board.getCell(point);// get HexCell at given point.
         return cell != null && cell.hasAtom();// check if the cell has an atom
 
     }
 
+    //check if a cell is an edge cell
+    private boolean isEdgeCell(BlackBoxBoard.Point3D point) {
+        // an edge cell will be where  one coordinate is at its maximum or minimum value
+        return  point.x == -4 || point.x == 4 ||
+                point.y == -4 || point.y == 4 ||
+                point.z == -4 || point.z == 4;
+    }
+
+
 
 
     //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
     private  void calculatePath(String dir){
+        // calculation if ray is immediately reflected
+        if(isEdgeCell(entryPoint)){
+            HexCell cell = board.getCell(entryPoint);
+            if(cell != null && cell.hasCIPoint()){
+                //if it has a CI we will find the cells on the edge its next to and find out if these cells have atoms o n edge
+                if(isRayReflectedAtEdge(entryPoint)){
+                    rayReversed = true;
+                    path.add(entryPoint);
+                    return; //end method early since the ray is reflected
+                }
+
+            }
+        }
+        //if ray is not immediately reflected
         //start path at entry point
         this.path.add(this.entryPoint);
 
@@ -87,7 +107,7 @@ public class Ray {
             // Check if the next position is a CI point
             HexCell cell = board.getCell(nextPosition);
 
-            if (cell.hasCIPoint()) {
+            if (cell != null && cell.hasCIPoint()) {
 
                 String result = newPath(currentPosition, dir);
 
@@ -125,7 +145,8 @@ public class Ray {
         HexCell cell = board.getCell(point);
         return cell != null && cell.hasCIPoint();
     }
-
+    // Checking for the presence of atoms at specific positions compared to the rays current position.
+    // Depending on where atoms are present around the ray, the rays direction can  be deflected,absorbed or reversed
     private String newPath (BlackBoxBoard.Point3D position, String dir) {
 
         String newDir = "Error";
@@ -521,7 +542,72 @@ public class Ray {
         return new BlackBoxBoard.Point3D(x, y, z);
     }
 
-      // string representation of rays path
+    // Function to calculate and store  edge cells next to entry point of a ray to determine if ray is reversed
+    private List<BlackBoxBoard.Point3D> getNextTo(BlackBoxBoard.Point3D point) {
+        List<BlackBoxBoard.Point3D> nextTo = new ArrayList<>();
+
+        // Handle corner conditions
+        if (point.x == -4 && point.y == 4) { // Bottom left corner
+            nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y - 1, point.z + 1));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y, point.z - 1));
+        }
+        if (point.x == 4 && point.y == -4) { // Top right corner
+            nextTo.add(new BlackBoxBoard.Point3D(point.x - 1, point.y, point.z + 1));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y + 1, point.z - 1));
+        }
+        if (point.x == -4 && point.z == 4) { // Leftmost corner
+            nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y - 1, point.z));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y + 1, point.z - 1));
+        }
+        if (point.x == 4 && point.z == -4) { // Rightmost corner
+            nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y - 1, point.z + 1));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x - 1, point.y + 1, point.z));
+        }
+        if (point.y == -4 && point.z == 4) { // Top left corner
+            nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y, point.z - 1));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x - 1, point.y + 1, point.z));
+        }
+        if (point.y == 4 && point.z == -4) { // Bottom right corner
+            nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y - 1, point.z));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x - 1, point.y, point.z + 1));
+        }
+
+        // Handle non-corner edge conditions separately
+        // X-axis edge conditions
+        if (point.x == -4 || point.x == 4) {
+            nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y + 1, point.z - 1));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y - 1, point.z + 1));
+        }
+        // Y-axis edge conditions
+        if (point.y == -4 || point.y == 4) {
+            nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y, point.z - 1));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x - 1, point.y, point.z + 1));
+        }
+        // Z-axis edge conditions
+        if (point.z == -4 || point.z == 4) {
+            nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y - 1, point.z));
+            nextTo.add(new BlackBoxBoard.Point3D(point.x - 1, point.y + 1, point.z));
+        }
+
+        return nextTo;
+    }
+    //Function to determine if ray will be reversed
+     private boolean isRayReflectedAtEdge(BlackBoxBoard.Point3D point) {
+        List<BlackBoxBoard.Point3D> nextTo = getNextTo(point);
+
+        // Check if any of the adjacent cells have an atom which could be the cause of the reversal/reflection
+         for (BlackBoxBoard.Point3D cellsNextTo : nextTo) {
+             HexCell cell = board.getCell(cellsNextTo);
+             if (cell != null && cell.hasAtom()) {
+                 return true; // Ray is reflected by an atom in the adjacent cell.
+             }
+         }
+         return false; //No reflection occurs if no atoms are in the cells next to entry point
+     }
+
+
+
+        // string representation of rays path
       public String getPath() {
           StringBuilder sb = new StringBuilder();
 
