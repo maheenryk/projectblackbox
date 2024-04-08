@@ -42,6 +42,10 @@ public class HexCell {
          return this.atom != null;
      }
 
+    public boolean hasCIPoint() {
+        return this.CIPoints != null;
+    }
+
     public void setCIPoints(BlackBoxBoard.Point3D CIPoint) {
         this.CIPoints.add(CIPoint);
     }

@@ -57,7 +57,7 @@ public class BlackBoxBoard {
         initializeBoard();
     }
 
-    //nested for loops iterate within [-3, 3] range and fill hashmap with key-value pairs.
+    //nested for loops iterate within [-4, 4] range and fill hashmap with key-value pairs.
     private void initializeBoard() {
         for (int z = 4; z >= -4; z--)
             for (int x = -4; x <= 4; x++) {
