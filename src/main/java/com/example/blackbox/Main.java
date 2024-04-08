@@ -9,12 +9,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
-import javafx.scene.text.FontWeight;
+import utils.ReadyButtonClickedListener;
+import Controller.GameState;
+
 public class Main extends Application {
+
+    private GameState gameState;
 
     public static void main(String[] args) {
         launch(args);
@@ -26,10 +29,14 @@ public class Main extends Application {
         BorderPane root = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
         Scene scene = new Scene(root);
         StackPane centerStackPane = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
+        StackPane buttonsStackPane = new StackPane();
         Group gridGroup = new Group(); //group for hex cells so grid can be manipulated as a unit (for layout purposes).
 
         HexCellGenerator.generateHexCells(gridGroup);//adding hex cells to group.
-        RayCircle.generateRayCircles(gridGroup); //adding raycircles to same group.
+        RayCircle.generateRayCircles(gridGroup); //adding ray circles to same group.
+
+        gameState = new GameState();
+        generateReadyButton(buttonsStackPane, gameState);
 
         centerStackPane.getChildren().add(gridGroup);
 
@@ -42,13 +49,9 @@ public class Main extends Application {
 
 
         root.setTop(topContainer);
-
-        generateReadyButton(root);
-
-
         root.setCenter(centerStackPane);
+        root.setBottom(buttonsStackPane);
 
-        //calculation for centre coordinates.
 
         root.setStyle("-fx-background-color: #84847f;");
         primaryStage.setTitle("BlackBox+");
@@ -60,21 +63,36 @@ public class Main extends Application {
 
     private Label generateTopText() {
         Label playerTurn = new Label("Setter's turn.");
-        playerTurn.setStyle("-fx-text-fill: #4242ff;");;
-        playerTurn.setFont(Font.font("Roboto Mono", FontWeight.BOLD, 45));
+        //css inline styling
+        playerTurn.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 60px;");
+        //borderpane margin and alignment
         playerTurn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         BorderPane.setMargin(playerTurn, new Insets(100, 0, 0, 0));
 
         return playerTurn;
     }
 
-    private void generateReadyButton(BorderPane root) {
+    private boolean isReadyClicked = false;
+
+    public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener) {
         Button ready = new Button("READY");
-        StackPane.setAlignment(ready, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(ready, new Insets(150));
-        root.getChildren().add(ready);
+
+        //eventhandler for button click
+        ready.setOnAction(event -> {
+            isReadyClicked = true;
+            // method maybe
+            listener.onReadyClicked(); //listener qualifier added here
+        });
+        //some inline CSS for button styling.
+        ready.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;-fx-padding: 10 30");
+        StackPane.setAlignment(ready, Pos.BOTTOM_CENTER);
+        //stackpane margin and alignments.
+        StackPane.setMargin(ready, new Insets(5, 10, 60, 20));
+        buttonsStackPane.getChildren().add(ready);
     }
-
-
-
 }
+
+
+
+
+

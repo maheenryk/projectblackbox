@@ -12,8 +12,14 @@ import javafx.scene.text.Text;
 public class RayCircle extends StackPane {
     private Circle circle;
     private Text rayText;
+    private Color originalColor;
+   private Color clickedColor = Color.RED;
+    private Color hoverColor = Color.BLACK;
+    private static RayCircle currentlyClicked; //to store clicked state of ray circle.
 
     RayCircle(double radius, Color fill) {
+
+        this.originalColor = fill;
 
         circle = new Circle(radius);
         circle.setFill(fill);
@@ -26,20 +32,45 @@ public class RayCircle extends StackPane {
         rayText.setFill(Color.WHITE);
 
         addHoverEffect();
+        addClickEffect();
 
-        //StackPane.setAlignment(rayText, javafx.geometry.Pos.CENTER);
         // adding circle and text to StackPane
         getChildren().addAll(circle, rayText);
     }
 
 
-    private void addHoverEffect() { //method for adding hover effect to custom RayCircle class.
-        Color originalColor = (Color) circle.getFill();
-        Color hoverColor = Color.DARKSLATEGRAY;
-        circle.setOnMouseEntered((MouseEvent event) -> circle.setFill(hoverColor));
-        circle.setOnMouseExited((MouseEvent event) -> circle.setFill(originalColor));
-        rayText.setOnMouseEntered((MouseEvent event) -> circle.setFill(hoverColor));
-        rayText.setOnMouseExited((MouseEvent event) -> circle.setFill(originalColor));
+    private void addClickEffect() {
+        this.setOnMouseClicked(event -> {
+            if (currentlyClicked != null && currentlyClicked != this) {
+                //returning the original colour of the raycircle
+                currentlyClicked.circle.setFill(currentlyClicked.originalColor);
+            }
+            //changing colour
+            circle.setFill(clickedColor);
+            // update the current clicked
+            currentlyClicked = this;
+        });
+    }
+
+
+    private void addHoverEffect() {
+
+        this.setOnMouseEntered(event -> {
+            //only apply hover if not clicked
+            if (currentlyClicked != this) {
+                circle.setFill(hoverColor);
+            }
+        });
+        this.setOnMouseExited(event -> { //upon mouse exit
+            //return to original colour upon exit only if the circle is not clicked
+            if (currentlyClicked != this) {
+                circle.setFill(originalColor);
+            }
+            //if clicked, then the clicked colour remains upon exit
+            else {
+                circle.setFill(clickedColor);
+            }
+        });
     }
 
     public void setRayText(String text) {
@@ -137,17 +168,6 @@ public class RayCircle extends StackPane {
 
     }
 
-//    private void handleRayCircleClick(RayCircle circle) {
-//        circle.setOnMouseClicked(event -> {
-//            if (circle.getFill().equals(Color.RED)) {
-//                // Change color to another color when clicked
-//                circle.setFill(Color.BLUE); // Change to your desired color
-//            } else {
-//                // Change color back to the original color when clicked again
-//                circle.setFill(Color.RED); // Change to your original color
-//            }
-//        });
-//    }
 
     static RayCircle createRayCircle(double layoutX, double layoutY, int number) {
         RayCircle circle = new RayCircle(12.0, Color.web("#4242ff"));
