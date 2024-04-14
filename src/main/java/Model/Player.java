@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * Class representing a player
  * Players can either be a Setter or Experimenter store in an enum
+
  */
 // declare our enum to store role states
     enum PlayerRole{
