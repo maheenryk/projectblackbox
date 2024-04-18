@@ -12,10 +12,6 @@ public class Atom {
         //more validation will be added as game progress
     }
 
-    public void CI() {
-
-    }
-
     @Override
     public String toString() {
         return "Atom{}";
@@ -23,11 +19,3 @@ public class Atom {
 
 
 }
-
-
-
-
-
-
-
-

@@ -76,7 +76,7 @@ public class BlackBoxBoard {
     public void printBoard() {
         System.out.println("HashMap Contents:");
         for (Map.Entry<Point3D, HexCell> entry : board.entrySet()) {
-            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+            System.out.println("\nKey: " + entry.getKey() + ", Value: " + entry.getValue());
         }
     }
 
@@ -128,8 +128,13 @@ public class BlackBoxBoard {
                     int newCIy = CIy + offset[1];
                     int newCIz = CIz + offset[2];
                     if (isValidCoordinate(newCIx, newCIy, newCIz)) {
+                        System.out.println("New X: "+newCIx);
+                        System.out.println("New Y: "+newCIy);
+                        System.out.println("New Z: "+newCIz);
                         Point3D CIPoint = new Point3D(newCIx, newCIy, newCIz);
-                        hexCell.setCIPoints(CIPoint);
+                        HexCell ciCell = board.get(CIPoint);
+                        ciCell.setCoIP(new CoIP());
+                        ciCell.setCIPoints(CIPoint);
                         System.out.println("Placed CI Point at: " + CIPoint);
                     }
                 }
@@ -156,9 +161,3 @@ public class BlackBoxBoard {
         return this.board.get(point);
     }
 }
-
-
-
-
-
-
