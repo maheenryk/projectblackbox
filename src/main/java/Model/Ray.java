@@ -115,10 +115,12 @@ public class Ray {
 
             if (cell !=null && cell.hasCIPoint()) {
 
-                Direction result = newPath(currentPosition, dir);
+                Direction result = newPath(nextPosition, dir);
 
                 if (result == Direction.Absorbed) {
                     isAbsorbed = true;
+                    nextPosition = calculateNextPosition(nextPosition, dir);
+                    this.path.add(nextPosition);
                     break;
                 }
 
@@ -187,6 +189,7 @@ public class Ray {
                 aGy = CIy - 1;
                 aGz = CIz + 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
@@ -195,7 +198,7 @@ public class Ray {
                 aOy = CIy + 1;
                 aOz = CIz;
 
-
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
@@ -204,6 +207,7 @@ public class Ray {
                 aPy = CIy;
                 aPz = CIz + 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -233,12 +237,15 @@ public class Ray {
                     newDir = Abs;
                 }
 
+                break;
+
             case YR:
 
                 aGx = CIx + 1;
                 aGy = CIy - 1;
                 aGz = CIz;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
@@ -247,6 +254,7 @@ public class Ray {
                 aOy = CIy + 1;
                 aOz = CIz - 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
@@ -255,6 +263,7 @@ public class Ray {
                 aPy = CIy;
                 aPz = CIz - 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -284,12 +293,15 @@ public class Ray {
                     newDir = Abs;
                 }
 
+                break;
+
             case XU:
 
                 aGx = CIx + 1;
                 aGy = CIy;
                 aGz = CIz - 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
@@ -298,6 +310,7 @@ public class Ray {
                 aOy = CIy + 1;
                 aOz = CIz;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
@@ -306,6 +319,7 @@ public class Ray {
                 aPy = CIy + 1;
                 aPz = CIz - 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -335,12 +349,15 @@ public class Ray {
                     newDir = Abs;
                 }
 
+                break;
+
             case XD:
 
                 aGx = CIx + 1;
                 aGy = CIy - 1;
                 aGz = CIz;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
@@ -349,6 +366,7 @@ public class Ray {
                 aOy = CIy;
                 aOz = CIz + 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
@@ -357,6 +375,7 @@ public class Ray {
                 aPy = CIy - 1;
                 aPz = CIz + 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -386,12 +405,15 @@ public class Ray {
                     newDir = Abs;
                 }
 
+                break;
+
             case ZU:
 
                 aGx = CIx - 1;
                 aGy = CIy;
                 aGz = CIz + 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
@@ -400,6 +422,7 @@ public class Ray {
                 aOy = CIy + 1;
                 aOz = CIz - 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
@@ -408,6 +431,7 @@ public class Ray {
                 aPy = CIy + 1;
                 aPz = CIz;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -437,12 +461,15 @@ public class Ray {
                     newDir = Abs;
                 }
 
+                break;
+
             case ZD:
 
                 aGx = CIx;
                 aGy = CIy - 1;
                 aGz = CIz + 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
@@ -451,6 +478,7 @@ public class Ray {
                 aOy = CIy;
                 aOz = CIz - 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
@@ -459,6 +487,7 @@ public class Ray {
                 aPy = CIy - 1;
                 aPz = CIz;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -487,6 +516,8 @@ public class Ray {
                 else if (atomPink) {
                     newDir = Abs;
                 }
+
+                break;
         }
 
         return newDir;

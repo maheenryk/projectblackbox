@@ -18,16 +18,18 @@ public class ModelMain {
 
         BlackBoxBoard blackBoxBoard = new BlackBoxBoard();
         System.out.println("Before placing atoms:");
-         blackBoxBoard.printBoard();
+        // blackBoxBoard.printBoard();
 
         //  Place atoms randomly
-        blackBoxBoard.placeRandomAtoms(6);
+        // blackBoxBoard.placeRandomAtoms(6);
         System.out.println("After placing atoms:");
-        blackBoxBoard.printBoard();
+        // blackBoxBoard.printBoard();
 
-        blackBoxBoard.printCIPoints();
+        // blackBoxBoard.printCIPoints();
 
         // Define an entry point for the ray. Choose an edge coordinate.
+        BlackBoxBoard.Point3D atom = new BlackBoxBoard.Point3D(0,0,0);
+        // blackBoxBoard.placeAtom(atom);
         BlackBoxBoard.Point3D entryPoint = new BlackBoxBoard.Point3D(4, 0, -4); // Example edge point
         Direction dir = Direction.YL;
 
