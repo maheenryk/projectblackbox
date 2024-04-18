@@ -4,6 +4,7 @@ package Model;
 //import javafx.geometry.Point2D;
 //import Model.BlackBoxBoard.Point3D;
 
+
 public class ModelMain {
     public static void main(String[] args) {
 //
@@ -17,7 +18,7 @@ public class ModelMain {
 
         BlackBoxBoard blackBoxBoard = new BlackBoxBoard();
         System.out.println("Before placing atoms:");
-        // blackBoxBoard.printBoard();
+         blackBoxBoard.printBoard();
 
         //  Place atoms randomly
         blackBoxBoard.placeRandomAtoms(6);
@@ -28,7 +29,7 @@ public class ModelMain {
 
         // Define an entry point for the ray. Choose an edge coordinate.
         BlackBoxBoard.Point3D entryPoint = new BlackBoxBoard.Point3D(4, 0, -4); // Example edge point
-        String dir = "YL";
+        Direction dir = Direction.YL;
 
         // Create a ray with the entry point
         Ray ray = new Ray(blackBoxBoard, entryPoint, dir);
