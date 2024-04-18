@@ -18,7 +18,7 @@ public class ModelMain {
 
         BlackBoxBoard blackBoxBoard = new BlackBoxBoard();
         System.out.println("Before placing atoms:");
-        // blackBoxBoard.printBoard();
+         blackBoxBoard.printBoard();
 
         //  Place atoms randomly
         blackBoxBoard.placeRandomAtoms(6);
