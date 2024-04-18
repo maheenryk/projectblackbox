@@ -69,7 +69,7 @@ public class HexCell {
         if(this.atom == null){
             atomCheck= "Atom is not present. ";
         }else{
-            atomCheck ="Atom is present. ";
+            atomCheck = "Atom is present. ";
         }
 
         String ciCheck;

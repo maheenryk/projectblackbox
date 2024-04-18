@@ -550,7 +550,7 @@ public class Ray {
     private List<BlackBoxBoard.Point3D> getNextTo(BlackBoxBoard.Point3D point) {
         List<BlackBoxBoard.Point3D> nextTo = new ArrayList<>();
 
-        // Handle corner conditions
+        // Handle  corner conditions
         if (point.x == -4 && point.y == 4) { // Bottom left corner
             nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y - 1, point.z + 1));
             nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y, point.z - 1));

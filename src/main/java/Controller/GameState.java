@@ -15,7 +15,7 @@ public class GameState implements ReadyButtonClickedListener {
         if (!isReadyClicked) { //action on first click
             isReadyClicked = true;
             System.out.println("READY button clicked");
-            //call method for beginning expermineter turn here
+            //call method for beginning experimenter turn here
             //maybe reset flag here.
         }
     }

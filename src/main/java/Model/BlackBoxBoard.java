@@ -41,7 +41,7 @@ public class BlackBoxBoard {
         //hashcode is printed without overriding, so toString method ust be overridden for Point3D object.
         @Override
         public String toString() {
-            return "Point3D(" + "x=" + x + ", y=" + y + ", z=" + z + ')';
+            return "Point3D(" + "x =" + x + ", y =" + y + ", z =" + z + ')';
         }
     }
 
