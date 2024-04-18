@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/* Ray class :
-*/
 public class Ray {
     //reference to the game board for path and check for atoms
     private BlackBoxBoard board;
@@ -23,7 +21,16 @@ public class Ray {
 
     private boolean rayReversed;
 
-    public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint, String dir){
+    Direction newDir = Direction.Error;
+    Direction Abs = Direction.Absorbed;
+    Direction YL = Direction.YL;
+    Direction YR = Direction.YR;
+    Direction XU = Direction.XU;
+    Direction XD = Direction.XD;
+    Direction ZU = Direction.ZD;
+    Direction ZD = Direction.ZD;
+
+    public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint, Direction dir){
         this.board = board; //board ref
         this.entryPoint = entryPoint; //starting point
         this.path = new ArrayList<>();
@@ -32,6 +39,7 @@ public class Ray {
         this.deflected120 = false;
         this.rayReversed = false;
         //call method to make sure every time a ray object is created its path is calculated immediately
+
         calculatePath(dir);
 
 
@@ -69,7 +77,7 @@ public class Ray {
 
 
     //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
-    private  void calculatePath(String dir){
+    private  void calculatePath(Direction dir){
         // calculation if ray is immediately reflected
         if(isEdgeCell(entryPoint)){
             HexCell cell = board.getCell(entryPoint);
@@ -109,15 +117,15 @@ public class Ray {
 
             if (cell != null && cell.hasCIPoint()) {
 
-                String result = newPath(currentPosition, dir);
+                Direction result = newPath(currentPosition, dir);
 
-                if (Objects.equals(result, "Absorbed")) {
+                if (result == Direction.Absorbed) {
                     isAbsorbed = true;
                     break;
                 }
 
-                else if (Objects.equals(result, "Error")) {
-                    System.out.println(result);
+                else if (result == Direction.Error) {
+                    System.out.println("Error");
                     break;
                 }
 
@@ -147,9 +155,7 @@ public class Ray {
     }
     // Checking for the presence of atoms at specific positions compared to the rays current position.
     // Depending on where atoms are present around the ray, the rays direction can  be deflected,absorbed or reversed
-    private String newPath (BlackBoxBoard.Point3D position, String dir) {
-
-        String newDir = "Error";
+    private Direction newPath (BlackBoxBoard.Point3D position, Direction dir) {
 
         int CIx = position.x;
         int CIy = position.y;
@@ -177,7 +183,7 @@ public class Ray {
 
         switch (dir) {
 
-            case "YL":
+            case YL:
 
                 aGx = CIx;
                 aGy = CIy - 1;
@@ -206,30 +212,30 @@ public class Ray {
 
                 if (atomGreen && atomOrange) {
                     // reverse ray
-                    newDir = "YR";
+                    newDir = YR;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = "XU";
+                    newDir = XU;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = "ZD";
+                    newDir = ZD;
                 }
 
                 else if (atomGreen) {
-                    newDir = "ZU";
+                    newDir = ZU;
                 }
 
                 else if (atomOrange) {
-                    newDir = "XD";
+                    newDir = XD;
                 }
 
                 else if (atomPink) {
-                    newDir = "Absorbed";
+                    newDir = Abs;
                 }
 
-            case "YR":
+            case YR:
 
                 aGx = CIx + 1;
                 aGy = CIy - 1;
@@ -257,30 +263,30 @@ public class Ray {
 
                 if (atomGreen && atomOrange) {
                     // reverse ray
-                    newDir = "YL";
+                    newDir = YL;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = "ZU";
+                    newDir = ZU;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = "XD";
+                    newDir = XD;
                 }
 
                 else if (atomGreen) {
-                    newDir = "XU";
+                    newDir = XU;
                 }
 
                 else if (atomOrange) {
-                    newDir = "ZD";
+                    newDir = ZD;
                 }
 
                 else if (atomPink) {
-                    newDir = "Absorbed";
+                    newDir = Abs;
                 }
 
-            case "XU":
+            case XU:
 
                 aGx = CIx + 1;
                 aGy = CIy;
@@ -308,30 +314,30 @@ public class Ray {
 
                 if (atomGreen && atomOrange) {
                     // reverse ray
-                    newDir = "XD";
+                    newDir = XD;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = "YL";
+                    newDir = YL;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = "ZD";
+                    newDir = ZD;
                 }
 
                 else if (atomGreen) {
-                    newDir = "ZU";
+                    newDir = ZU;
                 }
 
                 else if (atomOrange) {
-                    newDir = "YR";
+                    newDir = YR;
                 }
 
                 else if (atomPink) {
-                    newDir = "Absorbed";
+                    newDir = Abs;
                 }
 
-            case "XD":
+            case XD:
 
                 aGx = CIx + 1;
                 aGy = CIy - 1;
@@ -359,30 +365,30 @@ public class Ray {
 
                 if (atomGreen && atomOrange) {
                     // reverse ray
-                    newDir = "XU";
+                    newDir = XU;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = "ZU";
+                    newDir = ZU;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = "YR";
+                    newDir = YR;
                 }
 
                 else if (atomGreen) {
-                    newDir = "YL";
+                    newDir = YL;
                 }
 
                 else if (atomOrange) {
-                    newDir = "ZD";
+                    newDir = ZD;
                 }
 
                 else if (atomPink) {
-                    newDir = "Absorbed";
+                    newDir = Abs;
                 }
 
-            case "ZU":
+            case ZU:
 
                 aGx = CIx - 1;
                 aGy = CIy;
@@ -410,30 +416,30 @@ public class Ray {
 
                 if (atomGreen && atomOrange) {
                     // reverse ray
-                    newDir = "ZD";
+                    newDir = ZD;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = "YR";
+                    newDir = YR;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = "XU";
+                    newDir = XU;
                 }
 
                 else if (atomGreen) {
-                    newDir = "XD";
+                    newDir = XD;
                 }
 
                 else if (atomOrange) {
-                    newDir = "YL";
+                    newDir = YL;
                 }
 
                 else if (atomPink) {
-                    newDir = "Absorbed";
+                    newDir = Abs;
                 }
 
-            case "ZD":
+            case ZD:
 
                 aGx = CIx;
                 aGy = CIy - 1;
@@ -461,27 +467,27 @@ public class Ray {
 
                 if (atomGreen && atomOrange) {
                     // reverse ray
-                    newDir = "ZU";
+                    newDir = ZU;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = "XD";
+                    newDir = XD;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = "YL";
+                    newDir = YL;
                 }
 
                 else if (atomGreen) {
-                    newDir = "YR";
+                    newDir = YR;
                 }
 
                 else if (atomOrange) {
-                    newDir = "XU";
+                    newDir = XU;
                 }
 
                 else if (atomPink) {
-                    newDir = "Absorbed";
+                    newDir = Abs;
                 }
         }
 
@@ -499,7 +505,7 @@ public class Ray {
 
 
     // Method to calculate the next position of the ray based on the current position and direction of ray
-    private BlackBoxBoard.Point3D calculateNextPosition(BlackBoxBoard.Point3D currentPosition, String dir) {
+    private BlackBoxBoard.Point3D calculateNextPosition(BlackBoxBoard.Point3D currentPosition, Direction dir) {
 
         int x = currentPosition.x;
         int y = currentPosition.y;
@@ -507,32 +513,32 @@ public class Ray {
 
 
         switch (dir) {
-            case "YL": // direction is on axis y going left
+            case YL: // direction is on axis y going left
                 x --;
                 z ++;
                 break;
 
-            case "YR": // direction is on axis y going right
+            case YR: // direction is on axis y going right
                 x ++;
                 z --;
                 break;
 
-            case "XU": // direction is on axis x going up
+            case XU: // direction is on axis x going up
                 y ++;
                 z --;
                 break;
 
-            case "XD": // direction is on axis x going down
+            case XD: // direction is on axis x going down
                 y --;
                 z ++;
                 break;
 
-            case "ZU": // direction is on axis z going up
+            case ZU: // direction is on axis z going up
                 x --;
                 y ++;
                 break;
 
-            case "ZD": // direction is on axis z going down
+            case ZD: // direction is on axis z going down
                 x ++;
                 y --;
                 break;
