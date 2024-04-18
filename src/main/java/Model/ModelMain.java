@@ -10,7 +10,7 @@ public class ModelMain {
 //
 //        BlackBoxBoard.Point3D cubicCoordinates = new Point3D(-3, 3, 0);
 //
-//        // Call cubicToCartesian method and get the result
+//        //Call cubicToCartesian method and get the result
 //        Point2D result = ViewModel.cubicToCartesian(cubicCoordinates);
 //        // Print the result
 //        System.out.println("Result: " + result);

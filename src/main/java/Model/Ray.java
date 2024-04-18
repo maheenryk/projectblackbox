@@ -75,7 +75,6 @@ public class Ray {
 
 
 
-
     //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
     private  void calculatePath(Direction dir){
         // calculation if ray is immediately reflected
@@ -112,10 +111,9 @@ public class Ray {
             // Add the next position to the path
             this.path.add(nextPosition);
 
-            // Check if the next position is a CI point
             HexCell cell = board.getCell(nextPosition);
 
-            if (cell != null && cell.hasCIPoint()) {
+            if (cell !=null && cell.hasCIPoint()) {
 
                 Direction result = newPath(currentPosition, dir);
 
@@ -552,7 +550,7 @@ public class Ray {
     private List<BlackBoxBoard.Point3D> getNextTo(BlackBoxBoard.Point3D point) {
         List<BlackBoxBoard.Point3D> nextTo = new ArrayList<>();
 
-        // Handle corner conditions
+        // Handle  corner conditions
         if (point.x == -4 && point.y == 4) { // Bottom left corner
             nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y - 1, point.z + 1));
             nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y, point.z - 1));

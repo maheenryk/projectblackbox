@@ -23,7 +23,7 @@ public class BlackBoxBoard {
         }
 
 
-        @Override
+       @Override
         public int hashCode() {
             return java.util.Objects.hash(x, y, z);
         }
@@ -41,7 +41,7 @@ public class BlackBoxBoard {
         //hashcode is printed without overriding, so toString method ust be overridden for Point3D object.
         @Override
         public String toString() {
-            return "Point3D(" + "x=" + x + ", y=" + y + ", z=" + z + ')';
+            return "Point3D(" + "x =" + x + ", y =" + y + ", z =" + z + ')';
         }
     }
 
@@ -72,7 +72,7 @@ public class BlackBoxBoard {
                     }
                 }
             }
-        }
+         }
         System.out.println("board initialisation complete total points initialised: " + count);
     }
 
@@ -99,58 +99,7 @@ public class BlackBoxBoard {
     }
 
 
-    public void placeAtom(Point3D point) {
-        int CIx = point.x;
-        int CIy = point.y;
-        int CIz = point.z;
-
-        // Place an atom at this point if it doesn't already have one
-        HexCell hexCell = board.get(point);
-        if (!hexCell.hasAtom()) {
-            hexCell.setAtom(new Atom());
-            System.out.println("\nPlaced an atom at: " + point);
-
-            // create CIPoints, validate them, and set them
-            // Define offsets for each CI Point
-            int[][] offsets = {
-                    {1, -1, 0}, // Point 1
-                    {1, 0, -1}, // Point 2
-                    {0, 1, -1}, // Point 3
-                    {-1, 1, 0}, // Point 4
-                    {-1, 0, 1}, // Point 5
-                    {0, -1, 1}  // Point 6
-            };
-
-            // Iterate through the offsets and place CI Points
-            for (int[] offset : offsets) {
-                int newCIx = CIx + offset[0];
-                int newCIy = CIy + offset[1];
-                int newCIz = CIz + offset[2];
-                // System.out.println("Attempting CI Point at: " + newCIx + ", " + newCIy + ", " + newCIz);
-                if (isValidCoordinate(newCIx, newCIy, newCIz)) {
-                    Point3D CIPoint = new Point3D(newCIx, newCIy, newCIz);
-                    HexCell ciCell = getCell(CIPoint);
-                    //check if the hexcell is null before attempting to set coIP
-                    if (ciCell != null) {  // Check if the HexCell is not null
-                      //  ciCell.setCoIP(new CoIP());
-                        ciCell.setCIPoints(CIPoint);
-                        System.out.println("Placed CI Point at: " + CIPoint);
-                    } else {
-                        System.out.println("No HexCell found at: " + CIPoint + ", unable to place CI Point.");
-                    }
-
-                    //ciCell.setCoIP(new CoIP());
-                    // ciCell.setCIPoints(CIPoint);
-                    // System.out.println("Placed CI Point at: " + CIPoint);
-                }
-            }
-
-        }
-    }
-
     //method to place our atoms in cells randomly while staying within boards range  at the start of game
-
-
     public void placeRandomAtoms(int numberOfAtoms) {
         // create a list from the keys of the board HashMap, which are the valid positions
         List<Point3D> validPoints = new ArrayList<>(board.keySet());
@@ -162,7 +111,55 @@ public class BlackBoxBoard {
         for (int i = 0; i < numberOfAtoms; i++) {
             Point3D point = validPoints.get(i);
 
-            placeAtom(point);
+            int CIx = point.x;
+            int CIy = point.y;
+            int CIz = point.z;
+
+            // Place an atom at this point if it doesn't already have one
+            HexCell hexCell = board.get(point);
+            if (!hexCell.hasAtom()) {
+                hexCell.setAtom(new Atom());
+                System.out.println("\nPlaced an atom at: " + point);
+
+                // create CIPoints, validate them, and set them
+                // Define offsets for each CI Point
+                int[][] offsets = {
+                        {1, -1, 0}, // Point 1
+                        {1, 0, -1}, // Point 2
+                        {0, 1, -1}, // Point 3
+                        {-1, 1, 0}, // Point 4
+                        {-1, 0, 1}, // Point 5
+                        {0, -1, 1}  // Point 6
+                };
+
+                // Iterate through the offsets and place CI Points
+                for (int[] offset : offsets) {
+                    int newCIx = CIx + offset[0];
+                    int newCIy = CIy + offset[1];
+                    int newCIz = CIz + offset[2];
+                    System.out.println("Attempting CI Point at: " + newCIx + ", " + newCIy + ", " + newCIz);
+                    if (isValidCoordinate(newCIx, newCIy, newCIz)) {
+                        System.out.println("New X: "+newCIx);
+                        System.out.println("New Y: "+newCIy);
+                        System.out.println("New Z: "+newCIz);
+                        Point3D CIPoint = new Point3D(newCIx, newCIy, newCIz);
+                        HexCell ciCell = board.get(CIPoint);
+                        //check if the hexcell is null before attempting to set coIP
+                        if (ciCell != null) {  // Check if the HexCell is not null
+                            ciCell.setCoIP(new CoIP());
+                            ciCell.setCIPoints(CIPoint);
+                            System.out.println("Placed CI Point at: " + CIPoint);
+                        } else {
+                            System.out.println("No HexCell found at: " + CIPoint + ", unable to place CI Point.");
+                        }
+
+                        //ciCell.setCoIP(new CoIP());
+                       // ciCell.setCIPoints(CIPoint);
+                       // System.out.println("Placed CI Point at: " + CIPoint);
+                    }
+                }
+
+            }
         }
     }
 

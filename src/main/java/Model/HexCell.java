@@ -24,47 +24,62 @@ public class HexCell {
     */
 
     //create an instance variable of type atom.
-     private Atom atom;
+    private Atom atom;
+
+    private CoIP coIP;
 
     private List<BlackBoxBoard.Point3D> CIPoints;
 
-     public HexCell() {
+    public HexCell() {
         //at the start all hex cells do not contain an atom
-         this.atom = null;
-         this.CIPoints = new ArrayList<>();
-     }
+        this.atom = null;
+        this.coIP = null;
+        this.CIPoints = new ArrayList<>();
+    }
 
-      //set atom
-     public void setAtom(Atom atom) {
-         this.atom = atom;
-     }
-     public boolean hasAtom() {
-         return this.atom != null;
-     }
+    //set atom
+    public void setAtom(Atom atom) {
+        this.atom = atom;
+    }
+    public boolean hasAtom() {
+        return this.atom != null;
+    }
 
     public boolean hasCIPoint() {
-        return this.CIPoints != null;
+        return this.coIP != null;
     }
 
     public void setCIPoints(BlackBoxBoard.Point3D CIPoint) {
         this.CIPoints.add(CIPoint);
     }
 
+    public void setCoIP (CoIP coIP) {
+        this.coIP = coIP;
+    }
+
     public List<BlackBoxBoard.Point3D> getCIPoints() {
         return this.CIPoints;
     }
 
-     //returns a string rep of our HexCell
+    //returns a string rep of our HexCell
 
     @Override
     public String toString() {
-         String atomCheck;
-         if(this.atom == null){
-           atomCheck= "atom is not present";
-         }else{
-            atomCheck ="atom is present";
-         }
-         return  "HexCell: " + atomCheck;
+        String atomCheck;
+        if(this.atom == null){
+            atomCheck= "Atom is not present. ";
+        }else{
+            atomCheck = "Atom is present. ";
+        }
+
+        String ciCheck;
+        if (this.coIP == null) {
+            ciCheck = "CI Point is not present.";
+        }
+        else {
+            ciCheck = "CI Point is present.";
+        }
+        return  "\nHexCell: " + atomCheck + ciCheck;
     }
 
 }
