@@ -8,13 +8,31 @@ import java.util.List;
  * Players can either be a Setter or Experimenter store in an enum
 
  */
-// declare our enum to store role states
+
+public class Player {
+    // declare our enum to store role states
+
     enum PlayerRole{
         SETTER,
-        EXPERIMENTER;
-}
-public class Player {
-     private PlayerRole role;
+        EXPERIMENTER
+    }
+
+    private PlayerRole role;
+    public Player(PlayerRole role){
+        this.role = role;
+    }
+
+    public PlayerRole getRole() {
+        return role;
+    }
+
+    @Override
+    public String toString() {
+        return "Player role : " + role;
+    }
+
+
+    /*private PlayerRole role;
       //tracks score for player
      private int score = 0;
       // the number of ray markers placed by experimenter
