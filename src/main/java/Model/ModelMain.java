@@ -38,6 +38,7 @@ public class ModelMain {
         System.out.println("Ray's Path: " + ray.getPath());
         // Check if the ray is absorbed and print the result
         System.out.println("Ray absorbed: " + ray.isAbsorbed());
+        System.out.println("Ray is reversed:" +ray.isRayReversed());
 
 
     }
