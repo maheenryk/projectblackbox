@@ -22,7 +22,9 @@ public class BlackBoxBoard {
             this.z = z;
         }
 
-
+        /*
+        -- [[not sure if required anymore]]. --
+        must override to ensure distinct hashcode for unique combinations of x, y, z.
        @Override
         public int hashCode() {
             return java.util.Objects.hash(x, y, z);
@@ -35,13 +37,13 @@ public class BlackBoxBoard {
             Point3D point3D = (Point3D) o;
             return x == point3D.x && y == point3D.y && z == point3D.z;//checking fields in objects for equivalence
         }
-
-
+        ------
+        */
 
         //hashcode is printed without overriding, so toString method ust be overridden for Point3D object.
         @Override
         public String toString() {
-            return "Point3D(" + "x =" + x + ", y =" + y + ", z =" + z + ')';
+            return "Point3D(" + "x=" + x + ", y=" + y + ", z=" + z + ')';
         }
     }
 
@@ -57,35 +59,25 @@ public class BlackBoxBoard {
 
     //nested for loops iterate within [-4, 4] range and fill hashmap with key-value pairs.
     private void initializeBoard() {
-        System.out.println("Initializing board...");
-        int count = 0; //check how many hexcells we have
-        for (int z = 4; z >= -4; z--){
+        for (int y = -4; y <= 4; y++) /* y prints as the directional invariable so that the cells
+        are printed top-down, row by row*/
             for (int x = -4; x <= 4; x++) {
-                for (int y = -4; y <= 4; y++) {
+                for (int z = -4; z <= 4; z++) { //the printing of x and z determines the flow of hexcell generation from left to right.
 
                     if (x + y + z == 0) { // valid co-ords must sum to 0
                         Point3D point = new Point3D(x, y, z);
                         HexCell cell = new HexCell();
                         board.put(point, cell);
-                        System.out.println("Initialized Point: " + point);
-                        count++;
                     }
                 }
             }
-         }
-        System.out.println("board initialisation complete total points initialised: " + count);
     }
-
 
     //method to print board entries (all key + value pairs)
     public void printBoard() {
         System.out.println("HashMap Contents:");
-        if(board.isEmpty()){
-            System.out.println("The board is empty");
-        }else {
-            for (Map.Entry<Point3D, HexCell> entry : board.entrySet()) {
-                System.out.println("\nKey: " + entry.getKey() + ", Value: " + entry.getValue());
-            }
+        for (Map.Entry<Point3D, HexCell> entry : board.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
         }
     }
 
@@ -94,10 +86,18 @@ public class BlackBoxBoard {
         return this.board.size();
     }
 
-    public boolean isValidCoordinate(int x, int y, int z) {
-        return (x >= -4 && x <= 4) && (y >= -4 && y <= 4) && (z >= -4 && z <= 4) && (x + y + z == 0);
+//    public Set<Map.Entry<Point3D, HexCell>> getBoardEntries() { //method to access the board safely without modifying.
+//        return Collections.unmodifiableSet(board.entrySet());//attempts to add/remove entries will result in UnsupportedOperationException.
+//    }
+
+    public Iterator<Map.Entry<Point3D, HexCell>> getBoardIterator() {
+        return this.board.entrySet().iterator();
     }
 
+
+    public boolean isValidCoordinate(int x, int y, int z) {
+        return (x >= -4 && x <= 4) && (y >= -4 && y <= 4) && (z >= -4 && z <= 4);
+    }
 
     //method to place our atoms in cells randomly while staying within boards range  at the start of game
     public void placeRandomAtoms(int numberOfAtoms) {
@@ -137,25 +137,10 @@ public class BlackBoxBoard {
                     int newCIx = CIx + offset[0];
                     int newCIy = CIy + offset[1];
                     int newCIz = CIz + offset[2];
-                    System.out.println("Attempting CI Point at: " + newCIx + ", " + newCIy + ", " + newCIz);
                     if (isValidCoordinate(newCIx, newCIy, newCIz)) {
-                        System.out.println("New X: "+newCIx);
-                        System.out.println("New Y: "+newCIy);
-                        System.out.println("New Z: "+newCIz);
                         Point3D CIPoint = new Point3D(newCIx, newCIy, newCIz);
-                        HexCell ciCell = board.get(CIPoint);
-                        //check if the hexcell is null before attempting to set coIP
-                        if (ciCell != null) {  // Check if the HexCell is not null
-                            ciCell.setCoIP(new CoIP());
-                            ciCell.setCIPoints(CIPoint);
-                            System.out.println("Placed CI Point at: " + CIPoint);
-                        } else {
-                            System.out.println("No HexCell found at: " + CIPoint + ", unable to place CI Point.");
-                        }
-
-                        //ciCell.setCoIP(new CoIP());
-                       // ciCell.setCIPoints(CIPoint);
-                       // System.out.println("Placed CI Point at: " + CIPoint);
+                        hexCell.setCIPoints(CIPoint);
+                        System.out.println("Placed CI Point at: " + CIPoint);
                     }
                 }
 
@@ -181,3 +166,9 @@ public class BlackBoxBoard {
         return this.board.get(point);
     }
 }
+
+
+
+
+
+

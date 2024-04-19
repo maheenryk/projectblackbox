@@ -1,8 +1,13 @@
 package Controller;
 import com.example.blackbox.Main;
 import utils.ReadyButtonClickedListener;
+import javafx.geometry.Point2D;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class GameState implements ReadyButtonClickedListener {
+    private List<Point2D> setterAtoms = new ArrayList<>(); //list to store the setter atom positions
 
     public void startNewGame() {
          //other new game code here (future sprint)
@@ -19,6 +24,15 @@ public class GameState implements ReadyButtonClickedListener {
             //maybe reset flag here.
         }
     }
+
+    public void setSetterAtomPositions(List<Point2D> positions) {
+        this.setterAtoms.clear();
+        this.setterAtoms.addAll(positions);
+    }
+    public List<Point2D> getSetterAtomPositions() {
+        return this.setterAtoms;
+    }
+
 
 
 

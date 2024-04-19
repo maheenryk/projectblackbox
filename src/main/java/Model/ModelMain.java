@@ -3,6 +3,10 @@ package Model;
 //import Controller.ViewModel;
 //import javafx.geometry.Point2D;
 //import Model.BlackBoxBoard.Point3D;
+import javafx.scene.Group;
+
+import Controller.Translation;
+import com.example.blackbox.HexCellGenerator;
 
 
 public class ModelMain {
@@ -24,6 +28,8 @@ public class ModelMain {
         blackBoxBoard.placeRandomAtoms(6);
         System.out.println("After placing atoms:");
         blackBoxBoard.printBoard();
+
+        System.out.println(blackBoxBoard.getBoardSize());//checking correct no. of hexcells
 
         blackBoxBoard.printCIPoints();
 

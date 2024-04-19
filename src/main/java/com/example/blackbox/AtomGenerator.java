@@ -6,10 +6,15 @@
 
 package com.example.blackbox;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+
+import java.util.Map;
+
 
 public class AtomGenerator {
 
@@ -20,8 +25,10 @@ public class AtomGenerator {
         Circle atom = new Circle(20, Color.RED);
         atom.setLayoutX(centerX);
         atom.setLayoutY(centerY);
+        atom.setUserData("atom"); //setting to identify apart from ray circles.
         return atom;
     }
+
     private static boolean isPointInHexagon(double x, double y, Polygon hexagon) {
         // Get the bounds of the hexagon
         javafx.geometry.Bounds hexagonBounds = hexagon.getBoundsInParent();
@@ -38,15 +45,21 @@ public class AtomGenerator {
     }
 
     static Circle findAtomInHexagon(Group root, Polygon hexagon) {
+
         // Iterate through the children of the root to find an atom in the same hexagon
         for (javafx.scene.Node node : root.getChildren()) {
             if (node instanceof Circle atom) {
                 if (isPointInHexagon(atom.getLayoutX(), atom.getLayoutY(), hexagon)) {
-                    return atom; // Adjust the margin as needed
+                    System.out.println("Atom at coords: (" + atom.getLayoutX() + ", " + atom.getLayoutY() + ")");//testing purposes
+                    return atom;
                 }
             }
         }
         return null;
+
     }
 
+
+
 }
+
