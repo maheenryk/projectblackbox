@@ -28,22 +28,22 @@ public class ModelMain {
         // blackBoxBoard.printCIPoints();
 
 
-        BlackBoxBoard.Point3D atom1 = new BlackBoxBoard.Point3D(3,-1,-2);
+        BlackBoxBoard.Point3D atom1 = new BlackBoxBoard.Point3D(-1,3,-2);
         blackBoxBoard.placeAtom(atom1);
-        BlackBoxBoard.Point3D atom2 = new BlackBoxBoard.Point3D(2,1,-3);
+        BlackBoxBoard.Point3D atom2 = new BlackBoxBoard.Point3D(3,0,-3);
         blackBoxBoard.placeAtom(atom2);
-        BlackBoxBoard.Point3D atom3 = new BlackBoxBoard.Point3D(0,0,0);
-        // blackBoxBoard.placeAtom(atom3);
-        BlackBoxBoard.Point3D atom4 = new BlackBoxBoard.Point3D(0,0,0);
-        // blackBoxBoard.placeAtom(atom4);
-        BlackBoxBoard.Point3D atom5 = new BlackBoxBoard.Point3D(0,0,0);
-        // blackBoxBoard.placeAtom(atom5);
-        BlackBoxBoard.Point3D atom6 = new BlackBoxBoard.Point3D(0,0,0);
-        // blackBoxBoard.placeAtom(atom6);
+        BlackBoxBoard.Point3D atom3 = new BlackBoxBoard.Point3D(3,1,-4);
+        blackBoxBoard.placeAtom(atom3);
+        BlackBoxBoard.Point3D atom4 = new BlackBoxBoard.Point3D(-1,-2,3);
+        blackBoxBoard.placeAtom(atom4);
+        BlackBoxBoard.Point3D atom5 = new BlackBoxBoard.Point3D(-3,-1,4);
+        blackBoxBoard.placeAtom(atom5);
+        BlackBoxBoard.Point3D atom6 = new BlackBoxBoard.Point3D(-3,2,1);
+        blackBoxBoard.placeAtom(atom6);
 
         // Define an entry point for the ray. Choose an edge coordinate.
-        BlackBoxBoard.Point3D entryPoint = new BlackBoxBoard.Point3D(4, 0, -4); // Example edge point
-        Direction dir = Direction.YL;
+        BlackBoxBoard.Point3D entryPoint = new BlackBoxBoard.Point3D(0, 4, -4); // Example edge point
+        Direction dir = Direction.XU;
 
         // Create a ray with the entry point
         Ray ray = new Ray(blackBoxBoard, entryPoint, dir);

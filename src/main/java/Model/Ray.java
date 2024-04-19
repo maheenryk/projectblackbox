@@ -28,7 +28,7 @@ public class Ray {
     Direction YR = Direction.YR;
     Direction XU = Direction.XU;
     Direction XD = Direction.XD;
-    Direction ZU = Direction.ZD;
+    Direction ZU = Direction.ZU;
     Direction ZD = Direction.ZD;
 
     public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint, Direction dir){
@@ -173,6 +173,10 @@ public class Ray {
     // Checking for the presence of atoms at specific positions compared to the rays current position.
     // Depending on where atoms are present around the ray, the rays direction can  be deflected,absorbed or reversed
     private Direction newPath (BlackBoxBoard.Point3D position, Direction dir) {
+
+        rayReversed = false;
+        deflected60 = false;
+        deflected120 = false;
 
         int CIx = position.x;
         int CIy = position.y;
