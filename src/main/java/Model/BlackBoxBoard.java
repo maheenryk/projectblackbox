@@ -23,7 +23,7 @@ public class BlackBoxBoard {
         }
 
 
-       @Override
+        @Override
         public int hashCode() {
             return java.util.Objects.hash(x, y, z);
         }
@@ -72,7 +72,7 @@ public class BlackBoxBoard {
                     }
                 }
             }
-         }
+        }
         System.out.println("board initialisation complete total points initialised: " + count);
     }
 
@@ -138,10 +138,6 @@ public class BlackBoxBoard {
                     } else {
                         System.out.println("No HexCell found at: " + CIPoint + ", unable to place CI Point.");
                     }
-
-                    //ciCell.setCoIP(new CoIP());
-                    // ciCell.setCIPoints(CIPoint);
-                    // System.out.println("Placed CI Point at: " + CIPoint);
                 }
             }
 
@@ -149,8 +145,6 @@ public class BlackBoxBoard {
     }
 
     //method to place our atoms in cells randomly while staying within boards range  at the start of game
-
-
     public void placeRandomAtoms(int numberOfAtoms) {
         // create a list from the keys of the board HashMap, which are the valid positions
         List<Point3D> validPoints = new ArrayList<>(board.keySet());
@@ -161,7 +155,6 @@ public class BlackBoxBoard {
         //we can loop through the shuffled list and take the first numberOfAtoms points to place atoms
         for (int i = 0; i < numberOfAtoms; i++) {
             Point3D point = validPoints.get(i);
-
             placeAtom(point);
         }
     }
