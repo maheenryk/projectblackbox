@@ -23,6 +23,8 @@ public class Ray {
     private boolean rayReversed;
 
     Direction newDir = Direction.Error;
+
+    Direction exitDir = Direction.Error;
     Direction Abs = Direction.Absorbed;
     Direction YL = Direction.YL;
     Direction YR = Direction.YR;
@@ -58,6 +60,10 @@ public class Ray {
 
     public BlackBoxBoard.Point3D getExitPoint() {
         return exitPoint;
+    }
+
+    public Direction getDirection() {
+        return exitDir;
     }
 
     //check for atom
@@ -163,6 +169,7 @@ public class Ray {
             }
         }
 
+        exitDir = newDir;
         return exitPoint;
     }
 

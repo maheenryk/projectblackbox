@@ -66,6 +66,7 @@ public class ModelMain {
         }
         if (!ray.isAbsorbed()) {
             System.out.println("Ray exited at: " + ray.getExitPoint());
+            System.out.println("Ray's exit direction is: " + ray.getDirection());
         }
     }
 

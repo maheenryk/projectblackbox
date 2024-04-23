@@ -101,9 +101,7 @@ public class BlackBoxBoard {
         for (Point3D point3d : setterAtomList) {
             HexCell hexCell = board.get(point3d);
             if (hexCell != null && !hexCell.hasAtom()) {
-                hexCell.setAtom(new Atom());
-                System.out.println("Placed an atom at: " + point3d);
-
+                placeAtom(point3d);
             }
         }
     }
