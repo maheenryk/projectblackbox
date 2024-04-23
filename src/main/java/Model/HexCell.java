@@ -28,6 +28,11 @@ public class HexCell {
 
     private CoIP coIP;
 
+    private static int lastCellId = 0;
+
+    // Instance variable for the object's ID
+    private final int cellId;
+
     private List<BlackBoxBoard.Point3D> CIPoints;
 
     public HexCell() {
@@ -35,6 +40,10 @@ public class HexCell {
         this.atom = null;
         this.coIP = null;
         this.CIPoints = new ArrayList<>();
+        if (lastCellId > 61) {
+            throw new IllegalStateException("Cell Id exceeds the 61 max count of hex cells.");
+        }
+        this.cellId = ++lastCellId;
     }
 
     //set atom
@@ -69,7 +78,7 @@ public class HexCell {
         if(this.atom == null){
             atomCheck= "Atom is not present. ";
         }else{
-            atomCheck = "Atom is  present. ";
+            atomCheck = "Atom is ***PRESENT***. ";
         }
 
         String ciCheck;
@@ -77,9 +86,9 @@ public class HexCell {
             ciCheck = "CI Point is not present.";
         }
         else {
-            ciCheck = "CI Point is present.";
+            ciCheck = "CI Point is +++PRESENT+++";
         }
-        return  "\nHexCell: " + atomCheck + ciCheck;
+        return "\nHexCell ID " + cellId + ": " + atomCheck + ciCheck;
     }
 
 }

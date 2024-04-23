@@ -99,6 +99,18 @@ public class BlackBoxBoard {
         return (x >= -4 && x <= 4) && (y >= -4 && y <= 4) && (z >= -4 && z <= 4);
     }
 
+    public void placeSetterAtoms(List<Point3D> setterAtomList) { //updating the board with the setter's Atoms.
+        for (Point3D point3d : setterAtomList) {
+            HexCell hexCell = board.get(point3d);
+            if (hexCell != null && !hexCell.hasAtom()) {
+                hexCell.setAtom(new Atom());
+                System.out.println("Placed an atom at: " + point3d);
+
+            }
+        }
+    }
+
+
     //method to place our atoms in cells randomly while staying within boards range  at the start of game
     public void placeRandomAtoms(int numberOfAtoms) {
         // create a list from the keys of the board HashMap, which are the valid positions

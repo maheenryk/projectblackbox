@@ -11,11 +11,13 @@ import Model.HexCell;
 
 /**
  * This is a controller class that translates the coordinates from custom Point3D in game logic to 2D coordinates in
- * the game's UI. Essentially, this handles board connection of logic to UI. This is done by connecting the respective Linked
- * Hash Maps board (logic) and hexCellsMap (UI) in a third linked HashMap called translationMap.
+ * the game's UI. Essentially, this handles board connection of logic to UI. This is done by (1) connecting the respective Linked
+ * Hash Maps board (logic) and hexCellsMap (UI) in a third linked HashMap called translationMap, (2)
  */
 
 public class Translation {
+
+    // This section of the code deals with hex cell and atom connection.
 
     private BlackBoxBoard blackBoxBoard;
     private Map<Point3D, Point2D> translationMap;
@@ -67,11 +69,18 @@ public class Translation {
             if (atomPositions.contains(entry.getValue())) {
                 //upon matching, the relevant 3D is added to the matched list.
                 point3DSetterAtoms.add(entry.getKey());
-                System.out.println("Match found: " + entry.getKey() + "====>" + entry.getValue());
+                System.out.println("Match found: " + entry.getKey() + "====>" + entry.getValue() + "/n/n" + entry.getKey());
             }
         }
         return point3DSetterAtoms;
     }
+
+
+    //this section of the code deals with ray translation. ie connecting the UI ray nodes to the ray class in the Model.
+
+
+
+
 
 
 }
