@@ -3,10 +3,7 @@ package Model;
 //import Controller.ViewModel;
 //import javafx.geometry.Point2D;
 //import Model.BlackBoxBoard.Point3D;
-import javafx.scene.Group;
-
-import Controller.Translation;
-import com.example.blackbox.HexCellGenerator;
+import com.example.blackbox.Main;
 
 
 public class ModelMain {
@@ -45,6 +42,7 @@ public class ModelMain {
         // Check if the ray is absorbed and print the result
         System.out.println("Ray absorbed: " + ray.isAbsorbed());
         System.out.println("Ray is reversed:" +ray.isRayReversed());
+
 
 
     }

@@ -5,15 +5,11 @@
  */
 
 package com.example.blackbox;
-
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 
-import java.util.Map;
 
 
 public class AtomGenerator {
@@ -50,7 +46,7 @@ public class AtomGenerator {
         for (javafx.scene.Node node : root.getChildren()) {
             if (node instanceof Circle atom) {
                 if (isPointInHexagon(atom.getLayoutX(), atom.getLayoutY(), hexagon)) {
-                    System.out.println("Atom at coords: (" + atom.getLayoutX() + ", " + atom.getLayoutY() + ")");//testing purposes
+                    //System.out.println("Atom at coords: (" + atom.getLayoutX() + ", " + atom.getLayoutY() + ")");//testing purposes
                     return atom;
                 }
             }
