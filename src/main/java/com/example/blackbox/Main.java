@@ -37,9 +37,6 @@ public class Main extends Application {
     Translation translation = new Translation(b);
     private Stage window;
     private GameState gameState;
-
-    public static List<Point2D> atomPositions;
-    public static List<Point2D> expPositions;
     public static void main(String[] args) {
         launch(args);
     }
@@ -115,8 +112,8 @@ public class Main extends Application {
         Label setterInstructions = generateSetterInstructions();
         VBox rightContainer = new VBox();
         rightContainer.getChildren().add(setterInstructions);
-        rightContainer.setAlignment(Pos.CENTER_LEFT);
-        rightContainer.setMaxWidth(200);
+        rightContainer.setAlignment(Pos.CENTER_RIGHT);
+        rightContainer.setMaxWidth(100);
 
 
         root.setTop(topContainer);
@@ -246,7 +243,7 @@ public class Main extends Application {
         //event handler for button click
         ready.setOnAction(event -> {
             if (AtomGenerator.atomCount == 6) {//max final atom check
-                atomPositions = collectAtomPositions(); //collecting the final atom positions.
+                List<Point2D> atomPositions = collectAtomPositions(); //collecting the final atom positions.
 
                 List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
                 b.placeSetterAtoms(setterAtomList);
@@ -267,7 +264,7 @@ public class Main extends Application {
                 readyButtonAlert.initOwner(primaryStage);
                 readyButtonAlert.setTitle("Warning");
                 readyButtonAlert.setHeaderText(null);
-                readyButtonAlert.setContentText("Please place 6 atoms in the hex board.");
+                readyButtonAlert.setContentText("Please place exactly 6 atoms in the hex board.");
                 readyButtonAlert.showAndWait();
             }
         });

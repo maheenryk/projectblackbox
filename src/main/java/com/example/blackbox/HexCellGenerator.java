@@ -25,6 +25,12 @@ import static com.example.blackbox.AtomGenerator.*;
 
 public class HexCellGenerator {
 
+    static private final int ORIGINAL_X_START_HEX = 567;
+    static private final int ORIGINAL_Y_START_HEX = 130;
+    static void resetStartingPositions() { //method for resetting the starting generation positions of the hex cells between calls.
+        xStartHex = ORIGINAL_X_START_HEX;
+        yStartHex = ORIGINAL_Y_START_HEX;
+    }
 
      static private int xStartHex = 567;
      static private int yStartHex = 130;
@@ -51,7 +57,7 @@ public class HexCellGenerator {
 
                 Polygon hexagon = createHexCell(xStartHex + (i * XVal), yStartHex);
                 addHoverEffectHex(hexagon);
-                hexagon.setOnMouseClicked(HexCellGenerator::handleHexagonClick);
+                hexagon.setOnMouseClicked(event -> handleHexagonClick(event, root));//changed to pass the group dynamically to allow for multiple groups.
                 double centerX = hexagon.getLayoutBounds().getCenterX() + hexagon.getLayoutX();
                 double centerY = hexagon.getLayoutBounds().getCenterY() + hexagon.getLayoutY();
                 Point2D center = new Point2D(centerX, centerY); //2-d coordinates stored in Point2d
@@ -87,7 +93,7 @@ public class HexCellGenerator {
 
                 Polygon hexagon = createHexCell(xStartHex + (i * XVal), yStartHex);
                 addHoverEffectHex(hexagon);
-                hexagon.setOnMouseClicked(HexCellGenerator::handleHexagonClick);
+                hexagon.setOnMouseClicked(event -> handleHexagonClick(event, root));//changed to pass the group dynamically to allow for multiple groups.
                 double centerX = hexagon.getLayoutBounds().getCenterX() + hexagon.getLayoutX();
                 double centerY = hexagon.getLayoutBounds().getCenterY() + hexagon.getLayoutY();
                 Point2D center = new Point2D(centerX, centerY); //2-d coordinates stored in Point2d
@@ -152,28 +158,47 @@ public class HexCellGenerator {
         return hexagon;
     }
 
-    static private void handleHexagonClick(MouseEvent event) {
+//    static private void handleHexagonClick(MouseEvent event) {
+//        if (atomCount < MAX_ATOMS) {
+//            Polygon clickedHexagon = (Polygon) event.getSource();
+//            Group gridGroup = (Group) clickedHexagon.getParent();
+//
+//            // Check if the hexagon already contains an atom
+//            Circle existingAtom = findAtomInHexagon(gridGroup, clickedHexagon);
+//            if (existingAtom == null) {
+//                // Calculating the center based on the hexagon's vertices
+//                double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();
+//                double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
+//
+//                // create atom and add it to the gridGroup
+//                Circle atom = createAtom(centerX, centerY);
+//                gridGroup.getChildren().add(atom);
+//
+//                atomCount++;
+//
+//                atom.setOnMouseClicked(atomEvent -> {
+//                    gridGroup.getChildren().remove(atom);
+//                    atomCount--;
+//
+//                });
+//            }
+//        }
+//    }
+
+    static private void handleHexagonClick(MouseEvent event, Group targetGroup) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();
-            Group gridGroup = (Group) clickedHexagon.getParent();
-
-            // Check if the hexagon already contains an atom
-            Circle existingAtom = findAtomInHexagon(gridGroup, clickedHexagon);
+            // Use the passed targetGroup instead of deriving it from the event source
+            Circle existingAtom = findAtomInHexagon(targetGroup, clickedHexagon);
             if (existingAtom == null) {
-                // Calculating the center based on the hexagon's vertices
                 double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();
                 double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
-
-                // create atom and add it to the gridGroup
                 Circle atom = createAtom(centerX, centerY);
-                gridGroup.getChildren().add(atom);
-
+                targetGroup.getChildren().add(atom);
                 atomCount++;
-
                 atom.setOnMouseClicked(atomEvent -> {
-                    gridGroup.getChildren().remove(atom);
+                    targetGroup.getChildren().remove(atom);
                     atomCount--;
-
                 });
             }
         }

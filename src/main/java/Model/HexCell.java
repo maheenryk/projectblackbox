@@ -40,9 +40,9 @@ public class HexCell {
         this.atom = null;
         this.coIP = null;
         this.CIPoints = new ArrayList<>();
-        if (lastCellId > 61) {
-            throw new IllegalStateException("Cell Id exceeds the 61 max count of hex cells.");
-        }
+//        if (lastCellId > 61) {
+//            throw new IllegalStateException("Cell Id exceeds the 61 max count of hex cells.");
+//        }
         this.cellId = ++lastCellId;
     }
 
