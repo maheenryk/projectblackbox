@@ -6,6 +6,8 @@ package Model;
 //import com.example.blackbox.Main;
 
 
+import Controller.GameState;
+
 public class ModelMain {
     public static void main(String[] args) {
 //
@@ -22,7 +24,7 @@ public class ModelMain {
         // blackBoxBoard.printBoard();
 
         // Place atoms randomly
-        blackBoxBoard.placeRandomAtoms(6);
+        // blackBoxBoard.placeRandomAtoms(6);
         System.out.println("After placing atoms:");
 
         blackBoxBoard.printCIPoints();
@@ -62,8 +64,9 @@ public class ModelMain {
         Ray ray2 = new Ray(blackBoxBoard, entryPoint2, dir2);
         printRayInfo(ray2);
 
-        System.out.println("\nRay markers: " + blackBoxBoard.getRayMarkers());
+        System.out.println("Ray markers: " + blackBoxBoard.getRayMarkers());
         System.out.println("Total rays fired: " + blackBoxBoard.getRayCount());
+        System.out.println("The score is: " + GameState.calcScore());
     }
 
     public static void printRayInfo(Ray ray) {

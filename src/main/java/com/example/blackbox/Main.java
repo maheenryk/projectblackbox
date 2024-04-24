@@ -37,6 +37,9 @@ public class Main extends Application {
     Translation translation = new Translation(b);
     private Stage window;
     private GameState gameState;
+
+    public static List<Point2D> atomPositions;
+    public static List<Point2D> expPositions;
     public static void main(String[] args) {
         launch(args);
     }
@@ -242,8 +245,8 @@ public class Main extends Application {
 
         //event handler for button click
         ready.setOnAction(event -> {
-            if (AtomGenerator.atomCount < 6) {//max final atom check
-                List<Point2D> atomPositions = collectAtomPositions(); //collecting the final atom positions.
+            if (AtomGenerator.atomCount == 6) {//max final atom check
+                atomPositions = collectAtomPositions(); //collecting the final atom positions.
 
                 List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
                 b.placeSetterAtoms(setterAtomList);

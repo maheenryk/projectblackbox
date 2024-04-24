@@ -40,7 +40,9 @@ public class GameState implements ReadyButtonClickedListener {
     }
 
 
-    public int calcScore(List<Point2D> setterAtoms, List<Point2D> experimenterAtoms) {
+    public static int calcScore( ) {
+        List<Point2D> setterAtoms = Main.atomPositions;
+        List<Point2D> experimenterAtoms = Main.expPositions;
         int correctAtoms = setterAtoms.size();
         experimenterAtoms.retainAll(setterAtoms);
         System.out.println("Score: ");
