@@ -70,6 +70,10 @@ public class HexCell {
         return this.CIPoints;
     }
 
+    public int getCellId() {
+        return cellId;
+    }
+
     //returns a string rep of our HexCell
 
     @Override

@@ -2,15 +2,16 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+//import java.util.Objects;
 
 public class Ray {
     //reference to the game board for path and check for atoms
-    private BlackBoxBoard board;
+    private final BlackBoxBoard board;
     //entry point of ray on the game board
-    private BlackBoxBoard.Point3D entryPoint;
+    private final BlackBoxBoard.Point3D entryPoint;
     //we will store the path ray takes using a list
-    private List<BlackBoxBoard.Point3D> path;
+    private final BlackBoxBoard.Point3D exitPoint;
+    private final List<BlackBoxBoard.Point3D> path;
 
     //to check whether ray is absorbed by an atom
     private boolean isAbsorbed;
@@ -22,13 +23,17 @@ public class Ray {
     private boolean rayReversed;
 
     Direction newDir = Direction.Error;
+    Direction entryDir;
+    Direction exitDir = Direction.Error;
     Direction Abs = Direction.Absorbed;
     Direction YL = Direction.YL;
     Direction YR = Direction.YR;
     Direction XU = Direction.XU;
     Direction XD = Direction.XD;
-    Direction ZU = Direction.ZD;
+    Direction ZU = Direction.ZU;
     Direction ZD = Direction.ZD;
+
+
 
     public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint, Direction dir){
         this.board = board; //board ref
@@ -40,8 +45,7 @@ public class Ray {
         this.rayReversed = false;
         //call method to make sure every time a ray object is created its path is calculated immediately
 
-        calculatePath(dir);
-
+        this.exitPoint = calculatePath(dir);
 
     }
     public boolean isAbsorbed() {
@@ -56,6 +60,17 @@ public class Ray {
 
     public boolean isRayReversed() { return this.rayReversed; }
 
+    public BlackBoxBoard.Point3D getExitPoint() {
+        return exitPoint;
+    }
+
+    public BlackBoxBoard.Point3D getEntryPoint() {return entryPoint;}
+
+    public Direction getDirection() {
+        return exitDir;
+    }
+
+    public Direction getEntryDir() { return  entryDir; }
 
     //check for atom
     private boolean checkForAtom(BlackBoxBoard.Point3D point){
@@ -76,7 +91,10 @@ public class Ray {
 
 
     //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
-    private  void calculatePath(Direction dir){
+    private BlackBoxBoard.Point3D calculatePath(Direction dir){
+
+        BlackBoxBoard.Point3D exitPoint = null;
+
         // calculation if ray is immediately reflected
         if(isEdgeCell(entryPoint)){
             HexCell cell = board.getCell(entryPoint);
@@ -85,18 +103,31 @@ public class Ray {
                 if(isRayReflectedAtEdge(entryPoint)){
                     rayReversed = true;
                     path.add(entryPoint);
-                    return; //end method early since the ray is reflected
+                    BlackBoxBoard.rayCount += 1;
+                    BlackBoxBoard.rayMarkers += 1;
+                    return entryPoint; //end method early since the ray is reflected
                 }
 
             }
+
+            else if (cell != null && cell.hasAtom()) {
+                isAbsorbed = true;
+                path.add(entryPoint);
+                BlackBoxBoard.rayCount += 1;
+                BlackBoxBoard.rayMarkers += 1;
+                return entryPoint;
+            }
+
         }
+
+
         //if ray is not immediately reflected
         //start path at entry point
         this.path.add(this.entryPoint);
 
         // initialize list to store cells visited by the ray
-        List<BlackBoxBoard.Point3D> visitedCells = new ArrayList<>();
-        visitedCells.add(this.entryPoint);
+        //List<BlackBoxBoard.Point3D> visitedCells = new ArrayList<>();
+        //visitedCells.add(this.entryPoint);
 
         // current position of the ray
         BlackBoxBoard.Point3D currentPosition = this.entryPoint;
@@ -106,12 +137,9 @@ public class Ray {
         // doesn't break due to the entry point being on edge of board
         while (!isAbsorbed) {
             // Calculate the next position based on the current position and direction
-            BlackBoxBoard.Point3D nextPosition = calculateNextPosition(currentPosition, dir);
+            BlackBoxBoard.Point3D nextPosition;
 
-            // Add the next position to the path
-            this.path.add(nextPosition);
-
-            HexCell cell = board.getCell(nextPosition);
+            HexCell cell = board.getCell(currentPosition);
 
             if (cell !=null && cell.hasCIPoint()) {
 
@@ -119,6 +147,9 @@ public class Ray {
 
                 if (result == Direction.Absorbed) {
                     isAbsorbed = true;
+                    nextPosition = calculateNextPosition(currentPosition, dir);
+                    this.path.add(nextPosition);
+                    BlackBoxBoard.rayMarkers += 1;
                     break;
                 }
 
@@ -128,23 +159,35 @@ public class Ray {
                 }
 
                 else {
+                    if (rayReversed) {
+                        BlackBoxBoard.rayMarkers += 1;
+                    }
                     dir = result;
                 }
             }
+
+            nextPosition = calculateNextPosition(currentPosition, dir);
+
+            // Add the next position to the path
+            this.path.add(nextPosition);
 
             // Update current position
             currentPosition = nextPosition;
 
             // Add the current position to the visited cells list
-            visitedCells.add(currentPosition);
+            //visitedCells.add(currentPosition);
 
             // check if ray is on edge of board and break loop if true
             if (hasReachedBoardEdge(currentPosition)) {
+                exitPoint = currentPosition;
+                BlackBoxBoard.rayMarkers += 2;
                 break;
             }
         }
 
-
+        exitDir = newDir;
+        BlackBoxBoard.rayCount += 1;
+        return exitPoint;
     }
 
     public boolean hasCIPoint(BlackBoxBoard.Point3D point) {
@@ -154,6 +197,10 @@ public class Ray {
     // Checking for the presence of atoms at specific positions compared to the rays current position.
     // Depending on where atoms are present around the ray, the rays direction can  be deflected,absorbed or reversed
     private Direction newPath (BlackBoxBoard.Point3D position, Direction dir) {
+
+        rayReversed = false;
+        deflected60 = false;
+        deflected120 = false;
 
         int CIx = position.x;
         int CIy = position.y;
@@ -171,9 +218,9 @@ public class Ray {
         int aPy = CIy;
         int aPz = CIz;
 
-        BlackBoxBoard.Point3D greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
-        BlackBoxBoard.Point3D orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
-        BlackBoxBoard.Point3D pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
+        BlackBoxBoard.Point3D greenAtom;
+        BlackBoxBoard.Point3D orangeAtom;
+        BlackBoxBoard.Point3D pinkAtom;
 
         boolean atomGreen = false;
         boolean atomPink = false;
@@ -183,27 +230,26 @@ public class Ray {
 
             case YL:
 
-                aGx = CIx;
                 aGy = CIy - 1;
                 aGz = CIz + 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
 
                 aOx = CIx - 1;
                 aOy = CIy + 1;
-                aOz = CIz;
 
-
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
 
                 aPx = CIx - 1;
-                aPy = CIy;
                 aPz = CIz + 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -211,50 +257,57 @@ public class Ray {
                 if (atomGreen && atomOrange) {
                     // reverse ray
                     newDir = YR;
+                    rayReversed = true;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = XU;
+                    newDir = XD;
+                    deflected120 = true;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = ZD;
+                    newDir = ZU;
+                    deflected120 = true;
                 }
 
                 else if (atomGreen) {
-                    newDir = ZU;
+                    newDir = ZD;
+                    deflected60 = true;
                 }
 
                 else if (atomOrange) {
-                    newDir = XD;
+                    newDir = XU;
+                    deflected60 = true;
                 }
 
                 else if (atomPink) {
                     newDir = Abs;
                 }
+
+                break;
 
             case YR:
 
                 aGx = CIx + 1;
                 aGy = CIy - 1;
-                aGz = CIz;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
 
-                aOx = CIx;
                 aOy = CIy + 1;
                 aOz = CIz - 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
 
                 aPx = CIx + 1;
-                aPy = CIy;
                 aPz = CIz - 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -262,50 +315,57 @@ public class Ray {
                 if (atomGreen && atomOrange) {
                     // reverse ray
                     newDir = YL;
+                    rayReversed = true;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = ZU;
+                    newDir = ZD;
+                    deflected120 = true;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = XD;
+                    newDir = XU;
+                    deflected120 = true;
                 }
 
                 else if (atomGreen) {
-                    newDir = XU;
+                    newDir = XD;
+                    deflected60 = true;
                 }
 
                 else if (atomOrange) {
-                    newDir = ZD;
+                    newDir = ZU;
+                    deflected60 = true;
                 }
 
                 else if (atomPink) {
                     newDir = Abs;
                 }
+
+                break;
 
             case XU:
 
                 aGx = CIx + 1;
-                aGy = CIy;
-                aGz = CIz - 1;
+                aGy = CIy - 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
 
                 aOx = CIx - 1;
-                aOy = CIy + 1;
-                aOz = CIz;
+                aOz = CIz + 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
 
-                aPx = CIx;
-                aPy = CIy + 1;
-                aPz = CIz - 1;
+                aPy = CIy - 1;
+                aPz = CIz + 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -313,50 +373,57 @@ public class Ray {
                 if (atomGreen && atomOrange) {
                     // reverse ray
                     newDir = XD;
+                    rayReversed = true;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = YL;
+                    newDir = ZD;
+                    deflected120 = true;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = ZD;
+                    newDir = YR;
+                    deflected120 = true;
                 }
 
                 else if (atomGreen) {
-                    newDir = ZU;
+                    newDir = YL;
+                    deflected60 = true;
                 }
 
                 else if (atomOrange) {
-                    newDir = YR;
+                    newDir = ZU;
+                    deflected60 = true;
                 }
 
                 else if (atomPink) {
                     newDir = Abs;
                 }
 
+                break;
+
             case XD:
 
                 aGx = CIx + 1;
-                aGy = CIy - 1;
-                aGz = CIz;
+                aGz = CIz - 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
 
                 aOx = CIx - 1;
-                aOy = CIy;
-                aOz = CIz + 1;
+                aOy = CIy + 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
 
-                aPx = CIx;
-                aPy = CIy - 1;
-                aPz = CIz + 1;
+                aPy = CIy + 1;
+                aPz = CIz - 1;
 
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -364,101 +431,115 @@ public class Ray {
                 if (atomGreen && atomOrange) {
                     // reverse ray
                     newDir = XU;
+                    rayReversed = true;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = ZU;
+                    newDir = YL;
+                    deflected120 = true;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = YR;
+                    newDir = ZU;
+                    deflected120 = true;
                 }
 
                 else if (atomGreen) {
-                    newDir = YL;
+                    newDir = ZD;
+                    deflected60 = true;
                 }
 
                 else if (atomOrange) {
-                    newDir = ZD;
+                    newDir = YR;
+                    deflected60 = true;
                 }
 
                 else if (atomPink) {
                     newDir = Abs;
                 }
 
+                break;
+
             case ZU:
 
-                aGx = CIx - 1;
-                aGy = CIy;
+                aGy = CIy - 1;
                 aGz = CIz + 1;
 
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
 
-                aOx = CIx;
+                aOx = CIx + 1;
+                aOz = CIz - 1;
+
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
+                if (checkForAtom(orangeAtom)) {
+                    atomOrange = true;
+                }
+
+                aPx = CIx + 1;
+                aPy = CIy - 1;
+
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
+                if (checkForAtom(pinkAtom)) {
+                    atomPink = true;
+                }
+
+                if (atomGreen && atomOrange) {
+                    // reverse ray
+                    newDir = ZD;
+                    rayReversed = true;
+                }
+
+                else if (atomGreen && atomPink) {
+                    newDir = XD;
+                    deflected120 = true;
+                }
+
+                else if (atomOrange && atomPink) {
+                    newDir = YL;
+                    deflected120 = true;
+                }
+
+                else if (atomGreen) {
+                    newDir = YR;
+                    deflected60 = true;
+                }
+
+                else if (atomOrange) {
+                    newDir = XU;
+                    deflected60 = true;
+                }
+
+                else if (atomPink) {
+                    newDir = Abs;
+                }
+
+                break;
+
+            case ZD:
+
+                aGx = CIx - 1;
+                aGz = CIz + 1;
+
+                greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
+                if (checkForAtom(greenAtom)) {
+                    atomGreen = true;
+                }
+
                 aOy = CIy + 1;
                 aOz = CIz - 1;
 
+                orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
 
                 aPx = CIx - 1;
                 aPy = CIy + 1;
-                aPz = CIz;
 
-                if (checkForAtom(pinkAtom)) {
-                    atomPink = true;
-                }
-
-                if (atomGreen && atomOrange) {
-                    // reverse ray
-                    newDir = ZD;
-                }
-
-                else if (atomGreen && atomPink) {
-                    newDir = YR;
-                }
-
-                else if (atomOrange && atomPink) {
-                    newDir = XU;
-                }
-
-                else if (atomGreen) {
-                    newDir = XD;
-                }
-
-                else if (atomOrange) {
-                    newDir = YL;
-                }
-
-                else if (atomPink) {
-                    newDir = Abs;
-                }
-
-            case ZD:
-
-                aGx = CIx;
-                aGy = CIy - 1;
-                aGz = CIz + 1;
-
-                if (checkForAtom(greenAtom)) {
-                    atomGreen = true;
-                }
-
-                aOx = CIx + 1;
-                aOy = CIy;
-                aOz = CIz - 1;
-
-                if (checkForAtom(orangeAtom)) {
-                    atomOrange = true;
-                }
-
-                aPx = CIx + 1;
-                aPy = CIy - 1;
-                aPz = CIz;
-
+                pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
                     atomPink = true;
                 }
@@ -466,27 +547,46 @@ public class Ray {
                 if (atomGreen && atomOrange) {
                     // reverse ray
                     newDir = ZU;
+                    rayReversed = true;
                 }
 
                 else if (atomGreen && atomPink) {
-                    newDir = XD;
+                    newDir = YR;
+                    deflected120 = true;
                 }
 
                 else if (atomOrange && atomPink) {
-                    newDir = YL;
+                    newDir = XU;
+                    deflected120 = true;
                 }
 
                 else if (atomGreen) {
-                    newDir = YR;
+                    newDir = XD;
+                    deflected60 = true;
                 }
 
                 else if (atomOrange) {
-                    newDir = XU;
+                    newDir = YL;
+                    deflected60 = true;
                 }
 
                 else if (atomPink) {
                     newDir = Abs;
                 }
+
+                break;
+        }
+
+        if (rayReversed) {
+            System.out.println("Ray reversed.");
+        }
+
+        else if (deflected120) {
+            System.out.println("Ray deflected 120 degrees.");
+        }
+
+        else if (deflected60) {
+            System.out.println("Ray deflected 60 degrees.");
         }
 
         return newDir;
@@ -522,23 +622,23 @@ public class Ray {
                 break;
 
             case XU: // direction is on axis x going up
-                y ++;
-                z --;
-                break;
-
-            case XD: // direction is on axis x going down
                 y --;
                 z ++;
                 break;
 
-            case ZU: // direction is on axis z going up
-                x --;
+            case XD: // direction is on axis x going down
                 y ++;
+                z --;
+                break;
+
+            case ZU: // direction is on axis z going up
+                x ++;
+                y --;
                 break;
 
             case ZD: // direction is on axis z going down
-                x ++;
-                y --;
+                x --;
+                y ++;
                 break;
         }
 
@@ -546,11 +646,21 @@ public class Ray {
         return new BlackBoxBoard.Point3D(x, y, z);
     }
 
+    public int determineExitRayCircle(Direction exitDir, BlackBoxBoard.Point3D exitPoint) {
+
+        int exRC = 0;
+        return exRC;
+    }
+
+    public void determineRayEntry(int rayCircle) {
+
+    }
+
     // Function to calculate and store  edge cells next to entry point of a ray to determine if ray is reversed
     private List<BlackBoxBoard.Point3D> getNextTo(BlackBoxBoard.Point3D point) {
         List<BlackBoxBoard.Point3D> nextTo = new ArrayList<>();
 
-        // Handle  corner conditions
+        // Handle corner conditions
         if (point.x == -4 && point.y == 4) { // Bottom left corner
             nextTo.add(new BlackBoxBoard.Point3D(point.x, point.y - 1, point.z + 1));
             nextTo.add(new BlackBoxBoard.Point3D(point.x + 1, point.y, point.z - 1));
@@ -596,43 +706,43 @@ public class Ray {
         return nextTo;
     }
     //Function to determine if ray will be reversed
-     private boolean isRayReflectedAtEdge(BlackBoxBoard.Point3D point) {
+    private boolean isRayReflectedAtEdge(BlackBoxBoard.Point3D point) {
         List<BlackBoxBoard.Point3D> nextTo = getNextTo(point);
 
         // Check if any of the adjacent cells have an atom which could be the cause of the reversal/reflection
-         for (BlackBoxBoard.Point3D cellsNextTo : nextTo) {
-             HexCell cell = board.getCell(cellsNextTo);
-             if (cell != null && cell.hasAtom()) {
-                 return true; // Ray is reflected by an atom in the adjacent cell.
-             }
-         }
-         return false; //No reflection occurs if no atoms are in the cells next to entry point
-     }
+        for (BlackBoxBoard.Point3D cellsNextTo : nextTo) {
+            HexCell cell = board.getCell(cellsNextTo);
+            if (cell != null && cell.hasAtom()) {
+                return true; // Ray is reflected by an atom in the adjacent cell.
+            }
+        }
+        return false; //No reflection occurs if no atoms are in the cells next to entry point
+    }
 
 
 
-        // string representation of rays path
-      public String getPath() {
-          StringBuilder sb = new StringBuilder();
+    // string representation of rays path
+    public String getPath() {
+        StringBuilder sb = new StringBuilder();
 
-          // Iterate over points in the path list
-          for (int i = 0; i < this.path.size(); i++) {
-              BlackBoxBoard.Point3D point = this.path.get(i);
+        // Iterate over points in the path list
+        for (int i = 0; i < this.path.size(); i++) {
+            BlackBoxBoard.Point3D point = this.path.get(i);
 
-              // Append the coordinates of the point
-              sb.append("(")
-                      .append(point.x).append(", ")
-                      .append(point.y).append(", ")
-                      .append(point.z)
-                      .append(")");
+            // Append the coordinates of the point
+            sb.append("(")
+                    .append(point.x).append(", ")
+                    .append(point.y).append(", ")
+                    .append(point.z)
+                    .append(")");
 
-              // Append separator "->" if not the last point
-              if (i < this.path.size() - 1) {
-                  sb.append(" -> ");
-              }
-          }
-          return sb.toString();
-      }
+            // Append separator "->" if not the last point
+            if (i < this.path.size() - 1) {
+                sb.append(" -> ");
+            }
+        }
+        return sb.toString();
+    }
 
 
 }
