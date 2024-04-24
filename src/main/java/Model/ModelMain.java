@@ -5,9 +5,6 @@ package Model;
 //import Model.BlackBoxBoard.Point3D;
 //import com.example.blackbox.Main;
 
-
-import Controller.GameState;
-
 public class ModelMain {
     public static void main(String[] args) {
 //
@@ -49,6 +46,8 @@ public class ModelMain {
 
         blackBoxBoard.printBoard();
 
+        RayNode.initializeNodes();
+
         // Define an entry point for the ray. Choose an edge coordinate.
         BlackBoxBoard.Point3D entryPoint1 = new BlackBoxBoard.Point3D(0, 4, -4); // Example edge point
         Direction dir = Direction.XU;
@@ -66,7 +65,9 @@ public class ModelMain {
 
         System.out.println("Ray markers: " + blackBoxBoard.getRayMarkers());
         System.out.println("Total rays fired: " + blackBoxBoard.getRayCount());
-        System.out.println("The score is: " + GameState.calcScore());
+        //System.out.println("The score is: " + GameState.calcScore());
+        //System.out.println("Edge cells: " + BlackBoxBoard.edgeCells);
+
     }
 
     public static void printRayInfo(Ray ray) {

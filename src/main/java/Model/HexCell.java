@@ -74,6 +74,22 @@ public class HexCell {
         return cellId;
     }
 
+    //check if a cell is an edge cell
+    public static boolean isEdgeCell(BlackBoxBoard.Point3D point) {
+        // an edge cell will be where  one coordinate is at its maximum or minimum value
+        return  point.x == -4 || point.x == 4 ||
+                point.y == -4 || point.y == 4 ||
+                point.z == -4 || point.z == 4;
+    }
+    public static boolean isCornerCell(BlackBoxBoard.Point3D cell){
+        return (cell.x == 0 && cell.y == -4 && cell.z == 4) ||
+                (cell.x == 4 && cell.y == -4 && cell.z == 0) ||
+                (cell.x == 4 && cell.y == 0 && cell.z == -4) ||
+                (cell.x == 0 && cell.y == 4 && cell.z == -4) ||
+                (cell.x == -4 && cell.y == 4 && cell.z == 0) ||
+                (cell.x == -4 && cell.y == 0 && cell.z == 4);
+    }
+
     //returns a string rep of our HexCell
 
     @Override
