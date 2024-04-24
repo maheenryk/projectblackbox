@@ -5,9 +5,6 @@ package Model;
 //import Model.BlackBoxBoard.Point3D;
 //import com.example.blackbox.Main;
 
-
-import Controller.GameState;
-
 public class ModelMain {
     public static void main(String[] args) {
 //
@@ -24,7 +21,7 @@ public class ModelMain {
         // blackBoxBoard.printBoard();
 
         // Place atoms randomly
-        // blackBoxBoard.placeRandomAtoms(6);
+        blackBoxBoard.placeRandomAtoms(6);
         System.out.println("After placing atoms:");
 
         blackBoxBoard.printCIPoints();
@@ -49,6 +46,9 @@ public class ModelMain {
 
         blackBoxBoard.printBoard();
 
+        RayNode.initializeNodes();
+        //RayNode.printRayNodes();
+
         // Define an entry point for the ray. Choose an edge coordinate.
         BlackBoxBoard.Point3D entryPoint1 = new BlackBoxBoard.Point3D(0, 4, -4); // Example edge point
         Direction dir = Direction.XU;
@@ -66,12 +66,21 @@ public class ModelMain {
 
         System.out.println("Ray markers: " + blackBoxBoard.getRayMarkers());
         System.out.println("Total rays fired: " + blackBoxBoard.getRayCount());
-        System.out.println("The score is: " + GameState.calcScore());
+        //System.out.println("The score is: " + GameState.calcScore());
+        //System.out.println("Edge cells: " + BlackBoxBoard.edgeCells);
+
+        //System.out.println("Node Coordinates: " + RayNode.getNodeCoordinates(18));
+        //System.out.println("Node Direction: " + RayNode.getNodeDirection(18));
+        //System.out.println("Node: " + RayNode.getNodeNumber((new BlackBoxBoard.Point3D(-4, 4, 0)), Direction.YL));
+
     }
 
     public static void printRayInfo(Ray ray) {
         // Print the ray's path
-        System.out.println("Ray entered at: " + ray.getEntryPoint());
+        BlackBoxBoard.Point3D entryPoint = ray.getEntryPoint();
+        Direction entryDir = RayNode.getRevDir(ray.getEntryDir());
+        System.out.println("Ray entered at: " + entryPoint);
+        System.out.println("Ray's entry node: " + RayNode.getNodeNumber(entryPoint, entryDir));
         // Check if the ray is absorbed and print the result
         if (ray.isAbsorbed()) {
             System.out.println("Ray absorbed.");
@@ -80,8 +89,11 @@ public class ModelMain {
             System.out.println("Ray reversed.");
         }
         else {
-            System.out.println("Ray exited at: " + ray.getExitPoint());
-            System.out.println("Ray's exit direction is: " + ray.getDirection());
+            BlackBoxBoard.Point3D exitPoint = ray.getExitPoint();
+            Direction direction = ray.getDirection();
+            System.out.println("Ray exited at: " + exitPoint);
+            System.out.println("Ray's exit direction is: " + direction);
+            System.out.println("Ray's exit node: " + RayNode.getNodeNumber(exitPoint, direction));
         }
 
         System.out.println("Ray's Path: " + ray.getPath() + "\n");

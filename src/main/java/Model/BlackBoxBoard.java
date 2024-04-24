@@ -1,7 +1,6 @@
 package Model;
 import java.util.*;
 
-
 public class BlackBoxBoard {
 
     /* creating custom Point3D class to make connecting view (JavaFX) and model efficient.
@@ -55,13 +54,22 @@ public class BlackBoxBoard {
         initializeBoard();
     }
 
+    public static List<Point3D> edgeCells = Arrays.asList(
+            new Point3D(0, -4, 4),  new Point3D(1, -4, 3),  new Point3D(2, -4, 2),
+            new Point3D(3, -4, 1),  new Point3D(4, -4, 0),  new Point3D(4, -3, -1),
+            new Point3D(4, -2, -2), new Point3D(4, -1, -3), new Point3D(4, 0, -4),
+            new Point3D(3, 1, -4), new Point3D(2, 2, -4), new Point3D(1, 3, -4),
+            new Point3D(0, 4, -4),  new Point3D(-1, 4, -3),  new Point3D(-2, 4, -2),
+            new Point3D(-3, 4, -1),  new Point3D(-4, 4, 0),  new Point3D(-4, 3, 1),
+            new Point3D(-4, 2, 2),  new Point3D(-4, 1, 3),  new Point3D(-4, 0, 4),
+            new Point3D(-3, -1, 4), new Point3D(-2, -2, 4), new Point3D(-1, -3, 4));
+
     //nested for loops iterate within [-4, 4] range and fill hashmap with key-value pairs.
     private void initializeBoard() {
         for (int y = -4; y <= 4; y++) /* y prints as the directional invariable so that the cells
         are printed top-down, row by row*/
             for (int x = -4; x <= 4; x++) {
                 for (int z = -4; z <= 4; z++) { //the printing of x and z determines the flow of hexcell generation from left to right.
-
                     if (x + y + z == 0) { // valid co-ords must sum to 0
                         Point3D point = new Point3D(x, y, z);
                         HexCell cell = new HexCell();

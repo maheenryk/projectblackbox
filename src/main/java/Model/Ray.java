@@ -3,6 +3,12 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 //import java.util.Objects;
+import static Model.Direction.XU;
+import static Model.Direction.XD;
+import static Model.Direction.YR;
+import static Model.Direction.YL;
+import static Model.Direction.ZU;
+import static Model.Direction.ZD;
 
 public class Ray {
     //reference to the game board for path and check for atoms
@@ -26,14 +32,6 @@ public class Ray {
     Direction entryDir;
     Direction exitDir = Direction.Error;
     Direction Abs = Direction.Absorbed;
-    Direction YL = Direction.YL;
-    Direction YR = Direction.YR;
-    Direction XU = Direction.XU;
-    Direction XD = Direction.XD;
-    Direction ZU = Direction.ZU;
-    Direction ZD = Direction.ZD;
-
-
 
     public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint, Direction dir){
         this.board = board; //board ref
@@ -80,23 +78,14 @@ public class Ray {
 
     }
 
-    //check if a cell is an edge cell
-    private boolean isEdgeCell(BlackBoxBoard.Point3D point) {
-        // an edge cell will be where  one coordinate is at its maximum or minimum value
-        return  point.x == -4 || point.x == 4 ||
-                point.y == -4 || point.y == 4 ||
-                point.z == -4 || point.z == 4;
-    }
-
-
-
     //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
     private BlackBoxBoard.Point3D calculatePath(Direction dir){
+        entryDir = dir;
 
         BlackBoxBoard.Point3D exitPoint = null;
 
         // calculation if ray is immediately reflected
-        if(isEdgeCell(entryPoint)){
+        if(HexCell.isEdgeCell(entryPoint)){
             HexCell cell = board.getCell(entryPoint);
             if(cell != null && cell.hasCIPoint()){
                 //if it has a CI we will find the cells on the edge its next to and find out if these cells have atoms o n edge
@@ -185,7 +174,7 @@ public class Ray {
             }
         }
 
-        exitDir = newDir;
+        exitDir = dir;
         BlackBoxBoard.rayCount += 1;
         return exitPoint;
     }
