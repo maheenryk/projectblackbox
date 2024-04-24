@@ -47,6 +47,16 @@ public class RayNode {
         }
     }
 
+    public static int getNodeNumber(BlackBoxBoard.Point3D coordinates, Direction direction) {
+        for (Map.Entry<Integer, RayNode> entry : rayNodeMap.entrySet()) {
+            RayNode rayNode = entry.getValue();
+            if (rayNode.coordinates.equals(coordinates) && rayNode.direction == direction) {
+                return entry.getKey();
+            }
+        }
+        // If no matching node is found, return -1 or handle it according to your needs
+        return -1;
+    }
 
     public static void initializeNodes() {
 
@@ -64,7 +74,6 @@ public class RayNode {
         rayNodeMap.put(54, rayNode);
 
         Direction prevDir = direction;
-        BlackBoxBoard.Point3D prevCoords = coordinates;
 
         int cell = 1;
         for (int node = 53; node > 2; node --) {
@@ -96,7 +105,6 @@ public class RayNode {
             cell += 1;
         }
 
-        printRayNodes();
     }
 
 

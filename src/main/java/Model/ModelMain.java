@@ -47,6 +47,7 @@ public class ModelMain {
         blackBoxBoard.printBoard();
 
         RayNode.initializeNodes();
+        //RayNode.printRayNodes();
 
         // Define an entry point for the ray. Choose an edge coordinate.
         BlackBoxBoard.Point3D entryPoint1 = new BlackBoxBoard.Point3D(0, 4, -4); // Example edge point
@@ -67,6 +68,10 @@ public class ModelMain {
         System.out.println("Total rays fired: " + blackBoxBoard.getRayCount());
         //System.out.println("The score is: " + GameState.calcScore());
         //System.out.println("Edge cells: " + BlackBoxBoard.edgeCells);
+
+        System.out.println("Node Coordinates: " + RayNode.getNodeCoordinates(18));
+        System.out.println("Node Direction: " + RayNode.getNodeDirection(18));
+        System.out.println("Node: " + RayNode.getNodeNumber((new BlackBoxBoard.Point3D(-4, 4, 0)), Direction.YL));
 
     }
 
