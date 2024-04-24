@@ -96,14 +96,14 @@ public class GameController {
         }
         System.out.println("Round 1 is done. Your score: " + score);
         scanner.close();
-    }
+    }}
 //hide the atoms and board by commenting the print in blackboxboard
-    public static void main(String[] args) {
-        Player setter = new Player(Player.PlayerRole.SETTER);
-        Player experimenter = new Player(Player.PlayerRole.EXPERIMENTER);
-        GameController game = new GameController(setter, experimenter);
-        game.setupBoard();
-        game.sendRays();
-        game.guessAtoms();
-    }
-}
+//    public static void main(String[] args) {
+//        Player setter = new Player(Player.PlayerRole.SETTER);
+//        Player experimenter = new Player(Player.PlayerRole.EXPERIMENTER);
+//        GameController game = new GameController(setter, experimenter);
+//        game.setupBoard();
+//        game.sendRays();
+//        game.guessAtoms();
+//    }
+//}

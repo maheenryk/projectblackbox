@@ -1,6 +1,8 @@
+
 package com.example.blackbox;
 
 import javafx.scene.Group;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -12,23 +14,15 @@ public class RayCircle extends StackPane {
     private Circle circle;
     private Text rayText;
     private Color originalColor;
-   private Color clickedColor = Color.RED;
+    private Color clickedColor = Color.RED;
     private Color hoverColor = Color.BLACK;
     private static RayCircle currentlyClicked; //to store clicked state of ray circle.
 
-    private static boolean enableClickColorChange = true; //managing setter/exptr boards states.
 
 
-
-
-
-    RayCircle(double radius, Color fill, boolean enableClickColorChange) {
-
+    RayCircle(double radius, Color fill) {
 
         this.originalColor = fill;
-        this.enableClickColorChange = enableClickColorChange;
-
-
 
         circle = new Circle(radius);
         circle.setFill(fill);
@@ -52,14 +46,12 @@ public class RayCircle extends StackPane {
     private void addClickEffect() {
         this.setOnMouseClicked(event -> {
             if (currentlyClicked != null && currentlyClicked != this) {
-                // Resetting the original colour of the previously clicked RayCircle
+                //returning the original colour of the raycircle
                 currentlyClicked.circle.setFill(currentlyClicked.originalColor);
             }
-            if (enableClickColorChange) {
-                // Change colour only if enabled
-                circle.setFill(clickedColor);
-            }
-            // Update the current clicked RayCircle
+            //changing colour
+            circle.setFill(clickedColor);
+            // update the current clicked
             currentlyClicked = this;
         });
     }
@@ -93,7 +85,7 @@ public class RayCircle extends StackPane {
         return rayText;
     }
 
-   static void generateRayCircles(Group root, boolean enableClickColorChange) { //method for generating nodes (ray circles)
+    static void generateRayCircles(Group root) { //method for generating nodes (ray circles)
         //for loops using createRayCircle method to generate circles
         //with ray numbers in circles stacked as text.
 
@@ -113,7 +105,7 @@ public class RayCircle extends StackPane {
         //generating circles for north edge of hexagon ------------
         for (int i = 0; i < rayNumNorth.length; i++) {
             int rayNumber = rayNumNorth[i];
-            RayCircle circle = createRayCircle(circleXStartNorth + (i*34), circleYStartNorth, rayNumber, enableClickColorChange);
+            RayCircle circle = createRayCircle(circleXStartNorth + (i*34), circleYStartNorth, rayNumber);
             root.getChildren().add(circle);
         }
 
@@ -122,7 +114,7 @@ public class RayCircle extends StackPane {
         double NWCircleYStart = circleYStartNorth + 29.5;
 
         for (int leftRayNumber : rayNumNorthWest) {
-            RayCircle circle = createRayCircle(NWCircleXStart, NWCircleYStart, leftRayNumber, enableClickColorChange);
+            RayCircle circle = createRayCircle(NWCircleXStart, NWCircleYStart, leftRayNumber);
             root.getChildren().add(circle);
 
             NWCircleXStart -= 17;
@@ -134,7 +126,7 @@ public class RayCircle extends StackPane {
         double NECircleYStart = circleYStartNorth + 29.5;
 
         for (int rightRayNumber : rayNumNorthEast) {
-            RayCircle circle = createRayCircle(NECircleXStart, NECircleYStart, rightRayNumber, enableClickColorChange);
+            RayCircle circle = createRayCircle(NECircleXStart, NECircleYStart, rightRayNumber);
             root.getChildren().add(circle);
 
             NECircleXStart += 17;
@@ -147,7 +139,7 @@ public class RayCircle extends StackPane {
         //south edge -----------------------------------------
         for (int i = 0; i < rayNumSouth.length; i++) {
             int rayNumber = rayNumSouth[i];
-            RayCircle circle = createRayCircle(circleXStartSouth + (i*34), circleYStartSouth, rayNumber, enableClickColorChange);
+            RayCircle circle = createRayCircle(circleXStartSouth + (i*34), circleYStartSouth, rayNumber);
             root.getChildren().add(circle);
         }
 
@@ -156,7 +148,7 @@ public class RayCircle extends StackPane {
         double SWCircleYStart = circleYStartSouth - 29.5;
 
         for (int leftRayNumber : rayNumSouthWest) {
-            RayCircle circle = createRayCircle(SWCircleXStart, SWCircleYStart, leftRayNumber, enableClickColorChange);
+            RayCircle circle = createRayCircle(SWCircleXStart, SWCircleYStart, leftRayNumber);
             root.getChildren().add(circle);
 
             SWCircleXStart -= 17;
@@ -168,7 +160,7 @@ public class RayCircle extends StackPane {
         double SECircleYStart = circleYStartSouth - 29.5;
 
         for (int rightRayNumber : rayNumSouthEast) {
-            RayCircle circle = createRayCircle(SECircleXStart, SECircleYStart, rightRayNumber, enableClickColorChange);
+            RayCircle circle = createRayCircle(SECircleXStart, SECircleYStart, rightRayNumber);
             root.getChildren().add(circle);
 
             SECircleXStart += 17;
@@ -181,8 +173,8 @@ public class RayCircle extends StackPane {
     }
 
 
-    static RayCircle createRayCircle(double layoutX, double layoutY, int number, boolean enableClickColorChange) {
-        RayCircle circle = new RayCircle(12.0, Color.web("#4242ff"), enableClickColorChange);
+    static RayCircle createRayCircle(double layoutX, double layoutY, int number) {
+        RayCircle circle = new RayCircle(12.0, Color.web("#4242ff"));
         circle.setLayoutX(layoutX);
         circle.setLayoutY(layoutY);
 
@@ -198,12 +190,10 @@ public class RayCircle extends StackPane {
                 return Integer.parseInt(currentlyClicked.rayText.getText());
             } catch (NumberFormatException e) {
                 System.err.println("Error parsing currently clicked RayCircle number: " + e.getMessage());
-                return -1; //return inavlid if pparsing fails
+                return -1; // Return an invalid number if parsing fails
             }
         } else {
-            return -1; // '' if currentlyclicked doesn't return
+            return -1; // Return an invalid number if no RayCircle is currently clicked
         }
     }
 }
-
-

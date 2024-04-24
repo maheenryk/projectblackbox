@@ -1,3 +1,4 @@
+
 package com.example.blackbox;
 
 // import all libraries needed
@@ -15,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -31,12 +33,18 @@ import java.util.List;
 
 public class Main extends Application {
 
+    public static List<Point2D> atomPositions;
+    public static List<Point2D> expPositions;
     Group gridGroup = new Group();
-    BlackBoxBoard b = new BlackBoxBoard(); //setter board instance
-//    BlackBoxBoard eBoard = new BlackBoxBoard(); //experimenter board instance
-    Translation translation = new Translation(b);
+    Group gridGroup2 = new Group();
+    BlackBoxBoard sBoard = new BlackBoxBoard(); //setter board instance
+    BlackBoxBoard eBoard = new BlackBoxBoard(); //experimenter board instance
+    Translation translation = new Translation(sBoard);
+
+    Translation etranslation = new Translation(eBoard);
     private Stage window;
     private GameState gameState;
+    private GameState gameState2;
     public static void main(String[] args) {
         launch(args);
     }
@@ -76,19 +84,32 @@ public class Main extends Application {
         Scene startScene = new Scene(layout, 300, 250);
         layout.setStyle("-fx-background-color: black;");
 
- //---------------------playerChoice screen
+        startButton.setOnAction(e -> {
+            Scene mainGameScene = createMainGameScene(primaryStage);
+            showPlayerChoiceScreen(primaryStage, mainGameScene);
+        });
 
+        primaryStage.setTitle("BlackBox+");
+        primaryStage.setScene(startScene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
 
-//-------------------main game screen
-        BorderPane root = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
+    }
+
+    private Scene createMainGameScene(Stage primaryStage) {
+        BorderPane root = new BorderPane();
         Scene mainGameScene = new Scene(root);
-        StackPane centerStackPane = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
+        StackPane centerStackPane = new StackPane();
         StackPane buttonsStackPane = new StackPane();
+
         //group for hex cells so grid can be manipulated as a unit (for layout purposes).
 
 //        centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
 //        centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
         BorderPane.setMargin(centerStackPane, new Insets(0, 0, 0, 100));
+
+        HexCellGenerator.resetStartingPositions();//resetting the static variables between grid generation calls.
+
         HexCellGenerator.generateHexCells(gridGroup);//adding hex cells to group.
         HexCellGenerator.printHexCellsAndCenters(); //TEST
         RayCircle.generateRayCircles(gridGroup); //adding ray circles to same group.
@@ -112,35 +133,26 @@ public class Main extends Application {
         Label setterInstructions = generateSetterInstructions();
         VBox rightContainer = new VBox();
         rightContainer.getChildren().add(setterInstructions);
-        rightContainer.setAlignment(Pos.CENTER_RIGHT);
-        rightContainer.setMaxWidth(100);
+        rightContainer.setAlignment(Pos.TOP_RIGHT);
+        rightContainer.setMaxWidth(500);
+
 
 
         root.setTop(topContainer);
         root.setRight(rightContainer);
         root.setCenter(centerStackPane);
         root.setBottom(buttonsStackPane);
-        root.setStyle("-fx-background-color: #84847f;");
+        root.setStyle("-fx-background-color: black;");
 
-
-
-        startButton.setOnAction(e -> {
-            showPlayerChoiceScreen(primaryStage, mainGameScene);
-        });
-
-        primaryStage.setTitle("BlackBox+");
-        primaryStage.setScene(startScene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-
+        return mainGameScene;
     }
 
     private void showPlayerChoiceScreen(Stage primaryStage, Scene mainGameScene) {
         //label for the name entry prompt
-        Label nameLabel = new Label("Enter your name:");
+        Label nameLabel = new Label("Enter your name:"); //unecessary for time being. - personal choice.
         nameLabel.setTextFill(Color.WHITE);
 
-        //text field for the name entry
+//        text field for the name entry
         TextField nameField = new TextField();
         nameField.setMaxWidth(200);
 
@@ -158,7 +170,7 @@ public class Main extends Application {
 
 
         Scene playerChoiceScene = new Scene(vbox, primaryStage.getWidth(), primaryStage.getHeight()); // Use the primary stage's width and height for full screen
-        vbox.setStyle("-fx-background-color: grey;");
+        vbox.setStyle("-fx-background-color: black;");
 
         setterButton.setOnAction(e -> {
             primaryStage.setScene(mainGameScene);
@@ -168,7 +180,7 @@ public class Main extends Application {
         //action event for experimenter button
         experimenterButton.setOnAction(e -> {
             primaryStage.setScene(mainGameScene);
-            primaryStage.setFullScreen(true); //TODO: trigger random atoms & go straight to experimenter stage.
+            primaryStage.setFullScreen(true); // TODO: trigger random atoms & go straight to experimenter stage.
         });
 
 
@@ -176,6 +188,8 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
     }
 
+
+    //this method handles displaying the intermediate screen between the setter finishing their turn and the experimenter starting their turn.
     private void showExperimenterTurnScreen(Stage primaryStage) {
         Label chosenAtomsLabel = new Label("You have chosen your atoms!");
         chosenAtomsLabel.setFont(new Font("Arial", 24));
@@ -188,7 +202,7 @@ public class Main extends Application {
         Button continueButton = new Button("continue to experimenter");
         continueButton.setFont(new Font("Arial", 16));
         continueButton.setOnAction(event -> {
-            //TODO: Handle the action when the continue button is clicked
+            showExperimenterScreen(primaryStage);
         });
 
         VBox vbox = new VBox(10, chosenAtomsLabel, experimenterTurnLabel, continueButton);
@@ -202,13 +216,80 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
     }
 
-    private void showExperimenterScreen(Stage primaryStage) {
-        //scene for the experimenter
-        BorderPane root = new BorderPane();
 
-        Scene experimenterScene = new Scene(root);
+    //this method handles displaying the main game screen where the experimenter is actually playing.
+    private void showExperimenterScreen(Stage primaryStage) {
+
+
+        BorderPane root2 = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
+        Scene experimenterScene = new Scene(root2);
+        StackPane centerStackPane2 = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
+        StackPane buttonsStackPane2 = new StackPane();
+        //group for hex cells so grid can be manipulated as a unit (for layout purposes).
+
+//        centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
+//        centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        BorderPane.setMargin(centerStackPane2, new Insets(0, 0, 0, 100));
+
+        HexCellGenerator.resetStartingPositions(); /*resetting here is crucial as it directly affects the layout if the static variables,
+        (the startig x and y points) for the hex cells and ray circles are remain shifted from the last call to grid generation.*/
+
+        HexCellGenerator.generateHexCells(gridGroup2);//adding hex cells to group.
+        HexCellGenerator.printHexCellsAndCenters(); //TEST
+        RayCircle.generateRayCircles(gridGroup2); //adding ray circles to same group.
+
+        gameState2 = new GameState();
+        generateReadyButton(buttonsStackPane2, gameState2, primaryStage);
+        BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
+
+        centerStackPane2.getChildren().add(gridGroup2);
+
+        translation.linkMaps();
+
+
+        Label turn2 = generateTopExptText();
+        //setting text to the centre in the root top container.
+        VBox topContainer2 = new VBox();
+        topContainer2.getChildren().add(turn2);
+        VBox.setMargin(turn2, new Insets(50, 0, 0, 50));
+        topContainer2.setAlignment(Pos.TOP_CENTER);
+
+        Label experimenterInstructions = generateExperimenterInstructions();
+        VBox rightContainer2 = new VBox();
+        rightContainer2.getChildren().add(experimenterInstructions);
+        rightContainer2.setAlignment(Pos.TOP_RIGHT);
+        VBox.setMargin(rightContainer2, new Insets(0, 100, 0, 0));
+        rightContainer2.setMaxWidth(300);
+        VBox rayMarkerKey = generateRayMarkerKey();
+        BorderPane.setAlignment(rayMarkerKey, Pos.TOP_LEFT);
+
+
+        VBox rightPanel = createRightPanel();
+        root2.setRight(rightPanel);
+
+
+        root2.setLeft(rayMarkerKey);
+        root2.setTop(topContainer2);
+        root2.setRight(rightContainer2);
+        root2.setCenter(centerStackPane2);
+        root2.setBottom(buttonsStackPane2);
+        root2.setStyle("-fx-background-color: black;");
+
         primaryStage.setScene(experimenterScene);
+        primaryStage.setFullScreen(true);
         primaryStage.show();
+    }
+
+    private VBox createRightPanel() {
+        Button fireRayButton = createFireRayButton();  // Assume this method returns a configured Button
+        fireRayButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+
+        VBox rightContainer = new VBox(10); // 10 is the spacing between elements
+        rightContainer.getChildren().add(fireRayButton);
+        rightContainer.setAlignment(Pos.CENTER); // Center align the content
+        rightContainer.setPadding(new Insets(15)); // Padding around the VBox
+
+        return rightContainer;
     }
 
 
@@ -224,18 +305,80 @@ public class Main extends Application {
 
         return playerTurn;
     }
+    private Label generateTopExptText() { //generating the top text for the experimenter screen.
+        Label exptTurn = new Label("Experimenter's turn.");
+        //css inline styling
+        exptTurn.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 60px;");
+        //borderpane margin and alignment
+        exptTurn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        BorderPane.setMargin(exptTurn, new Insets(100, 0, 0, 0));
+
+        return exptTurn;
+    }
 
     private Label generateSetterInstructions() {
         Label instructions = new Label("Please place 6 atoms inside your chosen hex cells." +
                 "After you are finished, click the Ready button below the board.");
-        instructions.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;");
+        instructions.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
         instructions.setWrapText(true);
-        instructions.setMaxWidth(150);
+        instructions.setMaxWidth(500);
         instructions.setTextAlignment(TextAlignment.CENTER);
         return instructions;
     }
 
+    private Button createFireRayButton() {
+        Button fireRayButton = new Button("Fire Ray");
+        fireRayButton.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
+        fireRayButton.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px;");
+
+        //event handler for fire ray button click
+        fireRayButton.setOnAction(event -> {
+            int rayNumber = RayCircle.getCurrentlyClickedRayNumber();
+            if (rayNumber != -1) {
+                // If a valid ray number is clicked, handle the firing of the ray here
+                System.out.println("Firing ray: " + rayNumber);
+                // TODO: Add the code to handle the ray firing action
+            } else {
+                // No ray circle is currently selected
+                System.out.println("No ray selected!");
+            }
+        });
+
+        return fireRayButton;
+    }
+
+    private Label generateExperimenterInstructions() {
+        Label instructionsExpt = new Label("You can choose a ray by selecting on it. The chosen ray can be changed by simply clicking on the ray you would like to choose instead." +
+                "When you want to fire the ray, click the [Fire Ray] button below. The results of your ray will be shown in ray markers, indicated by the changing colour of the ray nodes.");
+        instructionsExpt.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
+        instructionsExpt.setWrapText(true);
+        instructionsExpt.setMaxWidth(500);
+        instructionsExpt.setTextAlignment(TextAlignment.CENTER);
+        return instructionsExpt;
+    }
+    private VBox generateRayMarkerKey() {
+        //white circle to represent reflected ray marker
+        Circle whiteCircle = new Circle(10, Color.WHITE);
+        whiteCircle.setStroke(Color.BLACK); // So it's visible on a white background
+        Label whiteLabel = new Label("Reflected");
+        whiteLabel.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; -fx-text-fill: black;");
+        HBox whiteKey = new HBox(5, whiteCircle, whiteLabel); // 5 is the spacing between items
+
+        //black circle to reflect absorbed ray marker
+        Circle blackCircle = new Circle(10, Color.BLACK);
+        Label blackLabel = new Label("Direct hit/Absorbed");
+        blackLabel.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; -fx-text-fill: black;");
+        HBox blackKey = new HBox(5, blackCircle, blackLabel); // 5 is the spacing between items
+
+        //combining the hboxes into a vbox to align vertically
+        VBox keyBox = new VBox(10, whiteKey, blackKey); // 10 is the spacing between keys
+        keyBox.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: white;");
+        keyBox.setAlignment(Pos.CENTER);
+
+        return keyBox;
+    }
     private boolean isReadyClicked = false;
+
 
     public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage) {
         Button ready = new Button("READY");
@@ -246,8 +389,10 @@ public class Main extends Application {
                 List<Point2D> atomPositions = collectAtomPositions(); //collecting the final atom positions.
 
                 List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
-                b.placeSetterAtoms(setterAtomList);
-                b.printBoard();
+                sBoard.placeSetterAtoms(setterAtomList);
+                eBoard.placeSetterAtoms(setterAtomList);
+                sBoard.printBoard();
+                //eBoard.printBoard();
 
                 //print the positions
                 System.out.println("Atom Positions:");
@@ -292,8 +437,5 @@ public class Main extends Application {
 
 
 }
-
-
-
 
 
