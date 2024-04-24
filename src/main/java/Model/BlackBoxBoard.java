@@ -75,7 +75,7 @@ public class BlackBoxBoard {
     public void printBoard() {
         System.out.println("HashMap Contents:");
         for (Map.Entry<Point3D, HexCell> entry : board.entrySet()) {
-            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue() + "\n");
         }
     }
 
@@ -95,6 +95,18 @@ public class BlackBoxBoard {
 
     public boolean isValidCoordinate(int x, int y, int z) {
         return (x >= -4 && x <= 4) && (y >= -4 && y <= 4) && (z >= -4 && z <= 4);
+    }
+
+    public static int rayCount = 0;
+
+    public static int rayMarkers = 0;
+
+    public int getRayCount() {
+        return rayCount;
+    }
+
+    public int getRayMarkers() {
+        return rayMarkers;
     }
 
     public void placeSetterAtoms(List<Point3D> setterAtomList) { //updating the board with the setter's Atoms.

@@ -1,13 +1,19 @@
 package Controller;
+import Model.BlackBoxBoard;
 import com.example.blackbox.Main;
+import javafx.geometry.Point3D;
 import utils.ReadyButtonClickedListener;
 import javafx.geometry.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 
 public class GameState implements ReadyButtonClickedListener {
-    private List<Point2D> setterAtoms = new ArrayList<>(); //list to store the setter atom positions
+    private final List<Point2D> setterAtoms = new ArrayList<>(); //list to store the setter atom positions
+    private final List<Point2D> experimenterAtoms = new ArrayList<>();
+
+
 
     public void startNewGame() {
          //other new game code here (future sprint)
@@ -34,10 +40,25 @@ public class GameState implements ReadyButtonClickedListener {
     }
 
 
-
+    public int calcScore(List<Point2D> setterAtoms, List<Point2D> experimenterAtoms) {
+        int correctAtoms = setterAtoms.size();
+        experimenterAtoms.retainAll(setterAtoms);
+        System.out.println("Score: ");
+        int incorrectAtoms = (correctAtoms - experimenterAtoms.size());
+        int score = incorrectAtoms*5;
+        if (incorrectAtoms > 1) {
+            System.out.println(incorrectAtoms + " atom was incorrectly placed.");
+        }
+        else {
+            System.out.println(incorrectAtoms + " atoms were incorrectly placed.");
+        }
+        System.out.println("Total rays fired: " + BlackBoxBoard.rayCount);
+        System.out.println("Total ray markers: " + BlackBoxBoard.rayMarkers);
+        score += BlackBoxBoard.rayMarkers;
+        return score;
+    }
 
     //method for beginning experimenter turn.
-
     public void resetReadyClicked() {//resetting flag from outside
         isReadyClicked = false;
     }

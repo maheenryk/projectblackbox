@@ -2,16 +2,16 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+//import java.util.Objects;
 
 public class Ray {
     //reference to the game board for path and check for atoms
-    private BlackBoxBoard board;
+    private final BlackBoxBoard board;
     //entry point of ray on the game board
-    private BlackBoxBoard.Point3D entryPoint;
+    private final BlackBoxBoard.Point3D entryPoint;
     //we will store the path ray takes using a list
-    private BlackBoxBoard.Point3D exitPoint;
-    private List<BlackBoxBoard.Point3D> path;
+    private final BlackBoxBoard.Point3D exitPoint;
+    private final List<BlackBoxBoard.Point3D> path;
 
     //to check whether ray is absorbed by an atom
     private boolean isAbsorbed;
@@ -23,7 +23,7 @@ public class Ray {
     private boolean rayReversed;
 
     Direction newDir = Direction.Error;
-
+    Direction entryDir;
     Direction exitDir = Direction.Error;
     Direction Abs = Direction.Absorbed;
     Direction YL = Direction.YL;
@@ -32,6 +32,8 @@ public class Ray {
     Direction XD = Direction.XD;
     Direction ZU = Direction.ZU;
     Direction ZD = Direction.ZD;
+
+
 
     public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint, Direction dir){
         this.board = board; //board ref
@@ -62,9 +64,13 @@ public class Ray {
         return exitPoint;
     }
 
+    public BlackBoxBoard.Point3D getEntryPoint() {return entryPoint;}
+
     public Direction getDirection() {
         return exitDir;
     }
+
+    public Direction getEntryDir() { return  entryDir; }
 
     //check for atom
     private boolean checkForAtom(BlackBoxBoard.Point3D point){
@@ -97,13 +103,18 @@ public class Ray {
                 if(isRayReflectedAtEdge(entryPoint)){
                     rayReversed = true;
                     path.add(entryPoint);
+                    BlackBoxBoard.rayCount += 1;
+                    BlackBoxBoard.rayMarkers += 1;
                     return entryPoint; //end method early since the ray is reflected
                 }
 
             }
 
-            if (cell != null && cell.hasAtom()) {
+            else if (cell != null && cell.hasAtom()) {
                 isAbsorbed = true;
+                path.add(entryPoint);
+                BlackBoxBoard.rayCount += 1;
+                BlackBoxBoard.rayMarkers += 1;
                 return entryPoint;
             }
 
@@ -115,8 +126,8 @@ public class Ray {
         this.path.add(this.entryPoint);
 
         // initialize list to store cells visited by the ray
-        List<BlackBoxBoard.Point3D> visitedCells = new ArrayList<>();
-        visitedCells.add(this.entryPoint);
+        //List<BlackBoxBoard.Point3D> visitedCells = new ArrayList<>();
+        //visitedCells.add(this.entryPoint);
 
         // current position of the ray
         BlackBoxBoard.Point3D currentPosition = this.entryPoint;
@@ -138,6 +149,7 @@ public class Ray {
                     isAbsorbed = true;
                     nextPosition = calculateNextPosition(currentPosition, dir);
                     this.path.add(nextPosition);
+                    BlackBoxBoard.rayMarkers += 1;
                     break;
                 }
 
@@ -147,6 +159,9 @@ public class Ray {
                 }
 
                 else {
+                    if (rayReversed) {
+                        BlackBoxBoard.rayMarkers += 1;
+                    }
                     dir = result;
                 }
             }
@@ -160,16 +175,18 @@ public class Ray {
             currentPosition = nextPosition;
 
             // Add the current position to the visited cells list
-            visitedCells.add(currentPosition);
+            //visitedCells.add(currentPosition);
 
             // check if ray is on edge of board and break loop if true
             if (hasReachedBoardEdge(currentPosition)) {
                 exitPoint = currentPosition;
+                BlackBoxBoard.rayMarkers += 2;
                 break;
             }
         }
 
         exitDir = newDir;
+        BlackBoxBoard.rayCount += 1;
         return exitPoint;
     }
 
@@ -201,9 +218,9 @@ public class Ray {
         int aPy = CIy;
         int aPz = CIz;
 
-        BlackBoxBoard.Point3D greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
-        BlackBoxBoard.Point3D orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
-        BlackBoxBoard.Point3D pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
+        BlackBoxBoard.Point3D greenAtom;
+        BlackBoxBoard.Point3D orangeAtom;
+        BlackBoxBoard.Point3D pinkAtom;
 
         boolean atomGreen = false;
         boolean atomPink = false;
@@ -213,7 +230,6 @@ public class Ray {
 
             case YL:
 
-                aGx = CIx;
                 aGy = CIy - 1;
                 aGz = CIz + 1;
 
@@ -224,7 +240,6 @@ public class Ray {
 
                 aOx = CIx - 1;
                 aOy = CIy + 1;
-                aOz = CIz;
 
                 orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
@@ -232,7 +247,6 @@ public class Ray {
                 }
 
                 aPx = CIx - 1;
-                aPy = CIy;
                 aPz = CIz + 1;
 
                 pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
@@ -276,14 +290,12 @@ public class Ray {
 
                 aGx = CIx + 1;
                 aGy = CIy - 1;
-                aGz = CIz;
 
                 greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
                     atomGreen = true;
                 }
 
-                aOx = CIx;
                 aOy = CIy + 1;
                 aOz = CIz - 1;
 
@@ -293,7 +305,6 @@ public class Ray {
                 }
 
                 aPx = CIx + 1;
-                aPy = CIy;
                 aPz = CIz - 1;
 
                 pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
@@ -337,7 +348,6 @@ public class Ray {
 
                 aGx = CIx + 1;
                 aGy = CIy - 1;
-                aGz = CIz;
 
                 greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
                 if (checkForAtom(greenAtom)) {
@@ -345,7 +355,6 @@ public class Ray {
                 }
 
                 aOx = CIx - 1;
-                aOy = CIy;
                 aOz = CIz + 1;
 
                 orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
@@ -353,7 +362,6 @@ public class Ray {
                     atomOrange = true;
                 }
 
-                aPx = CIx;
                 aPy = CIy - 1;
                 aPz = CIz + 1;
 
@@ -397,7 +405,6 @@ public class Ray {
             case XD:
 
                 aGx = CIx + 1;
-                aGy = CIy;
                 aGz = CIz - 1;
 
                 greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
@@ -407,14 +414,12 @@ public class Ray {
 
                 aOx = CIx - 1;
                 aOy = CIy + 1;
-                aOz = CIz;
 
                 orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
                 if (checkForAtom(orangeAtom)) {
                     atomOrange = true;
                 }
 
-                aPx = CIx;
                 aPy = CIy + 1;
                 aPz = CIz - 1;
 
@@ -457,7 +462,6 @@ public class Ray {
 
             case ZU:
 
-                aGx = CIx;
                 aGy = CIy - 1;
                 aGz = CIz + 1;
 
@@ -467,7 +471,6 @@ public class Ray {
                 }
 
                 aOx = CIx + 1;
-                aOy = CIy;
                 aOz = CIz - 1;
 
                 orangeAtom = new BlackBoxBoard.Point3D(aOx, aOy, aOz);
@@ -477,7 +480,6 @@ public class Ray {
 
                 aPx = CIx + 1;
                 aPy = CIy - 1;
-                aPz = CIz;
 
                 pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
@@ -519,7 +521,6 @@ public class Ray {
             case ZD:
 
                 aGx = CIx - 1;
-                aGy = CIy;
                 aGz = CIz + 1;
 
                 greenAtom = new BlackBoxBoard.Point3D(aGx, aGy, aGz);
@@ -527,7 +528,6 @@ public class Ray {
                     atomGreen = true;
                 }
 
-                aOx = CIx;
                 aOy = CIy + 1;
                 aOz = CIz - 1;
 
@@ -538,7 +538,6 @@ public class Ray {
 
                 aPx = CIx - 1;
                 aPy = CIy + 1;
-                aPz = CIz;
 
                 pinkAtom = new BlackBoxBoard.Point3D(aPx, aPy, aPz);
                 if (checkForAtom(pinkAtom)) {
@@ -645,6 +644,16 @@ public class Ray {
 
         // Return the calculated next position
         return new BlackBoxBoard.Point3D(x, y, z);
+    }
+
+    public int determineExitRayCircle(Direction exitDir, BlackBoxBoard.Point3D exitPoint) {
+
+        int exRC = 0;
+        return exRC;
+    }
+
+    public void determineRayEntry(int rayCircle) {
+
     }
 
     // Function to calculate and store  edge cells next to entry point of a ray to determine if ray is reversed
