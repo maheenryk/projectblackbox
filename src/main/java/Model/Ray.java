@@ -80,6 +80,7 @@ public class Ray {
 
     //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
     private BlackBoxBoard.Point3D calculatePath(Direction dir){
+        entryDir = dir;
 
         BlackBoxBoard.Point3D exitPoint = null;
 
@@ -173,7 +174,7 @@ public class Ray {
             }
         }
 
-        exitDir = newDir;
+        exitDir = dir;
         BlackBoxBoard.rayCount += 1;
         return exitPoint;
     }

@@ -122,21 +122,27 @@ public class RayNode {
         switch (dir) {
             case XU:
                 revDir = XD;
+                break;
 
             case XD:
                 revDir = XU;
+                break;
 
             case ZU:
                 revDir = ZD;
+                break;
 
             case ZD:
                 revDir = ZU;
+                break;
 
             case YL:
                 revDir = YR;
+                break;
 
             case YR:
                 revDir = YL;
+                break;
 
         }
         return revDir;
