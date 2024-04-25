@@ -81,6 +81,8 @@ public class HexCell {
                 point.y == -4 || point.y == 4 ||
                 point.z == -4 || point.z == 4;
     }
+
+    // check if a cell is a corner cell
     public static boolean isCornerCell(BlackBoxBoard.Point3D cell){
         return (cell.x == 0 && cell.y == -4 && cell.z == 4) ||
                 (cell.x == 4 && cell.y == -4 && cell.z == 0) ||

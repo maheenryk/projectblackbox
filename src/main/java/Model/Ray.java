@@ -179,10 +179,7 @@ public class Ray {
         return exitPoint;
     }
 
-    public boolean hasCIPoint(BlackBoxBoard.Point3D point) {
-        HexCell cell = board.getCell(point);
-        return cell != null && cell.hasCIPoint();
-    }
+
     // Checking for the presence of atoms at specific positions compared to the rays current position.
     // Depending on where atoms are present around the ray, the rays direction can  be deflected,absorbed or reversed
     private Direction newPath (BlackBoxBoard.Point3D position, Direction dir) {
@@ -635,14 +632,28 @@ public class Ray {
         return new BlackBoxBoard.Point3D(x, y, z);
     }
 
-    public int determineExitRayCircle(Direction exitDir, BlackBoxBoard.Point3D exitPoint) {
+    public static void printRayInfo(Ray ray) {
+        // Print the ray's path
+        BlackBoxBoard.Point3D entryPoint = ray.getEntryPoint();
+        Direction entryDir = RayNode.getRevDir(ray.getEntryDir());
+        System.out.println("Ray entered at: " + entryPoint);
+        System.out.println("Ray's entry node: " + RayNode.getNodeNumber(entryPoint, entryDir));
+        // Check if the ray is absorbed and print the result
+        if (ray.isAbsorbed()) {
+            System.out.println("Ray absorbed.");
+        }
+        else if (ray.isRayReversed()) {
+            System.out.println("Ray reversed.");
+        }
+        else {
+            BlackBoxBoard.Point3D exitPoint = ray.getExitPoint();
+            Direction direction = ray.getDirection();
+            System.out.println("Ray exited at: " + exitPoint);
+            System.out.println("Ray's exit direction is: " + direction);
+            System.out.println("Ray's exit node: " + RayNode.getNodeNumber(exitPoint, direction));
+        }
 
-        int exRC = 0;
-        return exRC;
-    }
-
-    public void determineRayEntry(int rayCircle) {
-
+        System.out.println("Ray's Path: " + ray.getPath() + "\n");
     }
 
     // Function to calculate and store  edge cells next to entry point of a ray to determine if ray is reversed

@@ -1,9 +1,8 @@
-
 package com.example.blackbox;
 
 // import all libraries needed
 import Controller.Translation;
-import Model.BlackBoxBoard;
+import Model.*;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -44,7 +43,7 @@ public class Main extends Application {
     Translation etranslation = new Translation(eBoard);
     private Stage window;
     private GameState gameState;
-    private GameState gameState2;
+    // private GameState gameState2;
     public static void main(String[] args) {
         launch(args);
     }
@@ -97,54 +96,112 @@ public class Main extends Application {
     }
 
     private Scene createMainGameScene(Stage primaryStage) {
+
         BorderPane root = new BorderPane();
         Scene mainGameScene = new Scene(root);
+
         StackPane centerStackPane = new StackPane();
-        StackPane buttonsStackPane = new StackPane();
+        VBox rightContainer = new VBox();
 
-        //group for hex cells so grid can be manipulated as a unit (for layout purposes).
+        // Generate hex cells and ray circles
+        HexCellGenerator.resetStartingPositions();
+        HexCellGenerator.generateHexCells(gridGroup);
+        RayCircle.generateRayCircles(gridGroup);
 
-//        centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
-//        centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
-        BorderPane.setMargin(centerStackPane, new Insets(0, 0, 0, 100));
-
-        HexCellGenerator.resetStartingPositions();//resetting the static variables between grid generation calls.
-
-        HexCellGenerator.generateHexCells(gridGroup);//adding hex cells to group.
-        HexCellGenerator.printHexCellsAndCenters(); //TEST
-        RayCircle.generateRayCircles(gridGroup); //adding ray circles to same group.
-
+        // Generate game state and ready button
         gameState = new GameState();
+        StackPane buttonsStackPane = new StackPane();
         generateReadyButton(buttonsStackPane, gameState, primaryStage);
         BorderPane.setMargin(buttonsStackPane, new Insets(0, 0, 50, 30));
 
+        // Add grid group to center stack pane
         centerStackPane.getChildren().add(gridGroup);
 
+        // Link maps for translation
         translation.linkMaps();
 
-
+        // Generate top text and setter instructions
         Label turn = generateTopText();
-        //setting text to the centre in the root top container.
         VBox topContainer = new VBox();
         topContainer.getChildren().add(turn);
         VBox.setMargin(turn, new Insets(50, 0, 0, 50));
         topContainer.setAlignment(Pos.TOP_CENTER);
 
         Label setterInstructions = generateSetterInstructions();
-        VBox rightContainer = new VBox();
         rightContainer.getChildren().add(setterInstructions);
-        rightContainer.setAlignment(Pos.TOP_RIGHT);
-        rightContainer.setMaxWidth(500);
-
+        rightContainer.setAlignment(Pos.CENTER_RIGHT);
+        rightContainer.setMaxWidth(250);
 
 
         root.setTop(topContainer);
-        root.setRight(rightContainer);
         root.setCenter(centerStackPane);
+        root.setRight(rightContainer);
         root.setBottom(buttonsStackPane);
         root.setStyle("-fx-background-color: black;");
 
         return mainGameScene;
+    }
+
+    //this method handles displaying the main game screen where the experimenter is actually playing.
+    private void showExperimenterScreen(Stage primaryStage) {
+
+        BorderPane root2 = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
+        Scene experimenterScene = new Scene(root2);
+        StackPane centerStackPane2 = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
+        StackPane buttonsStackPane2 = new StackPane();
+        //group for hex cells so grid can be manipulated as a unit (for layout purposes).
+
+//      centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
+//      centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        BorderPane.setMargin(centerStackPane2, new Insets(0, 0, 0, 100));
+
+        HexCellGenerator.resetStartingPositions(); /*resetting here is crucial as it directly affects the layout if the static variables,
+        (the startig x and y points) for the hex cells and ray circles are remain shifted from the last call to grid generation.*/
+
+        HexCellGenerator.generateHexCells(gridGroup2);//adding hex cells to group.
+        HexCellGenerator.printHexCellsAndCenters(); //TEST
+        RayCircle.generateRayCircles(gridGroup2); //adding ray circles to same group.
+
+        gameState = new GameState();
+        generateReadyButton(buttonsStackPane2, gameState, primaryStage);
+        BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
+
+        centerStackPane2.getChildren().add(gridGroup2);
+
+        translation.linkMaps();
+
+
+        Label turn2 = generateTopExptText();
+        //setting text to the centre in the root top container.
+        VBox topContainer2 = new VBox();
+        topContainer2.getChildren().add(turn2);
+        VBox.setMargin(turn2, new Insets(50, 0, 0, 50));
+        topContainer2.setAlignment(Pos.TOP_CENTER);
+
+        Label experimenterInstructions = generateExperimenterInstructions();
+        VBox rightContainer2 = new VBox();
+        rightContainer2.getChildren().add(experimenterInstructions);
+        rightContainer2.setAlignment(Pos.TOP_RIGHT);
+        VBox.setMargin(rightContainer2, new Insets(0, 100, 0, 0));
+        rightContainer2.setMaxWidth(300);
+        VBox rayMarkerKey = generateRayMarkerKey();
+        BorderPane.setAlignment(rayMarkerKey, Pos.TOP_LEFT);
+
+
+        VBox rightPanel = createRightPanel();
+        root2.setRight(rightPanel);
+
+
+        root2.setLeft(rayMarkerKey);
+        root2.setTop(topContainer2);
+        root2.setRight(rightContainer2);
+        root2.setCenter(centerStackPane2);
+        root2.setBottom(buttonsStackPane2);
+        root2.setStyle("-fx-background-color: black;");
+
+        primaryStage.setScene(experimenterScene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
     }
 
     private void showPlayerChoiceScreen(Stage primaryStage, Scene mainGameScene) {
@@ -216,70 +273,6 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
     }
 
-
-    //this method handles displaying the main game screen where the experimenter is actually playing.
-    private void showExperimenterScreen(Stage primaryStage) {
-
-
-        BorderPane root2 = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
-        Scene experimenterScene = new Scene(root2);
-        StackPane centerStackPane2 = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
-        StackPane buttonsStackPane2 = new StackPane();
-        //group for hex cells so grid can be manipulated as a unit (for layout purposes).
-
-//        centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
-//        centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
-        BorderPane.setMargin(centerStackPane2, new Insets(0, 0, 0, 100));
-
-        HexCellGenerator.resetStartingPositions(); /*resetting here is crucial as it directly affects the layout if the static variables,
-        (the startig x and y points) for the hex cells and ray circles are remain shifted from the last call to grid generation.*/
-
-        HexCellGenerator.generateHexCells(gridGroup2);//adding hex cells to group.
-        HexCellGenerator.printHexCellsAndCenters(); //TEST
-        RayCircle.generateRayCircles(gridGroup2); //adding ray circles to same group.
-
-        gameState2 = new GameState();
-        generateReadyButton(buttonsStackPane2, gameState2, primaryStage);
-        BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
-
-        centerStackPane2.getChildren().add(gridGroup2);
-
-        translation.linkMaps();
-
-
-        Label turn2 = generateTopExptText();
-        //setting text to the centre in the root top container.
-        VBox topContainer2 = new VBox();
-        topContainer2.getChildren().add(turn2);
-        VBox.setMargin(turn2, new Insets(50, 0, 0, 50));
-        topContainer2.setAlignment(Pos.TOP_CENTER);
-
-        Label experimenterInstructions = generateExperimenterInstructions();
-        VBox rightContainer2 = new VBox();
-        rightContainer2.getChildren().add(experimenterInstructions);
-        rightContainer2.setAlignment(Pos.TOP_RIGHT);
-        VBox.setMargin(rightContainer2, new Insets(0, 100, 0, 0));
-        rightContainer2.setMaxWidth(300);
-        VBox rayMarkerKey = generateRayMarkerKey();
-        BorderPane.setAlignment(rayMarkerKey, Pos.TOP_LEFT);
-
-
-        VBox rightPanel = createRightPanel();
-        root2.setRight(rightPanel);
-
-
-        root2.setLeft(rayMarkerKey);
-        root2.setTop(topContainer2);
-        root2.setRight(rightContainer2);
-        root2.setCenter(centerStackPane2);
-        root2.setBottom(buttonsStackPane2);
-        root2.setStyle("-fx-background-color: black;");
-
-        primaryStage.setScene(experimenterScene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-    }
-
     private VBox createRightPanel() {
         Button fireRayButton = createFireRayButton();  // Assume this method returns a configured Button
         fireRayButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
@@ -317,7 +310,7 @@ public class Main extends Application {
     }
 
     private Label generateSetterInstructions() {
-        Label instructions = new Label("Please place 6 atoms inside your chosen hex cells." +
+        Label instructions = new Label("Please place 6 atoms inside your chosen hex cells. " +
                 "After you are finished, click the Ready button below the board.");
         instructions.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
         instructions.setWrapText(true);
@@ -334,10 +327,14 @@ public class Main extends Application {
         //event handler for fire ray button click
         fireRayButton.setOnAction(event -> {
             int rayNumber = RayCircle.getCurrentlyClickedRayNumber();
-            if (rayNumber != -1) {
+            if (rayNumber > 0 && rayNumber < 55) {
                 // If a valid ray number is clicked, handle the firing of the ray here
                 System.out.println("Firing ray: " + rayNumber);
-                // TODO: Add the code to handle the ray firing action
+                BlackBoxBoard.Point3D entryPoint = RayNode.getNodeCoordinates(rayNumber);
+                Direction entryDir = RayNode.getNodeDirection(rayNumber);
+                assert entryDir != null;
+                entryDir = RayNode.getRevDir(entryDir);
+                Ray ray = new Ray(eBoard, entryPoint, entryDir);
             } else {
                 // No ray circle is currently selected
                 System.out.println("No ray selected!");

@@ -39,15 +39,24 @@ public class GameState implements ReadyButtonClickedListener {
         return this.setterAtoms;
     }
 
+    public void setExpAtomPositions(List<Point2D> positions) {
+        this.experimenterAtoms.clear();
+        this.experimenterAtoms.addAll(positions);
+    }
+    public List<Point2D> getExperimenterAtoms() {
+        return this.experimenterAtoms;
+    }
 
     public static int calcScore( ) {
         List<Point2D> setterAtoms = Main.atomPositions;
         List<Point2D> experimenterAtoms = Main.expPositions;
         int correctAtoms = setterAtoms.size();
+
+        // only keep in experimenter atoms list the atoms that match with setter's list
         experimenterAtoms.retainAll(setterAtoms);
-        System.out.println("Score: ");
         int incorrectAtoms = (correctAtoms - experimenterAtoms.size());
         int score = incorrectAtoms*5;
+
         if (incorrectAtoms > 1) {
             System.out.println(incorrectAtoms + " atom was incorrectly placed.");
         }

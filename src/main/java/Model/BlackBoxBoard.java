@@ -54,6 +54,8 @@ public class BlackBoxBoard {
         initializeBoard();
     }
 
+    // list of edge cells ordered in clockwise order to be used for ray node generation
+    // could be turned into a generation loop later on
     public static List<Point3D> edgeCells = Arrays.asList(
             new Point3D(0, -4, 4),  new Point3D(1, -4, 3),  new Point3D(2, -4, 2),
             new Point3D(3, -4, 1),  new Point3D(4, -4, 0),  new Point3D(4, -3, -1),

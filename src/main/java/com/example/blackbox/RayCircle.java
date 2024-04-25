@@ -16,8 +16,9 @@ public class RayCircle extends StackPane {
     private Color originalColor;
     private Color clickedColor = Color.RED;
     private Color hoverColor = Color.BLACK;
+    private Color clickedHover = Color.GRAY;
     private static RayCircle currentlyClicked; //to store clicked state of ray circle.
-
+    private static RayCircle deClicked;
 
 
     RayCircle(double radius, Color fill) {
@@ -45,14 +46,17 @@ public class RayCircle extends StackPane {
 
     private void addClickEffect() {
         this.setOnMouseClicked(event -> {
-            if (currentlyClicked != null && currentlyClicked != this) {
+            if (currentlyClicked == this) {
                 //returning the original colour of the raycircle
                 currentlyClicked.circle.setFill(currentlyClicked.originalColor);
+                currentlyClicked = null;
             }
-            //changing colour
-            circle.setFill(clickedColor);
-            // update the current clicked
-            currentlyClicked = this;
+            else {
+                //changing colour
+                circle.setFill(clickedColor);
+                // update the current clicked
+                currentlyClicked = this;
+            }
         });
     }
 
@@ -64,7 +68,11 @@ public class RayCircle extends StackPane {
             if (currentlyClicked != this) {
                 circle.setFill(hoverColor);
             }
+            else {
+                circle.setFill(clickedHover);
+            }
         });
+
         this.setOnMouseExited(event -> { //upon mouse exit
             //return to original colour upon exit only if the circle is not clicked
             if (currentlyClicked != this) {
