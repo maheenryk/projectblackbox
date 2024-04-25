@@ -137,7 +137,7 @@ public class BlackBoxBoard {
         HexCell hexCell = board.get(point);
         if (!hexCell.hasAtom()) {
             hexCell.setAtom(new Atom());
-            System.out.println("\nPlaced an atom at: " + point);
+            //System.out.println("\nPlaced an atom at: " + point);
 
             // create CIPoints, validate them, and set them
             // Define offsets for each CI Point
@@ -163,7 +163,7 @@ public class BlackBoxBoard {
                     if (ciCell != null) {  // Check if the HexCell is not null
                         ciCell.setCoIP(new CoIP());
                         ciCell.setCIPoints(CIPoint);
-                        System.out.println("Placed CI Point at: " + CIPoint);
+                        //System.out.println("Placed CI Point at: " + CIPoint);
                     } else {
                         System.out.println("No HexCell found at: " + CIPoint + ", unable to place CI Point.");
                     }

@@ -335,11 +335,17 @@ public class Main extends Application {
                 // If a valid ray number is clicked, handle the firing of the ray here
                 System.out.println("Firing ray: " + rayNumber);
 
-                BlackBoxBoard.Point3D entryPoint = RayNode.getNodeCoordinates(rayNumber);
-                Direction entryDir = RayNode.getNodeDirection(rayNumber);
-                entryDir = RayNode.getRevDir(entryDir);
-                Ray ray = new Ray(sBoard, entryPoint, entryDir);
+                Ray ray = new Ray(sBoard, rayNumber);
                 Ray.printRayInfo(ray);
+                if (ray.isRayReversed()) {
+                    // TODO add method for printing ray reversal on screen
+                }
+                else if (ray.isAbsorbed()) {
+                    // TODO add method for printing ray absorption on screen
+                }
+                else {
+                    // TODO add method for printing ray's exit node on screen
+                }
             } else {
                 // No ray circle is currently selected
                 System.out.println("No ray selected!");

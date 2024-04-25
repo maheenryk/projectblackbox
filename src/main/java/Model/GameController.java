@@ -28,7 +28,8 @@ public class GameController {
         System.out.println("Atoms placed.");
     }
 
-    public void sendRays() {
+    /* Not needed anymore
+        public void sendRays() {
         System.out.println("Experimenter starts sending rays:");
         Scanner scanner = new Scanner(System.in);
         String sendRay = new String();
@@ -57,6 +58,8 @@ public class GameController {
         } while (sendRay.equals("yes"));
 
     }
+     */
+
 
     private void updateScore(Ray ray, int x, int y, int z) {
         Marker markerType = Marker.PINK; // Default for passing straight through without interaction

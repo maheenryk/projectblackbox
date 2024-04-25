@@ -29,9 +29,10 @@ public class ModelMain {
 
         // testing ray paths with specific atom placements
 
-        /*
-        BlackBoxBoard.Point3D atom = new BlackBoxBoard.Point3D(0,-4,4);
+        BlackBoxBoard.Point3D atom = new BlackBoxBoard.Point3D(0,0,0);
         blackBoxBoard.placeAtom(atom);
+        /*
+
         atom = new BlackBoxBoard.Point3D(-3,4,-1);
         blackBoxBoard.placeAtom(atom);
         atom = new BlackBoxBoard.Point3D(0,1,-1);
@@ -50,16 +51,12 @@ public class ModelMain {
         //RayNode.printRayNodes();
 
         // Define an entry point for the ray. Choose an edge coordinate.
-        BlackBoxBoard.Point3D entryPoint = new BlackBoxBoard.Point3D(0, 4, -4); // Example edge point
-        Direction dir = Direction.XU;
         // Create a ray with the entry point
-        Ray ray = new Ray(blackBoxBoard, entryPoint, dir);
+        Ray ray = new Ray(blackBoxBoard, 35);
         Ray.printRayInfo(ray);
 
-        entryPoint = new BlackBoxBoard.Point3D(4, 0, -4); // Example edge point
-        dir = Direction.YL;
         // Create a ray with the entry point
-        ray = new Ray(blackBoxBoard, entryPoint, dir);
+        ray = new Ray(blackBoxBoard, 46);
         Ray.printRayInfo(ray);
 
         System.out.println("Ray markers: " + blackBoxBoard.getRayMarkers());

@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 //import java.util.Objects;
 import static Model.Direction.XU;
 import static Model.Direction.XD;
@@ -28,14 +29,16 @@ public class Ray {
 
     private boolean rayReversed;
 
-    Direction newDir = Direction.Error;
+    Direction newDir;
     Direction entryDir;
-    Direction exitDir = Direction.Error;
+    Direction exitDir;
     Direction Abs = Direction.Absorbed;
 
-    public Ray(BlackBoxBoard board, BlackBoxBoard.Point3D entryPoint, Direction dir){
+    public Ray(BlackBoxBoard board, int node){
+
         this.board = board; //board ref
-        this.entryPoint = entryPoint; //starting point
+        this.entryPoint = RayNode.getNodeCoordinates(node); //starting point
+        this.entryDir = RayNode.getRevDir(Objects.requireNonNull(RayNode.getNodeDirection(node)));
         this.path = new ArrayList<>();
         this.isAbsorbed = false; //at the start ray is not absorbed
         this.deflected60 = false;
@@ -43,7 +46,7 @@ public class Ray {
         this.rayReversed = false;
         //call method to make sure every time a ray object is created its path is calculated immediately
 
-        this.exitPoint = calculatePath(dir);
+        this.exitPoint = calculatePath(entryDir);
 
     }
     public boolean isAbsorbed() {
@@ -69,6 +72,10 @@ public class Ray {
     }
 
     public Direction getEntryDir() { return  entryDir; }
+
+    public Direction getExitDir() {
+        return exitDir;
+    }
 
     //check for atom
     private boolean checkForAtom(BlackBoxBoard.Point3D point){
@@ -563,6 +570,7 @@ public class Ray {
                 break;
         }
 
+        /* print statements used for testing deflections
         if (rayReversed) {
             System.out.println("Ray reversed.");
         }
@@ -574,6 +582,7 @@ public class Ray {
         else if (deflected60) {
             System.out.println("Ray deflected 60 degrees.");
         }
+         */
 
         return newDir;
     }
