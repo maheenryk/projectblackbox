@@ -51,6 +51,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        RayNode.initializeNodes();
 
 //------------------------start screen
 
@@ -164,6 +165,7 @@ public class Main extends Application {
 
         gameState = new GameState();
         generateReadyButton(buttonsStackPane2, gameState, primaryStage);
+        Button fireRayButton = createFireRayButton();
         BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
 
         centerStackPane2.getChildren().add(gridGroup2);
@@ -181,6 +183,7 @@ public class Main extends Application {
         Label experimenterInstructions = generateExperimenterInstructions();
         VBox rightContainer2 = new VBox();
         rightContainer2.getChildren().add(experimenterInstructions);
+        rightContainer2.getChildren().add(fireRayButton);
         rightContainer2.setAlignment(Pos.TOP_RIGHT);
         VBox.setMargin(rightContainer2, new Insets(0, 100, 0, 0));
         rightContainer2.setMaxWidth(300);
@@ -321,6 +324,7 @@ public class Main extends Application {
 
     private Button createFireRayButton() {
         Button fireRayButton = new Button("Fire Ray");
+
         fireRayButton.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
         fireRayButton.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px;");
 
@@ -330,15 +334,17 @@ public class Main extends Application {
             if (rayNumber > 0 && rayNumber < 55) {
                 // If a valid ray number is clicked, handle the firing of the ray here
                 System.out.println("Firing ray: " + rayNumber);
+
                 BlackBoxBoard.Point3D entryPoint = RayNode.getNodeCoordinates(rayNumber);
                 Direction entryDir = RayNode.getNodeDirection(rayNumber);
-                assert entryDir != null;
                 entryDir = RayNode.getRevDir(entryDir);
-                Ray ray = new Ray(eBoard, entryPoint, entryDir);
+                Ray ray = new Ray(sBoard, entryPoint, entryDir);
+                Ray.printRayInfo(ray);
             } else {
                 // No ray circle is currently selected
                 System.out.println("No ray selected!");
             }
+
         });
 
         return fireRayButton;
