@@ -345,12 +345,19 @@ public class Main extends Application {
 
 
                 //set random color to entry/exit pair of ray circle for ray markers
-                if (entryRayCircle != null && exitRayCircle != null) {
+                if (entryRayCircle != null && exitRayCircle != null && !(ray.isRayReversed())) {
                     Color currentColorPair = RayCircle.getNextColor(); //get the next color for the pair
-                    entryRayCircle.setColor(currentColorPair);  //set same color pair for ray markers
-                    exitRayCircle.setColor(currentColorPair);
-                } else {
-                    System.out.println("No ray selected!");
+                    entryRayCircle.setPermanentColor(currentColorPair);  //set same color pair for ray markers
+                    exitRayCircle.setPermanentColor(currentColorPair);
+                } else if(ray.isRayReversed()) {
+                    entryRayCircle.setPermanentColor(Color.WHITE);
+                    entryRayCircle.setTextColor(Color.BLACK); //setting number text to black so it's easier to see against white background.
+                }
+                else if(ray.isAbsorbed() || nodeNumbers[1] == -1) {
+                    entryRayCircle.setPermanentColor(Color.BLACK);
+                }
+                else {
+                    System.out.println("No ray selected!");//testing if ray is either unfounded or reversed.
                 }
 
             }
