@@ -1,13 +1,12 @@
 package Controller;
 import Model.BlackBoxBoard;
-import com.example.blackbox.Main;
 import javafx.geometry.Point2D;
 import utils.ReadyButtonClickedListener;
-import javafx.geometry.Point2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class GameState implements ReadyButtonClickedListener {
@@ -50,12 +49,12 @@ public class GameState implements ReadyButtonClickedListener {
 
 
 
-    public static int calcScore(List<Point2D> setterAtoms, List<Point2D> experimenterAtoms) {
+    public static Map<String, Integer>  calcScore(List<Point2D> setterAtoms, List<Point2D> experimenterAtoms) {
         int correctAtoms = setterAtoms.size();
 
         // only keep in experimenter atoms list the atoms that match with setter's list
-        experimenterAtoms.retainAll(setterAtoms);
         int incorrectAtoms = (correctAtoms - experimenterAtoms.size());
+        experimenterAtoms.retainAll(setterAtoms);
         int score = incorrectAtoms * 5;
 
         if (incorrectAtoms > 1) {
@@ -67,7 +66,14 @@ public class GameState implements ReadyButtonClickedListener {
         System.out.println("Total ray markers: " + BlackBoxBoard.rayMarkers);
         score += BlackBoxBoard.rayMarkers;
 
-        return score;
+        Map<String, Integer> results = new HashMap<>(); //map for storing results
+        results.put("score", score);
+        //results.put("incorrectAtoms", incorrectAtoms);
+        results.put("rayCount", BlackBoxBoard.rayCount);
+        results.put("rayMarkers", BlackBoxBoard.rayMarkers);
+
+        return results;
+
     }
 
     //method for beginning experimenter turn.

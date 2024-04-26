@@ -3,6 +3,8 @@ package com.example.blackbox;
 // import all libraries needed
 import Controller.Translation;
 import Model.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -23,14 +25,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
+import javafx.util.Duration;
 import utils.ReadyButtonClickedListener;
 import Controller.GameState;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import javafx.scene.paint.Color;
-import java.util.Random;
-import java.util.Arrays;
 
 import static Controller.GameState.calcScore;
 
@@ -92,6 +93,7 @@ public class Main extends Application {
         startButton.setOnAction(e -> {
             Scene mainGameScene = createMainGameScene(primaryStage);
             primaryStage.setScene(mainGameScene);
+            primaryStage.setFullScreen(true);
         });
 
         primaryStage.setTitle("BlackBox+");
@@ -400,6 +402,54 @@ public class Main extends Application {
 
         return keyBox;
     }
+
+    public void showResults(Stage primaryStage, Map<String, Integer> results) { //SCREEN TO DISPLAY RESULTS AND stats
+        StackPane root = new StackPane();
+        root.setAlignment(Pos.CENTER);
+
+        Label scoreLabel = new Label("Your score is: " + results.get("score"));
+        scoreLabel.setFont(new Font("Arial Rounded MT Bold", 60));
+        scoreLabel.setTextFill(Color.WHITE);
+        scoreLabel.setOpacity(0);
+        scoreLabel.setTextAlignment(TextAlignment.CENTER);
+
+        //stats label below the score label
+        Label statsLabel = new Label(
+                //results.get("incorrectAtoms") + " atoms were incorrectly placed.\n" +
+                        "Total rays fired: " + results.get("rayCount") + "\n" +
+                        "Total ray markers: " + results.get("rayMarkers")
+        );
+        statsLabel.setFont(new Font("Arial Rounded MT Bold", 30)); //slightly smaller font size for stats
+        statsLabel.setTextFill(Color.WHITE);
+        statsLabel.setOpacity(0);
+        statsLabel.setTextAlignment(TextAlignment.CENTER);
+
+        //vertical layout for the labels
+        VBox labelsBox = new VBox(10, scoreLabel, statsLabel);
+        labelsBox.setAlignment(Pos.CENTER);
+
+        root.getChildren().add(labelsBox);
+        root.setStyle("-fx-background-color: black;");
+
+        Scene resultScene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
+        primaryStage.setScene(resultScene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
+
+        //creating fade transition with sequential fade for stats display
+        FadeTransition fadeScore = new FadeTransition(Duration.seconds(3), scoreLabel);
+        fadeScore.setFromValue(0);
+        fadeScore.setToValue(1);
+
+        FadeTransition fadeStats = new FadeTransition(Duration.seconds(1.5), statsLabel); // Reduced duration
+        fadeStats.setFromValue(0);
+        fadeStats.setToValue(1);
+        fadeStats.setDelay(Duration.seconds(1)); //delay for fade
+
+        SequentialTransition sequentialTransition = new SequentialTransition(fadeScore, fadeStats);
+        sequentialTransition.play();
+    }
+
     private boolean isReadyClicked = false;
 
 
@@ -442,11 +492,11 @@ public class Main extends Application {
                 //eBoard.printBoard();
                 List<Point2D> atomPositionsExperimenter = collectAtomPositions(); //collecting experimenter final atom positions.
                 gameState.setExpAtomPositions(atomPositionsExperimenter);
-                int score = calcScore(setterAtomPos, atomPositionsExperimenter);
-                System.out.println("*****SCORE***** ------ " + score);
+                Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter);
+                showResults(primaryStage, results);
+
 
                 gameState.onReadyClicked();
-                showExperimenterTurnScreen(primaryStage); //TODO : CHANGE THIS
 
 //            else {
 //                //alert popup to remind setter to place exactly 6 atoms.
