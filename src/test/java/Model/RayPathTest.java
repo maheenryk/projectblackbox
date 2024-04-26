@@ -32,6 +32,54 @@ class RayPathTest {
     }
 
     @Test
+    void edgePathTest() {
+        ray = new Ray(testBoard, 2);
+        exitPoint = ray.getExitPoint();
+        exitDir = ray.getExitDir();
+        exitNode = RayNode.getNodeNumber(exitPoint, exitDir);
+
+        assertFalse(ray.isDeflected60());
+        assertFalse(ray.isDeflected120());
+        assertFalse(ray.isAbsorbed());
+        assertFalse(ray.isRayReversed());
+        assertEquals(45, exitNode);
+    }
+
+    @Test
+    void edgePathWithAtomTest() {
+        atom = new BlackBoxBoard.Point3D(-3,4,-1);
+        testBoard.placeAtom(atom);
+
+        ray = new Ray(testBoard, 29);
+        exitPoint = ray.getExitPoint();
+        exitDir = ray.getExitDir();
+        exitNode = RayNode.getNodeNumber(exitPoint, exitDir);
+
+        assertFalse(ray.isDeflected60());
+        assertFalse(ray.isDeflected120());
+        assertFalse(ray.isRayReversed());
+        assertTrue(ray.isAbsorbed());
+        assertEquals(-1, exitNode);
+    }
+
+    @Test
+    void edgePathWithCITest() {
+        atom = new BlackBoxBoard.Point3D(2,-3,1);
+        testBoard.placeAtom(atom);
+
+        ray = new Ray(testBoard, 45);
+        exitPoint = ray.getExitPoint();
+        exitDir = ray.getExitDir();
+        exitNode = RayNode.getNodeNumber(exitPoint, exitDir);
+
+        assertFalse(ray.isDeflected120());
+        assertFalse(ray.isRayReversed());
+        assertFalse(ray.isAbsorbed());
+        assertTrue(ray.isDeflected60());
+        assertEquals(49, exitNode);
+    }
+
+    @Test
     void deflection60Test() {
         atom = new BlackBoxBoard.Point3D(0,0,0);
         testBoard.placeAtom(atom);

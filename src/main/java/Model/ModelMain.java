@@ -48,16 +48,16 @@ public class ModelMain {
         blackBoxBoard.printBoard();
 
         RayNode.initializeNodes();
-        //RayNode.printRayNodes();
+        RayNode.printRayNodes();
 
         // Define an entry point for the ray. Choose an edge coordinate.
         // Create a ray with the entry point
-        Ray ray = new Ray(blackBoxBoard, 35);
-        Ray.printRayInfo(ray);
+        //Ray ray = new Ray(blackBoxBoard, 35);
+        //Ray.printRayInfo(ray);
 
         // Create a ray with the entry point
-        ray = new Ray(blackBoxBoard, 46);
-        Ray.printRayInfo(ray);
+        //ray = new Ray(blackBoxBoard, 46);
+        //Ray.printRayInfo(ray);
 
         System.out.println("Ray markers: " + blackBoxBoard.getRayMarkers());
         System.out.println("Total rays fired: " + blackBoxBoard.getRayCount());

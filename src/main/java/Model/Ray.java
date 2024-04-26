@@ -46,7 +46,7 @@ public class Ray {
         this.rayReversed = false;
         //call method to make sure every time a ray object is created its path is calculated immediately
 
-        this.exitPoint = calculatePath(entryDir);
+        this.exitPoint = calculatePath();
 
     }
     public boolean isAbsorbed() {
@@ -86,8 +86,8 @@ public class Ray {
     }
 
     //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
-    private BlackBoxBoard.Point3D calculatePath(Direction dir){
-        entryDir = dir;
+    private BlackBoxBoard.Point3D calculatePath(){
+        Direction dir = entryDir;
 
         BlackBoxBoard.Point3D exitPoint = null;
 
@@ -162,6 +162,13 @@ public class Ray {
                 }
             }
 
+            // check if ray is on edge of board and break loop if true
+            if (hasReachedBoardEdge(currentPosition, dir)) {
+                exitPoint = currentPosition;
+                BlackBoxBoard.rayMarkers += 2;
+                break;
+            }
+
             nextPosition = calculateNextPosition(currentPosition, dir);
 
             // Add the next position to the path
@@ -173,12 +180,6 @@ public class Ray {
             // Add the current position to the visited cells list
             //visitedCells.add(currentPosition);
 
-            // check if ray is on edge of board and break loop if true
-            if (hasReachedBoardEdge(currentPosition)) {
-                exitPoint = currentPosition;
-                BlackBoxBoard.rayMarkers += 2;
-                break;
-            }
         }
 
         exitDir = dir;
@@ -588,12 +589,10 @@ public class Ray {
     }
 
     // Method to check if a position is at the edge of the board
-    private boolean hasReachedBoardEdge(BlackBoxBoard.Point3D position) {
-        int x = position.x;
-        int y = position.y;
-        int z = position.z;
+    private boolean hasReachedBoardEdge(BlackBoxBoard.Point3D position, Direction direction) {
 
-        return (x == 4 || x == -4) || (y == 4 || y == -4) || (z == 4 || z == -4);
+        int node = RayNode.getNodeNumber(position, direction);
+        return node != -1;
     }
 
 

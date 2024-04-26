@@ -165,7 +165,7 @@ public class RayNode {
                 break;
 
             case XD:
-                if (x > 0) {
+                if (x >= 0) {
                     adjDir = YR;
                 }
                 else {
