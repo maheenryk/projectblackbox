@@ -195,14 +195,14 @@ public class Main extends Application {
         rightContainer2.getChildren().add(experimenterInstructions);
         rightContainer2.getChildren().add(fireRayButton);
         rightContainer2.setAlignment(Pos.TOP_RIGHT);
-        VBox.setMargin(rightContainer2, new Insets(0, 100, 0, 0));
+        VBox.setMargin(rightContainer2, new Insets(0, 200, 0, 0));
         rightContainer2.setMaxWidth(300);
         VBox rayMarkerKey = generateRayMarkerKey();
         BorderPane.setAlignment(rayMarkerKey, Pos.TOP_LEFT);
 
 
-        VBox rightPanel = createRightPanel();
-        root2.setRight(rightPanel);
+//        VBox rightPanel = createRightPanel();
+//        root2.setRight(rightPanel);
 
 
         root2.setLeft(rayMarkerKey);
@@ -287,17 +287,17 @@ public class Main extends Application {
     }
 
 
-    private VBox createRightPanel() {
-        Button fireRayButton = createFireRayButton();  // Assume this method returns a configured Button
-        fireRayButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
-
-        VBox rightContainer = new VBox(10); // 10 is the spacing between elements
-        rightContainer.getChildren().add(fireRayButton);
-        rightContainer.setAlignment(Pos.CENTER); // Center align the content
-        rightContainer.setPadding(new Insets(15)); // Padding around the VBox
-
-        return rightContainer;
-    }
+//    private VBox createRightPanel() { //panel for fire ray buttom
+//        Button fireRayButton = createFireRayButton();
+//        fireRayButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+//
+//        VBox rightContainer = new VBox(10);
+//        rightContainer.getChildren().add(fireRayButton);
+//        rightContainer.setAlignment(Pos.CENTER);
+//        rightContainer.setPadding(new Insets(0, 45, 0, 0)); //vbox padding
+//
+//        return rightContainer;
+//    }
 
 
 
