@@ -1,7 +1,7 @@
 package Controller;
 import Model.BlackBoxBoard;
 import com.example.blackbox.Main;
-import javafx.geometry.Point3D;
+import javafx.geometry.Point2D;
 import utils.ReadyButtonClickedListener;
 import javafx.geometry.Point2D;
 import java.util.ArrayList;
@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.*;
 
 
+
 public class GameState implements ReadyButtonClickedListener {
     private final List<Point2D> setterAtoms = new ArrayList<>(); //list to store the setter atom positions
-    private final List<Point2D> experimenterAtoms = new ArrayList<>();
+    private final List<Point2D> experimenterAtoms = new ArrayList<>(); //list to store experimenter atoms.
 
 
 
@@ -47,25 +48,25 @@ public class GameState implements ReadyButtonClickedListener {
         return this.experimenterAtoms;
     }
 
-    public static int calcScore( ) {
-        List<Point2D> setterAtoms = Main.atomPositions;
-        List<Point2D> experimenterAtoms = Main.expPositions;
+
+
+    public static int calcScore(List<Point2D> setterAtoms, List<Point2D> experimenterAtoms) {
         int correctAtoms = setterAtoms.size();
 
         // only keep in experimenter atoms list the atoms that match with setter's list
         experimenterAtoms.retainAll(setterAtoms);
         int incorrectAtoms = (correctAtoms - experimenterAtoms.size());
-        int score = incorrectAtoms*5;
+        int score = incorrectAtoms * 5;
 
         if (incorrectAtoms > 1) {
-            System.out.println(incorrectAtoms + " atom was incorrectly placed.");
-        }
-        else {
             System.out.println(incorrectAtoms + " atoms were incorrectly placed.");
+        } else {
+            System.out.println(incorrectAtoms + " atom was incorrectly placed.");
         }
         System.out.println("Total rays fired: " + BlackBoxBoard.rayCount);
         System.out.println("Total ray markers: " + BlackBoxBoard.rayMarkers);
         score += BlackBoxBoard.rayMarkers;
+
         return score;
     }
 
@@ -74,5 +75,9 @@ public class GameState implements ReadyButtonClickedListener {
         isReadyClicked = false;
     }
 }
+
+    //method for comparing the atoms of experimnter and setter for scoring purposes:
+
+
 
 

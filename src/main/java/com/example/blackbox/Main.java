@@ -32,7 +32,7 @@ import javafx.scene.paint.Color;
 import java.util.Random;
 import java.util.Arrays;
 
-
+import static Controller.GameState.calcScore;
 
 
 public class Main extends Application {
@@ -91,7 +91,7 @@ public class Main extends Application {
 
         startButton.setOnAction(e -> {
             Scene mainGameScene = createMainGameScene(primaryStage);
-            showPlayerChoiceScreen(primaryStage, mainGameScene);
+            primaryStage.setScene(mainGameScene);
         });
 
         primaryStage.setTitle("BlackBox+");
@@ -110,6 +110,7 @@ public class Main extends Application {
         VBox rightContainer = new VBox();
 
         // Generate hex cells and ray circles
+        AtomGenerator.resetAtomCount(); //making sure atom count is reset to 0.
         HexCellGenerator.resetStartingPositions();
         HexCellGenerator.generateHexCells(gridGroup);
         RayCircle.generateRayCircles(gridGroup);
@@ -117,7 +118,7 @@ public class Main extends Application {
         // Generate game state and ready button
         gameState = new GameState();
         StackPane buttonsStackPane = new StackPane();
-        generateReadyButton(buttonsStackPane, gameState, primaryStage);
+        generateReadyButton(buttonsStackPane, gameState, primaryStage, false);
         BorderPane.setMargin(buttonsStackPane, new Insets(0, 0, 50, 30));
 
         // Add grid group to center stack pane
@@ -161,6 +162,8 @@ public class Main extends Application {
 //      centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
         BorderPane.setMargin(centerStackPane2, new Insets(0, 0, 0, 100));
 
+        AtomGenerator.resetAtomCount();//resetting atom count
+
         HexCellGenerator.resetStartingPositions(); /*resetting here is crucial as it directly affects the layout if the static variables,
         (the startig x and y points) for the hex cells and ray circles are remain shifted from the last call to grid generation.*/
 
@@ -169,7 +172,7 @@ public class Main extends Application {
         RayCircle.generateRayCircles(gridGroup2); //adding ray circles to same group.
 
         gameState = new GameState();
-        generateReadyButton(buttonsStackPane2, gameState, primaryStage);
+        generateReadyButton(buttonsStackPane2, gameState, primaryStage, true);
         Button fireRayButton = createFireRayButton();
         BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
 
@@ -280,6 +283,7 @@ public class Main extends Application {
         primaryStage.setScene(experimenterTurnScene);
         primaryStage.setFullScreen(true);
     }
+
 
     private VBox createRightPanel() {
         Button fireRayButton = createFireRayButton();  // Assume this method returns a configured Button
@@ -399,39 +403,62 @@ public class Main extends Application {
     private boolean isReadyClicked = false;
 
 
-    public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage) {
+    public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage, boolean isExperimenter) {
         Button ready = new Button("READY");
-
         //event handler for button click
         ready.setOnAction(event -> {
-            if (AtomGenerator.atomCount == 6) {//max final atom check
-                List<Point2D> atomPositions = collectAtomPositions(); //collecting the final atom positions.
+            List<Point2D> atomPositions = collectAtomPositions();//collecting the final atom positions (setter) in list of Point2D objects.
+            List<Point2D> setterAtomPos = new ArrayList<>(atomPositions);
+            if (isExperimenter == false) {//max final atom check
+//                List<Point2D> atomPositions = collectAtomPositions();
+                if (AtomGenerator.atomCount == 6) {
+                    List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
+                    sBoard.placeSetterAtoms(setterAtomList);
+                    sBoard.printBoard();
 
-                List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
-                sBoard.placeSetterAtoms(setterAtomList);
-                eBoard.placeSetterAtoms(setterAtomList);
-                sBoard.printBoard();
-                //eBoard.printBoard();
-
-                //print the positions
-                System.out.println("Atom Positions:");
-                for (Point2D position : atomPositions) {
-                    System.out.println(position.toString());
+                    //print the positions
+                    System.out.println("Atom Positions:");
+                    for (Point2D position : atomPositions) {
+                        System.out.println(position.toString());
+                    }
+                    gameState.setSetterAtomPositions(atomPositions);
+                    gameState.onReadyClicked();
+                    showExperimenterTurnScreen(primaryStage);
+                } else {
+                    //alert popup to remind setter to place exactly 6 atoms.
+                    Alert readyButtonAlert = new Alert(Alert.AlertType.WARNING);
+                    readyButtonAlert.initOwner(primaryStage);
+                    readyButtonAlert.setTitle("ATOMS : Warning");
+                    readyButtonAlert.setHeaderText(">:(");
+                    readyButtonAlert.setContentText("Please place exactly 6 atoms in the hex board.");
+                    readyButtonAlert.showAndWait();
                 }
-
-                gameState.setSetterAtomPositions(atomPositions);
-                gameState.onReadyClicked();
-                showExperimenterTurnScreen(primaryStage);
-            } else {
-                //alert popup to remind setter to place exactly 6 atoms.
-                Alert readyButtonAlert = new Alert(Alert.AlertType.WARNING);
-                readyButtonAlert.initOwner(primaryStage);
-                readyButtonAlert.setTitle("Warning");
-                readyButtonAlert.setHeaderText(null);
-                readyButtonAlert.setContentText("Please place exactly 6 atoms in the hex board.");
-                readyButtonAlert.showAndWait();
             }
-        });
+
+
+            else if (isExperimenter) {
+                AtomGenerator.resetAtomCount();
+
+                //eBoard.printBoard();
+                List<Point2D> atomPositionsExperimenter = collectAtomPositions(); //collecting experimenter final atom positions.
+                gameState.setExpAtomPositions(atomPositionsExperimenter);
+                int score = calcScore(setterAtomPos, atomPositionsExperimenter);
+                System.out.println("*****SCORE***** ------ " + score);
+
+                gameState.onReadyClicked();
+                showExperimenterTurnScreen(primaryStage); //TODO : CHANGE THIS
+
+//            else {
+//                //alert popup to remind setter to place exactly 6 atoms.
+//                Alert readyButtonAlert = new Alert(Alert.AlertType.WARNING);
+//                readyButtonAlert.initOwner(primaryStage);
+//                readyButtonAlert.setTitle("ATOMS : Warning");
+//                readyButtonAlert.setHeaderText(">:(");
+//                readyButtonAlert.setContentText("You have less than 6 guesses placed.");
+//                readyButtonAlert.showAndWait();
+//            }
+        }
+    });
         //some inline CSS for button styling.
         ready.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;-fx-padding: 10 30");
         StackPane.setAlignment(ready, Pos.BOTTOM_CENTER);
@@ -439,6 +466,8 @@ public class Main extends Application {
 //        StackPane.setMargin(ready, new Insets(5, 10, 60, 20));
         buttonsStackPane.getChildren().add(ready);
     }
+
+
 
 
     private List<Point2D> collectAtomPositions() {
