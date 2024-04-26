@@ -2,15 +2,21 @@
 package com.example.blackbox;
 
 import javafx.scene.Group;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import java.util.HashMap;
+import java.util.Map;
+import javafx.scene.paint.Color;
+import java.util.List;
+import java.util.Arrays;
+
 
 public class RayCircle extends StackPane {
+    private static final Map<Integer, RayCircle> rayCircleMap = new HashMap<>();
     private Circle circle;
     private Text rayText;
     private Color originalColor;
@@ -18,6 +24,22 @@ public class RayCircle extends StackPane {
     private Color hoverColor = Color.BLACK;
     private Color clickedHover = Color.GRAY;
     private static RayCircle currentlyClicked; //to store clicked state of ray circle.
+    private static int currentColorIndex = 0;  //track the color index
+    private static final List<Color> rayMarkerColors = Arrays.asList(
+
+            Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.PURPLE, Color.BROWN,
+            Color.HOTPINK, Color.LIGHTPINK, Color.DARKBLUE, Color.LIGHTBLUE, Color.CORAL
+    );
+
+    public static Color getNextColor() {
+        Color color = rayMarkerColors.get(currentColorIndex);
+        currentColorIndex = (currentColorIndex + 1) % rayMarkerColors.size();  //move to next index, wrap around if at end
+        return color;
+    }
+
+    public void setColor(Color color) {
+        circle.setFill(color);
+    }
 
 
     RayCircle(double radius, Color fill) {
@@ -44,19 +66,15 @@ public class RayCircle extends StackPane {
 
 
     private void addClickEffect() {
-
         this.setOnMouseClicked(event -> {
-            if (currentlyClicked == this) {
-                //returning the original colour of the raycircle
+            if (currentlyClicked != null) {
+                // Reset the previous clicked circle to its original color
                 currentlyClicked.circle.setFill(currentlyClicked.originalColor);
-                currentlyClicked = null;
             }
-            else {
-                //changing colour
-                circle.setFill(clickedColor);
-                // update the current clicked
-                currentlyClicked = this;
-            }
+            // Update the currently clicked to this one
+            currentlyClicked = this;
+            // Change color to indicate this is the selected circle
+            circle.setFill(clickedColor);
         });
     }
 
@@ -188,8 +206,12 @@ public class RayCircle extends StackPane {
 
         // Set ray number text
         circle.setRayText(String.valueOf(number));
+        rayCircleMap.put(number, circle);
 
         return circle;
+    }
+    public static RayCircle findRayCircleByNumber(int rayNodeNumber) {
+        return rayCircleMap.get(rayNodeNumber);
     }
 
     public static int getCurrentlyClickedRayNumber() {
@@ -204,4 +226,13 @@ public class RayCircle extends StackPane {
             return -1; // Return an invalid number if no RayCircle is currently clicked
         }
     }
+
+//    List<Color> rayMarkerColors = Arrays.asList(
+//            Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.PURPLE, Color.BROWN, Color.HOTPINK, Color.LIGHTPINK,
+//            Color.DARKBLUE, Color.LIGHTBLUE, Color.CORAL
+//    );
+//    Random random = new Random();
+//    Color randomColor = rayMarkerColors.get(random.nextInt(rayMarkerColors.size()));
+
+
 }

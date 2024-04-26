@@ -641,12 +641,18 @@ public class Ray {
         return new BlackBoxBoard.Point3D(x, y, z);
     }
 
-    public static void printRayInfo(Ray ray) {
+    public static int[]  printRayInfo(Ray ray) {
+
         // Print the ray's path
         BlackBoxBoard.Point3D entryPoint = ray.getEntryPoint();
         Direction entryDir = RayNode.getRevDir(ray.getEntryDir());
+        int entryNodeNumber = RayNode.getNodeNumber(entryPoint, entryDir);
+        BlackBoxBoard.Point3D exitPoint = ray.getExitPoint();
+        Direction direction = ray.getDirection();
+        int exitNodeNumber = RayNode.getNodeNumber(exitPoint, direction);
+
         System.out.println("Ray entered at: " + entryPoint);
-        System.out.println("Ray's entry node: " + RayNode.getNodeNumber(entryPoint, entryDir));
+        System.out.println("Ray's entry node: " + entryNodeNumber);
         // Check if the ray is absorbed and print the result
         if (ray.isAbsorbed()) {
             System.out.println("Ray absorbed.");
@@ -655,14 +661,13 @@ public class Ray {
             System.out.println("Ray reversed.");
         }
         else {
-            BlackBoxBoard.Point3D exitPoint = ray.getExitPoint();
-            Direction direction = ray.getDirection();
             System.out.println("Ray exited at: " + exitPoint);
             System.out.println("Ray's exit direction is: " + direction);
-            System.out.println("Ray's exit node: " + RayNode.getNodeNumber(exitPoint, direction));
+            System.out.println("Ray's exit node: " + exitNodeNumber);
         }
 
         System.out.println("Ray's Path: " + ray.getPath() + "\n");
+        return new int[] {entryNodeNumber, exitNodeNumber};
     }
 
     // Function to calculate and store  edge cells next to entry point of a ray to determine if ray is reversed

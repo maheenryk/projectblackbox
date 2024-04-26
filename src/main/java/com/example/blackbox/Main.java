@@ -28,6 +28,11 @@ import Controller.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.paint.Color;
+import java.util.Random;
+import java.util.Arrays;
+
+
 
 
 public class Main extends Application {
@@ -324,37 +329,35 @@ public class Main extends Application {
 
     private Button createFireRayButton() {
         Button fireRayButton = new Button("Fire Ray");
+        fireRayButton.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; " +
+                "-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; " +
+                "-fx-border-width: 1px;");
 
-        fireRayButton.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
-        fireRayButton.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px;");
-
-        //event handler for fire ray button click
         fireRayButton.setOnAction(event -> {
             int rayNumber = RayCircle.getCurrentlyClickedRayNumber();
             if (rayNumber > 0 && rayNumber < 55) {
-                // If a valid ray number is clicked, handle the firing of the ray here
                 System.out.println("Firing ray: " + rayNumber);
-
                 Ray ray = new Ray(sBoard, rayNumber);
-                Ray.printRayInfo(ray);
-                if (ray.isRayReversed()) {
-                    // TODO add method for printing ray reversal on screen
+                int[] nodeNumbers = Ray.printRayInfo(ray);
+
+                RayCircle entryRayCircle = RayCircle.findRayCircleByNumber(nodeNumbers[0]);
+                RayCircle exitRayCircle = RayCircle.findRayCircleByNumber(nodeNumbers[1]);
+
+
+                //set random color to entry/exit pair of ray circle for ray markers
+                if (entryRayCircle != null && exitRayCircle != null) {
+                    Color currentColorPair = RayCircle.getNextColor(); //get the next color for the pair
+                    entryRayCircle.setColor(currentColorPair);  //set same color pair for ray markers
+                    exitRayCircle.setColor(currentColorPair);
+                } else {
+                    System.out.println("No ray selected!");
                 }
-                else if (ray.isAbsorbed()) {
-                    // TODO add method for printing ray absorption on screen
-                }
-                else {
-                    // TODO add method for printing ray's exit node on screen
-                }
-            } else {
-                // No ray circle is currently selected
-                System.out.println("No ray selected!");
+
             }
-
         });
-
         return fireRayButton;
     }
+
 
     private Label generateExperimenterInstructions() {
         Label instructionsExpt = new Label("You can choose a ray by selecting on it. The chosen ray can be changed by simply clicking on the ray you would like to choose instead." +
@@ -368,19 +371,19 @@ public class Main extends Application {
     private VBox generateRayMarkerKey() {
         //white circle to represent reflected ray marker
         Circle whiteCircle = new Circle(10, Color.WHITE);
-        whiteCircle.setStroke(Color.BLACK); // So it's visible on a white background
+        whiteCircle.setStroke(Color.BLACK);
         Label whiteLabel = new Label("Reflected");
         whiteLabel.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; -fx-text-fill: black;");
-        HBox whiteKey = new HBox(5, whiteCircle, whiteLabel); // 5 is the spacing between items
+        HBox whiteKey = new HBox(5, whiteCircle, whiteLabel);
 
         //black circle to reflect absorbed ray marker
         Circle blackCircle = new Circle(10, Color.BLACK);
         Label blackLabel = new Label("Direct hit/Absorbed");
         blackLabel.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; -fx-text-fill: black;");
-        HBox blackKey = new HBox(5, blackCircle, blackLabel); // 5 is the spacing between items
+        HBox blackKey = new HBox(5, blackCircle, blackLabel);
 
         //combining the hboxes into a vbox to align vertically
-        VBox keyBox = new VBox(10, whiteKey, blackKey); // 10 is the spacing between keys
+        VBox keyBox = new VBox(10, whiteKey, blackKey);
         keyBox.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: white;");
         keyBox.setAlignment(Pos.CENTER);
 

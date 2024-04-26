@@ -188,7 +188,7 @@ public class HexCellGenerator {
     static private void handleHexagonClick(MouseEvent event, Group targetGroup) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();
-            // Use the passed targetGroup instead of deriving it from the event source
+            //using target group here so that setter and experimenter scenes can be seperated in UI
             Circle existingAtom = findAtomInHexagon(targetGroup, clickedHexagon);
             if (existingAtom == null) {
                 double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();
