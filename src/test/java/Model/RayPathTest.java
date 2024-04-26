@@ -47,10 +47,10 @@ class RayPathTest {
 
     @Test
     void edgePathWithAtomTest() {
-        atom = new BlackBoxBoard.Point3D(1,-4,3);
+        atom = new BlackBoxBoard.Point3D(-3,4,-1);
         testBoard.placeAtom(atom);
 
-        ray = new Ray(testBoard, 45);
+        ray = new Ray(testBoard, 29);
         exitPoint = ray.getExitPoint();
         exitDir = ray.getExitDir();
         exitNode = RayNode.getNodeNumber(exitPoint, exitDir);
