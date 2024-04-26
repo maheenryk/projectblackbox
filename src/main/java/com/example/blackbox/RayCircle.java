@@ -21,15 +21,28 @@ public class RayCircle extends StackPane {
     private Text rayText;
     private Color originalColor;
     private Color clickedColor = Color.RED;
-    private Color hoverColor = Color.BLACK;
+    private Color hoverColor = Color.GRAY;
     private Color clickedHover = Color.GRAY;
     private static RayCircle currentlyClicked; //to store clicked state of ray circle.
+    private boolean colorLocked = false;//flag to lock ray marker colour changes.
     private static int currentColorIndex = 0;  //track the color index
-    private static final List<Color> rayMarkerColors = Arrays.asList(
+    private static final List<Color> rayMarkerColors = Arrays.asList( //list of unique identifiable colours for ray markers.
 
-            Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.PURPLE, Color.BROWN,
-            Color.HOTPINK, Color.LIGHTPINK, Color.DARKBLUE, Color.LIGHTBLUE, Color.CORAL
+            Color.rgb(0, 140, 86), Color.rgb(255, 200, 0), Color.rgb(227, 0, 235),
+            Color.rgb(255, 102, 51), Color.rgb(101, 201, 170), Color.rgb(255, 157, 0),
+            Color.rgb(149, 0, 207),Color.rgb(136, 181, 45),Color.rgb(99, 69, 196),
+            Color.rgb(255, 120, 187),Color.rgb(159, 192, 209),Color.rgb(255, 184, 122),
+            Color.rgb(179, 255, 0),Color.rgb(53, 70, 110),Color.rgb(255, 25, 94),
+            Color.rgb(255, 221, 69),Color.rgb(86, 105, 92),Color.rgb(32, 36, 46),
+            Color.rgb(148, 108, 0),Color.rgb(148, 64, 0), Color.rgb(82, 8, 0),
+            Color.rgb(171, 70, 100),Color.rgb(0, 145, 128),Color.rgb(66, 27, 0),
+            Color.rgb(173, 173, 102),Color.rgb(210, 176, 255),Color.rgb(207, 255, 213),
+            Color.rgb(166, 97, 60),Color.rgb(48, 30, 44),Color.rgb(87, 99, 186)
     );
+
+    public void setTextColor(Color color) { //using to change text black against white background ray circle.
+        rayText.setFill(color);
+    }
 
     public static Color getNextColor() {
         Color color = rayMarkerColors.get(currentColorIndex);
@@ -68,40 +81,44 @@ public class RayCircle extends StackPane {
     private void addClickEffect() {
         this.setOnMouseClicked(event -> {
             if (currentlyClicked != null) {
-                // Reset the previous clicked circle to its original color
-                currentlyClicked.circle.setFill(currentlyClicked.originalColor);
+                if (!currentlyClicked.colorLocked) {
+                    currentlyClicked.circle.setFill(currentlyClicked.originalColor);
+                }
             }
-            // Update the currently clicked to this one
             currentlyClicked = this;
-            // Change color to indicate this is the selected circle
-            circle.setFill(clickedColor);
+            if (!colorLocked) {
+                circle.setFill(clickedColor);
+            }
         });
     }
 
 
     private void addHoverEffect() {
-
         this.setOnMouseEntered(event -> {
-            //only apply hover if not clicked
-            if (currentlyClicked != this) {
-                circle.setFill(hoverColor);
-            }
-            else {
-                circle.setFill(clickedHover);
+            if (!colorLocked) {
+                if (currentlyClicked != this) {
+                    circle.setFill(hoverColor);
+                } else {
+                    circle.setFill(clickedHover);
+                }
             }
         });
 
-        this.setOnMouseExited(event -> { //upon mouse exit
-            //return to original colour upon exit only if the circle is not clicked
-            if (currentlyClicked != this) {
-                circle.setFill(originalColor);
-            }
-            //if clicked, then the clicked colour remains upon exit
-            else {
-                circle.setFill(clickedColor);
+        this.setOnMouseExited(event -> {
+            if (!colorLocked) {
+                if (currentlyClicked != this) {
+                    circle.setFill(originalColor);
+                } else {
+                    circle.setFill(clickedColor);
+                }
             }
         });
     }
+    public void setPermanentColor(Color color) {
+        circle.setFill(color);
+        colorLocked = true;  // Lock the color to prevent further changes
+    }
+
 
     public void setRayText(String text) {
         rayText.setText(text);
