@@ -174,7 +174,7 @@ public class Ray {
             //visitedCells.add(currentPosition);
 
             // check if ray is on edge of board and break loop if true
-            if (hasReachedBoardEdge(currentPosition)) {
+            if (hasReachedBoardEdge(currentPosition, dir)) {
                 exitPoint = currentPosition;
                 BlackBoxBoard.rayMarkers += 2;
                 break;
@@ -588,12 +588,10 @@ public class Ray {
     }
 
     // Method to check if a position is at the edge of the board
-    private boolean hasReachedBoardEdge(BlackBoxBoard.Point3D position) {
-        int x = position.x;
-        int y = position.y;
-        int z = position.z;
+    private boolean hasReachedBoardEdge(BlackBoxBoard.Point3D position, Direction direction) {
 
-        return (x == 4 || x == -4) || (y == 4 || y == -4) || (z == 4 || z == -4);
+        int node = RayNode.getNodeNumber(position, direction);
+        return node != -1;
     }
 
 
