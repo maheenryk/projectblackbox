@@ -158,37 +158,10 @@ public class HexCellGenerator {
         return hexagon;
     }
 
-//    static private void handleHexagonClick(MouseEvent event) {
-//        if (atomCount < MAX_ATOMS) {
-//            Polygon clickedHexagon = (Polygon) event.getSource();
-//            Group gridGroup = (Group) clickedHexagon.getParent();
-//
-//            // Check if the hexagon already contains an atom
-//            Circle existingAtom = findAtomInHexagon(gridGroup, clickedHexagon);
-//            if (existingAtom == null) {
-//                // Calculating the center based on the hexagon's vertices
-//                double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();
-//                double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
-//
-//                // create atom and add it to the gridGroup
-//                Circle atom = createAtom(centerX, centerY);
-//                gridGroup.getChildren().add(atom);
-//
-//                atomCount++;
-//
-//                atom.setOnMouseClicked(atomEvent -> {
-//                    gridGroup.getChildren().remove(atom);
-//                    atomCount--;
-//
-//                });
-//            }
-//        }
-//    }
 
     static private void handleHexagonClick(MouseEvent event, Group targetGroup) {
         if (atomCount < MAX_ATOMS) {
             Polygon clickedHexagon = (Polygon) event.getSource();
-            //using target group here so that setter and experimenter scenes can be seperated in UI
             Circle existingAtom = findAtomInHexagon(targetGroup, clickedHexagon);
             if (existingAtom == null) {
                 double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();

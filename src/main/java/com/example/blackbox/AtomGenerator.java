@@ -5,17 +5,24 @@
  */
 
 package com.example.blackbox;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AtomGenerator {
 
     static final int MAX_ATOMS = 6;
     static int atomCount = 0;
+    public static void resetAtomCount() {//method to reset atom count to 0 before experimenter screen so atom setting functionality works.
+        atomCount = 0;
+    }
+
 
     static Circle createAtom(double centerX, double centerY) {
         Circle atom = new Circle(20, Color.RED);

@@ -128,6 +128,7 @@ public class BlackBoxBoard {
         }
     }
 
+
     public void placeAtom(Point3D point) {
         int CIx = point.x;
         int CIy = point.y;
