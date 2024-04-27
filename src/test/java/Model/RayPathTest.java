@@ -33,7 +33,7 @@ class RayPathTest {
 
     @Test
     void edgePathTest() {
-        ray = new Ray(testBoard, 2);
+        ray = new Ray(testBoard, 38);
         exitPoint = ray.getExitPoint();
         exitDir = ray.getExitDir();
         exitNode = RayNode.getNodeNumber(exitPoint, exitDir);

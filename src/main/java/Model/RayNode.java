@@ -16,7 +16,7 @@ public class RayNode {
     public BlackBoxBoard.Point3D coordinates;
     public Direction direction;
     static Map<Integer, RayNode> rayNodeMap = new HashMap<>();
-
+    public static boolean turn; // for dealing with adjacent nodes for corner cells
 
     // method to print all the ray nodes in the map
     public static void printRayNodes() {
@@ -69,6 +69,7 @@ public class RayNode {
         // the generation method with these nodes already set
         // otherwise it'll be complicated to figure out the edge cases
         BlackBoxBoard.Point3D coordinates = new BlackBoxBoard.Point3D(0, -4, 4);
+        BlackBoxBoard.Point3D prevCoords;
         Direction direction = Direction.YL;
         RayNode rayNode = new RayNode(2, coordinates, direction);
         rayNodeMap.put(2, rayNode);
@@ -90,6 +91,7 @@ public class RayNode {
             coordinates = edgeCells.get(cell);
 
             // each corner cell has 3 nodes, so that's why this loops thrice
+            // getting adjacent direction for SAME cell
             if (HexCell.isCornerCell(coordinates)) {
                 for (int k = 0; k < 3; k ++) {
                     prevDir = getAdjDir(prevDir, coordinates);
@@ -98,6 +100,9 @@ public class RayNode {
                     // only decrement node twice bc it'll be decremented at the end of each loop anyway
                     if (k < 2) {
                         node -= 1;
+                    }
+                    if (k == 1) {
+                        turn = true;
                     }
                 }
             }
@@ -115,6 +120,7 @@ public class RayNode {
                 }
             }
 
+            turn = false;
             cell += 1;
         }
 
@@ -165,7 +171,11 @@ public class RayNode {
                 break;
 
             case XD:
-                if (x >= 0) {
+                if (turn) {
+                    adjDir = ZD;
+                    break;
+                }
+                else if (x >= 0) {
                     adjDir = YR;
                 }
                 else {
@@ -174,7 +184,11 @@ public class RayNode {
                 break;
 
             case ZU:
-                if (z > 0) {
+                if (turn) {
+                    adjDir = YR;
+                    break;
+                }
+                else if (z >= 0) {
                     adjDir = XU;
                 }
                 else {
@@ -183,7 +197,11 @@ public class RayNode {
                 break;
 
             case ZD:
-                if (z >= 0) {
+                if (turn) {
+                    adjDir = YL;
+                    break;
+                }
+                else if (z > 0) {
                     adjDir = YL;
                 }
                 else {
@@ -192,7 +210,11 @@ public class RayNode {
                 break;
 
             case YL:
-                if (y > 0) {
+                if (turn) {
+                    adjDir = XU;
+                    break;
+                }
+                else if (y >= 0) {
                     adjDir = ZD;
                 }
                 else {
@@ -201,7 +223,11 @@ public class RayNode {
                 break;
 
             case YR:
-                if (y >= 0) {
+                if (turn) {
+                    adjDir = XD;
+                    break;
+                }
+                else if (y > 0) {
                     adjDir = XD;
                 }
                 else {

@@ -10,22 +10,22 @@ public class ModelMain {
 
 
         BlackBoxBoard blackBoxBoard = new BlackBoxBoard();
-        System.out.println("Before placing atoms:");
+        //System.out.println("Before placing atoms:");
         // blackBoxBoard.printBoard();
 
         // Place atoms randomly
         //blackBoxBoard.placeRandomAtoms(6);
-        System.out.println("After placing atoms:");
+        //System.out.println("After placing atoms:");
 
-        blackBoxBoard.printCIPoints();
+        //blackBoxBoard.printCIPoints();
 
 
         // testing ray paths with specific atom placements
 
+
+        /*
         BlackBoxBoard.Point3D atom = new BlackBoxBoard.Point3D(0,0,0);
         blackBoxBoard.placeAtom(atom);
-        /*
-
         atom = new BlackBoxBoard.Point3D(-3,4,-1);
         blackBoxBoard.placeAtom(atom);
         atom = new BlackBoxBoard.Point3D(0,1,-1);
@@ -38,7 +38,7 @@ public class ModelMain {
         blackBoxBoard.placeAtom(atom);
          */
 
-        blackBoxBoard.printBoard();
+        //blackBoxBoard.printBoard();
 
         RayNode.initializeNodes();
         RayNode.printRayNodes();
