@@ -61,6 +61,7 @@ public class GameController {
      */
 
 
+    /*
     private void updateScore(Ray ray, int x, int y, int z) {
         Marker markerType = Marker.PINK; // Default for passing straight through without interaction
         if (ray.isAbsorbed()) {
@@ -74,6 +75,7 @@ public class GameController {
         }
         placeMarker(x, y, z, markerType);
     }
+     */
 
     private void placeMarker(int x, int y, int z, Marker marker) {
         System.out.println("Placing " + marker + " marker at entry point (" + x + ", " + y + ", " + z + ").");

@@ -94,7 +94,16 @@ public class Ray {
         // calculation if ray is immediately reflected
         if(HexCell.isEdgeCell(entryPoint)){
             HexCell cell = board.getCell(entryPoint);
-            if(cell != null && cell.hasCIPoint()){
+
+            if (cell != null && cell.hasAtom()) {
+                isAbsorbed = true;
+                path.add(entryPoint);
+                BlackBoxBoard.rayCount += 1;
+                BlackBoxBoard.rayMarkers += 1;
+                return entryPoint;
+            }
+
+            else if(cell != null && cell.hasCIPoint()){
                 //if it has a CI we will find the cells on the edge its next to and find out if these cells have atoms o n edge
                 if(isRayReflectedAtEdge(entryPoint)){
                     rayReversed = true;
@@ -104,14 +113,6 @@ public class Ray {
                     return entryPoint; //end method early since the ray is reflected
                 }
 
-            }
-
-            else if (cell != null && cell.hasAtom()) {
-                isAbsorbed = true;
-                path.add(entryPoint);
-                BlackBoxBoard.rayCount += 1;
-                BlackBoxBoard.rayMarkers += 1;
-                return entryPoint;
             }
 
         }

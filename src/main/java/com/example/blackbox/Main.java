@@ -492,7 +492,7 @@ public class Main extends Application {
                 //eBoard.printBoard();
                 List<Point2D> atomPositionsExperimenter = collectAtomPositions(); //collecting experimenter final atom positions.
                 gameState.setExpAtomPositions(atomPositionsExperimenter);
-                Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter);
+                Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter, sBoard);
                 showResults(primaryStage, results);
 
 
