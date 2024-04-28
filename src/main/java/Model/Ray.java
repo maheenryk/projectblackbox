@@ -166,7 +166,9 @@ public class Ray {
             // check if ray is on edge of board and break loop if true
             if (hasReachedBoardEdge(currentPosition, dir)) {
                 exitPoint = currentPosition;
-                BlackBoxBoard.rayMarkers += 2;
+                if (!isRayReversed()) {
+                    BlackBoxBoard.rayMarkers += 2;
+                }
                 break;
             }
 
