@@ -457,7 +457,11 @@ public class Main extends Application {
         Button ready = new Button("READY");
         //event handler for button click
         ready.setOnAction(event -> {
-            List<Point2D> atomPositions = collectAtomPositions();//collecting the final atom positions (setter) in list of Point2D objects.
+            List<Point2D> atomPositions = collectAtomPositions(gridGroup);//collecting the final atom positions (setter) in list of Point2D objects.
+            System.out.println("atomPositions Positions:");
+            for (Point2D position : atomPositions) {
+                System.out.println("X: " + position.getX() + ", Y: " + position.getY());
+            }
             List<Point2D> setterAtomPos = new ArrayList<>(atomPositions);
             if (isExperimenter == false) {//max final atom check
 //                List<Point2D> atomPositions = collectAtomPositions();
@@ -490,8 +494,18 @@ public class Main extends Application {
                 AtomGenerator.resetAtomCount();
 
                 //eBoard.printBoard();
-                List<Point2D> atomPositionsExperimenter = collectAtomPositions(); //collecting experimenter final atom positions.
-                gameState.setExpAtomPositions(atomPositionsExperimenter);
+                List<Point2D> atomPositionsExperimenter = collectAtomPositions(gridGroup2); //collecting experimenter final atom positions.
+                //gameState.setExpAtomPositions(atomPositionsExperimenter);
+                System.out.println("Experimenter Atom Positions:");
+                for (Point2D position : atomPositionsExperimenter) {
+                    System.out.println("X: " + position.getX() + ", Y: " + position.getY());
+                }
+                System.out.println("SetterPOS Positions:");
+                for (Point2D position : setterAtomPos) {
+                    System.out.println("X: " + position.getX() + ", Y: " + position.getY());
+                }
+
+
                 Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter, sBoard);
                 showResults(primaryStage, results);
 
@@ -520,9 +534,9 @@ public class Main extends Application {
 
 
 
-    private List<Point2D> collectAtomPositions() {
+    private List<Point2D> collectAtomPositions(Group grid) {
         List<Point2D> positions = new ArrayList<>();
-        for (Node node : gridGroup.getChildren()) {
+        for (Node node : grid.getChildren()) {
             if (node instanceof Circle && "atom".equals(node.getUserData())) { //making sure only atom Circle instances are referenced.
                 Circle atom = (Circle) node;
                 Point2D center = new Point2D(atom.getLayoutX(), atom.getLayoutY());
