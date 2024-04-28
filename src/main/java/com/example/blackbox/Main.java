@@ -415,7 +415,7 @@ public class Main extends Application {
 
         //stats label below the score label
         Label statsLabel = new Label(
-                //results.get("incorrectAtoms") + " atoms were incorrectly placed.\n" +
+                results.get("incorrectAtoms") + " atoms were incorrectly placed.\n" +
                         "Total rays fired: " + results.get("rayCount") + "\n" +
                         "Total ray markers: " + results.get("rayMarkers")
         );
@@ -441,7 +441,7 @@ public class Main extends Application {
         fadeScore.setFromValue(0);
         fadeScore.setToValue(1);
 
-        FadeTransition fadeStats = new FadeTransition(Duration.seconds(1.5), statsLabel); // Reduced duration
+        FadeTransition fadeStats = new FadeTransition(Duration.seconds(1.5), statsLabel);
         fadeStats.setFromValue(0);
         fadeStats.setToValue(1);
         fadeStats.setDelay(Duration.seconds(1)); //delay for fade
