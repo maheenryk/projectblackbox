@@ -1,7 +1,10 @@
 
 package com.example.blackbox;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -11,8 +14,12 @@ import javafx.scene.text.Text;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
+
 import java.util.List;
 import java.util.Arrays;
+
+import static com.example.blackbox.Main.BACKGROUND_COLOR;
 
 
 public class RayCircle extends StackPane {
@@ -94,6 +101,14 @@ public class RayCircle extends StackPane {
 
 
     private void addHoverEffect() {
+        //adding a tooltip in the hover effect for ray circles to provide info.
+        Tooltip tooltip = new Tooltip("ℹ Click on a ray circle to select it. To change ray, simply select a different ray.");
+        tooltip.setStyle("-fx-font-size: 14; -fx-background-color: #DAA600; -fx-text-fill: white; -fx-opacity: 0.7;");
+        tooltip.setMaxWidth(150);
+        tooltip.setWrapText(true);
+        tooltip.setShowDelay(Duration.millis(170));
+        Tooltip.install(this, tooltip);
+
         this.setOnMouseEntered(event -> {
             if (!colorLocked) {
                 if (currentlyClicked != this) {
@@ -102,6 +117,10 @@ public class RayCircle extends StackPane {
                     circle.setFill(clickedHover);
                 }
             }
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
+                tooltip.hide();
+            }));
+            timeline.play();
         });
 
         this.setOnMouseExited(event -> {
@@ -217,7 +236,7 @@ public class RayCircle extends StackPane {
 
 
     static RayCircle createRayCircle(double layoutX, double layoutY, int number) {
-        RayCircle circle = new RayCircle(12.0, Color.web("#4242ff"));
+        RayCircle circle = new RayCircle(12.0, BACKGROUND_COLOR);
         circle.setLayoutX(layoutX);
         circle.setLayoutY(layoutY);
 
@@ -243,13 +262,6 @@ public class RayCircle extends StackPane {
             return -1; // Return an invalid number if no RayCircle is currently clicked
         }
     }
-
-//    List<Color> rayMarkerColors = Arrays.asList(
-//            Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.PURPLE, Color.BROWN, Color.HOTPINK, Color.LIGHTPINK,
-//            Color.DARKBLUE, Color.LIGHTBLUE, Color.CORAL
-//    );
-//    Random random = new Random();
-//    Color randomColor = rayMarkerColors.get(random.nextInt(rayMarkerColors.size()));
 
 
 }

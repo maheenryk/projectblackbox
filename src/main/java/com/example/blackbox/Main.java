@@ -7,21 +7,17 @@ import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
@@ -32,24 +28,28 @@ import Controller.GameState;
 
 import java.util.*;
 
-import javafx.scene.paint.Color;
-
 import static Controller.GameState.calcScore;
 
 
 public class Main extends Application {
 
     public static List<Point2D> atomPositions;
-    public static List<Point2D> setterAtomPos;
     public static List<Point2D> expPositions;
     Group gridGroup = new Group();
     Group gridGroup2 = new Group();
-    Group gridGroup3 = new Group();
     BlackBoxBoard sBoard = new BlackBoxBoard(); //setter board instance
-    Translation translation = new Translation(sBoard);
+    BlackBoxBoard eBoard = new BlackBoxBoard(); //experimenter board instance
 
-    public static boolean setterAtomsSet = false;
-    private Stage window;
+    //only translation instance for setter board as experimenter board does not need atom translation with the logic.
+    Translation translation = new Translation(sBoard); //experimenter eBoard's atoms has direct comparisons with 2D Object ArrayLists from the UI only.
+
+    //----------constants
+
+    public static final Color BACKGROUND_COLOR = Color.DARKGOLDENROD;
+    public static final Color SECONDARY_COLOR = Color.DARKGRAY;
+
+
+//    private Stage window;
     private GameState gameState;
     // private GameState gameState2;
     public static void main(String[] args) {
@@ -153,8 +153,9 @@ public class Main extends Application {
         return mainGameScene;
     }
 
-    //this method handles displaying the main game screen where the experimenter is actually playing.
-    private void showExperimenterScreen(Stage primaryStage) {
+    //this method handles displaying the main game screen where the experimenter is playing.
+    public void showExperimenterScreen(Stage primaryStage) { // TODO: change to private
+        AtomGenerator.resetAtomCount();//resetting atom count
 
         BorderPane root2 = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
         Scene experimenterScene = new Scene(root2);
@@ -162,14 +163,10 @@ public class Main extends Application {
         StackPane buttonsStackPane2 = new StackPane();
         //group for hex cells so grid can be manipulated as a unit (for layout purposes).
 
-//      centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
-//      centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
         BorderPane.setMargin(centerStackPane2, new Insets(0, 0, 0, 100));
 
-        AtomGenerator.resetAtomCount();//resetting atom count
-
         HexCellGenerator.resetStartingPositions(); /*resetting here is crucial as it directly affects the layout if the static variables,
-        (the startig x and y points) for the hex cells and ray circles are remain shifted from the last call to grid generation.*/
+        (the starting x and y points) for the hex cells and ray circles remain shifted from the last call to grid generation.*/
 
         HexCellGenerator.generateHexCells(gridGroup2);//adding hex cells to group.
         HexCellGenerator.printHexCellsAndCenters(); //TEST
@@ -179,6 +176,7 @@ public class Main extends Application {
         generateReadyButton(buttonsStackPane2, gameState, primaryStage, true);
         Button fireRayButton = createFireRayButton();
         BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
+        buttonsStackPane2.getChildren().add(fireRayButton);
 
         centerStackPane2.getChildren().add(gridGroup2);
 
@@ -192,20 +190,17 @@ public class Main extends Application {
         VBox.setMargin(turn2, new Insets(50, 0, 0, 50));
         topContainer2.setAlignment(Pos.TOP_CENTER);
 
-        Label experimenterInstructions = generateExperimenterInstructions();
-        VBox rightContainer2 = new VBox();
-        rightContainer2.getChildren().add(experimenterInstructions);
+
+        AnchorPane rightContainer2 = new AnchorPane();
         rightContainer2.getChildren().add(fireRayButton);
-        rightContainer2.setAlignment(Pos.TOP_RIGHT);
-        VBox.setMargin(rightContainer2, new Insets(0, 200, 0, 0));
-        rightContainer2.setMaxWidth(300);
+        AnchorPane.setBottomAnchor(fireRayButton, 300.0);
+        AnchorPane.setRightAnchor(fireRayButton, 85.0);
+        AnchorPane.setRightAnchor(rightContainer2, 150.0);
+        BorderPane.setMargin(rightContainer2, new javafx.geometry.Insets(0, 0, 0, 120));
+
+//        rightContainer2.setPrefSize(150, 150);
         VBox rayMarkerKey = generateRayMarkerKey();
         BorderPane.setAlignment(rayMarkerKey, Pos.TOP_LEFT);
-
-
-//        VBox rightPanel = createRightPanel();
-//        root2.setRight(rightPanel);
-
 
         root2.setLeft(rayMarkerKey);
         root2.setTop(topContainer2);
@@ -219,53 +214,6 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void showGameRevealScreen(Stage primaryStage) {
-
-        BorderPane root3 = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
-        Scene gameRevealScene = new Scene(root3);
-        StackPane centerStackPane3 = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
-        StackPane buttonsStackPane3 = new StackPane();
-        //group for hex cells so grid can be manipulated as a unit (for layout purposes).
-
-//      centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
-//      centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
-        BorderPane.setMargin(centerStackPane3, new Insets(0, 0, 0, 100));
-
-        AtomGenerator.resetAtomCount();//resetting atom count
-
-        HexCellGenerator.resetStartingPositions(); /*resetting here is crucial as it directly affects the layout if the static variables,
-        (the startig x and y points) for the hex cells and ray circles are remain shifted from the last call to grid generation.*/
-
-        HexCellGenerator.generateHexCells(gridGroup3);//adding hex cells to group.
-        HexCellGenerator.printHexCellsAndCenters(); //TEST
-        RayCircle.generateRayCircles(gridGroup3); //adding ray circles to same group.
-
-        GameReveal.revealSetterAtoms(setterAtomPos,gridGroup3);
-
-        centerStackPane3.getChildren().add(gridGroup3);
-
-        translation.linkMaps();
-
-        Label reveal = revealTopText();
-        //setting text to the centre in the root top container.
-        VBox topContainer2 = new VBox();
-        topContainer2.getChildren().add(reveal);
-        VBox.setMargin(reveal, new Insets(50, 0, 0, 50));
-        topContainer2.setAlignment(Pos.TOP_CENTER);
-
-
-//        VBox rightPanel = createRightPanel();
-//        root2.setRight(rightPanel);
-
-        root3.setTop(topContainer2);
-        root3.setCenter(centerStackPane3);
-        root3.setStyle("-fx-background-color: black;");
-
-        primaryStage.setScene(gameRevealScene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
-
-    }
     private void showPlayerChoiceScreen(Stage primaryStage, Scene mainGameScene) {
         //label for the name entry prompt
         Label nameLabel = new Label("Enter your name:"); //unecessary for time being. - personal choice.
@@ -309,7 +257,7 @@ public class Main extends Application {
 
 
     //this method handles displaying the intermediate screen between the setter finishing their turn and the experimenter starting their turn.
-    private void showExperimenterTurnScreen(Stage primaryStage) {
+    private void showContinueToExperimenterScreen(Stage primaryStage) {
         Label chosenAtomsLabel = new Label("You have chosen your atoms!");
         chosenAtomsLabel.setFont(new Font("Arial", 24));
         chosenAtomsLabel.setTextFill(Color.WHITE);
@@ -336,36 +284,21 @@ public class Main extends Application {
     }
 
 
-//    private VBox createRightPanel() { //panel for fire ray buttom
-//        Button fireRayButton = createFireRayButton();
-//        fireRayButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
-//
-//        VBox rightContainer = new VBox(10);
-//        rightContainer.getChildren().add(fireRayButton);
-//        rightContainer.setAlignment(Pos.CENTER);
-//        rightContainer.setPadding(new Insets(0, 45, 0, 0)); //vbox padding
-//
-//        return rightContainer;
-//    }
-
-
-
 
     private Label generateTopText() {
         Label playerTurn = new Label("Setter's turn.");
         //css inline styling
-        playerTurn.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 60px;");
+        playerTurn.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 60px;");
         //borderpane margin and alignment
         playerTurn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         BorderPane.setMargin(playerTurn, new Insets(100, 0, 0, 0));
 
         return playerTurn;
     }
-
     private Label generateTopExptText() { //generating the top text for the experimenter screen.
-        Label exptTurn = new Label("Experimenter's turn.");
+        Label exptTurn = new Label("EXPERIMENTER'S TURN.");
         //css inline styling
-        exptTurn.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 60px;");
+        exptTurn.setStyle("-fx-font-family:'Droid Sans Mono'; -fx-font-size: 60px; -fx-font-weight: bold");
         //borderpane margin and alignment
         exptTurn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         BorderPane.setMargin(exptTurn, new Insets(100, 0, 0, 0));
@@ -373,36 +306,23 @@ public class Main extends Application {
         return exptTurn;
     }
 
-    private Label revealTopText() { //generating the top text for the experimenter screen.
-        Label scoreTxt = new Label("Final Score and Game Reveal");
-        //css inline styling
-        scoreTxt.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 60px;");
-        //borderpane margin and alignment
-        scoreTxt.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        BorderPane.setMargin(scoreTxt, new Insets(100, 0, 0, 0));
-
-        return scoreTxt;
-    }
-
     private Label generateSetterInstructions() {
         Label instructions = new Label("Please place 6 atoms inside your chosen hex cells. " +
                 "After you are finished, click the Ready button below the board.");
-        instructions.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
+        instructions.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px;");
         instructions.setWrapText(true);
-        instructions.setMaxWidth(500);
+        instructions.setMaxWidth(400);
         instructions.setTextAlignment(TextAlignment.CENTER);
         return instructions;
     }
 
     private Button createFireRayButton() {
-        Button fireRayButton = new Button("Fire Ray");
-        fireRayButton.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; " +
-                "-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; " +
-                "-fx-border-width: 1px;");
+        Button fireRayButton = new Button("FIRE RAY");
+        fireRayButton.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 18px; " +
+                "-fx-background-color: #F6DE90; -fx-text-fill: black; -fx-border-color: black; " +
+                "-fx-border-width: 4px; -fx-font-weight: bold; -fx-border-radius: 2px; -fx-padding: 14px;");
+        fireRayButton.setAlignment(Pos.BASELINE_CENTER);
 
-        if (!setterAtomsSet) {
-            sBoard.placeSetterAtoms(BlackBoxBoard.randomAtoms);
-        }
 
         fireRayButton.setOnAction(event -> {
             int rayNumber = RayCircle.getCurrentlyClickedRayNumber();
@@ -437,60 +357,93 @@ public class Main extends Application {
     }
 
 
-    private Label generateExperimenterInstructions() {
-        Label instructionsExpt = new Label("You can choose a ray by selecting on it. The chosen ray can be changed by simply clicking on the ray you would like to choose instead." +
-                "When you want to fire the ray, click the [Fire Ray] button below. The results of your ray will be shown in ray markers, indicated by the changing colour of the ray nodes.");
-        instructionsExpt.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px;");
-        instructionsExpt.setWrapText(true);
-        instructionsExpt.setMaxWidth(500);
-        instructionsExpt.setTextAlignment(TextAlignment.CENTER);
-        return instructionsExpt;
-    }
+//    private Text generateExperimenterInstructions() {
+//        Text instructionsExpt = new Text("YOU CAN CHOOSE A RAY BY SELECTING ON IT. THE CHOSEN RAY CAN BE CHANGED BY SIMPLY CLICKING ON THE RAY YOU WOULD LIKE TO CHOOSE INSTEAD." +
+//                "WHEN YOU WANT TO FIRE THE RAY, CLICK THE [FIRE RAY] BUTTON BELOW. THE RESULTS OF YOUR RAY WILL BE SHOWN IN RAY MARKERS, INDICATED BY THE CHANGING COLOUR OF THE RAY NODES.");
+//        instructionsExpt.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px;");
+//        instructionsExpt.setWrappingWidth(200);
+//        instructionsExpt.maxWidth(150);
+//        instructionsExpt.setTextAlignment(TextAlignment.CENTER);
+//        StackPane exptpane = new StackPane(instructionsExpt);
+//        exptpane.setPadding(new Insets(50,50,50,50));
+//        instructionsExpt.setFill(SECONDARY_COLOR);
+//        return instructionsExpt;
+//    }
+
+//    public void start(Stage primaryStage) {
+//
+//        Button infoButton = new Button("ℹ");
+//        infoButton.setStyle("-fx-font-size: 18;");
+//
+//
+//        Label infoLabel = new Label("YOU CAN CHOOSE A RAY BY SELECTING ON IT. THE CHOSEN RAY CAN BE CHANGED BY SIMPLY CLICKING ON THE RAY YOU WOULD LIKE TO CHOOSE INSTEAD." +
+//                "WHEN YOU WANT TO FIRE THE RAY, CLICK THE [FIRE RAY] BUTTON BELOW. THE RESULTS OF YOUR RAY WILL BE SHOWN IN RAY MARKERS, INDICATED BY THE CHANGING COLOUR OF THE RAY NODE");
+//        infoLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px;");
+//        VBox popupContent = new VBox(10);
+//        popupContent.getChildren().add(infoLabel);
+//        popupContent.setAlignment(Pos.CENTER);
+//
+//        Stage popupStage = new Stage();
+//        popupStage.setScene(new Scene(popupLayout, 200, 100));
+//
+//
+//        infoButton.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                popupStage.show();
+//            }
+//        });
     private VBox generateRayMarkerKey() {
         //white circle to represent reflected ray marker
         Circle whiteCircle = new Circle(10, Color.WHITE);
         whiteCircle.setStroke(Color.BLACK);
-        Label whiteLabel = new Label("Reflected");
-        whiteLabel.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; -fx-text-fill: black;");
+        Label whiteLabel = new Label("REFLECTED");
+        whiteLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
         HBox whiteKey = new HBox(5, whiteCircle, whiteLabel);
 
         //black circle to reflect absorbed ray marker
         Circle blackCircle = new Circle(10, Color.BLACK);
-        Label blackLabel = new Label("Direct hit/Absorbed");
-        blackLabel.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 16px; -fx-text-fill: black;");
+        Label blackLabel = new Label("DIRECT HIT/ABSORBED");
+        blackLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
         HBox blackKey = new HBox(5, blackCircle, blackLabel);
 
+        //colored pair to reflect two normal ray markers.
+        Circle colorCircle = new Circle(10, Color.PINK);
+        Label colorLabel = new Label("x2  ENTRY & EXIT POINTS");
+        colorLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
+        HBox colorKey = new HBox(5, colorCircle, colorLabel);
+        Image image = new Image("file:src/main/resources/multicolor.jpeg");
+        colorCircle.setFill(new ImagePattern(image));
+
         //combining the hboxes into a vbox to align vertically
-        VBox keyBox = new VBox(10, whiteKey, blackKey);
-        keyBox.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: white;");
+        VBox keyBox = new VBox(8, whiteKey, blackKey, colorKey);
+        keyBox.setStyle("-fx-border-color: black; -fx-border-width: 15; -fx-padding: 8px");
+        keyBox.setBackground(Background.fill(SECONDARY_COLOR));
         keyBox.setAlignment(Pos.CENTER);
 
         return keyBox;
     }
 
     public void showResults(Stage primaryStage, Map<String, Integer> results) { //SCREEN TO DISPLAY RESULTS AND stats
-        /*
         StackPane root = new StackPane();
         root.setAlignment(Pos.CENTER);
 
         Label scoreLabel = new Label("Your score is: " + results.get("score"));
-        scoreLabel.setFont(new Font("Arial Rounded MT Bold", 60));
+        scoreLabel.setFont(new Font("Droid Sans Mono", 60));
         scoreLabel.setTextFill(Color.WHITE);
         scoreLabel.setOpacity(0);
         scoreLabel.setTextAlignment(TextAlignment.CENTER);
 
         //stats label below the score label
         Label statsLabel = new Label(
-                results.get("correctAtoms") + " atoms were correctly placed.\n" +
+                results.get("incorrectAtoms") + " atoms were incorrectly placed.\n" +
                         "Total rays fired: " + results.get("rayCount") + "\n" +
                         "Total ray markers: " + results.get("rayMarkers")
         );
-        statsLabel.setFont(new Font("Arial Rounded MT Bold", 30)); //slightly smaller font size for stats
+        statsLabel.setFont(new Font("Droid Sans Mono", 30)); //slightly smaller font size for stats
         statsLabel.setTextFill(Color.WHITE);
         statsLabel.setOpacity(0);
         statsLabel.setTextAlignment(TextAlignment.CENTER);
-
-        showAtomsButton(root, primaryStage);
 
         //vertical layout for the labels
         VBox labelsBox = new VBox(10, scoreLabel, statsLabel);
@@ -516,39 +469,27 @@ public class Main extends Application {
 
         SequentialTransition sequentialTransition = new SequentialTransition(fadeScore, fadeStats);
         sequentialTransition.play();
-
-         */
-
-        showGameRevealScreen(primaryStage);
     }
 
     private boolean isReadyClicked = false;
 
-    public void showAtomsButton(StackPane buttonsStackPane, Stage primaryStage) {
-        Button showAtoms = new Button("Show Atoms");
-        showAtoms.setOnAction(event -> {
-            showGameRevealScreen(primaryStage);
-        });
-        showAtoms.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;-fx-padding: 10 30");
-        StackPane.setAlignment(showAtoms, Pos.BOTTOM_CENTER);
-        buttonsStackPane.getChildren().add(showAtoms);
-    }
+
     public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage, boolean isExperimenter) {
         Button ready = new Button("READY");
         //event handler for button click
         ready.setOnAction(event -> {
+            System.out.println(" &&&& &&&&& &&&&&&& READY CLICKED  &&&&&&&& &&&&& &&&&&& &&&&&& &&&&&&&");
             List<Point2D> atomPositions = collectAtomPositions(gridGroup);//collecting the final atom positions (setter) in list of Point2D objects.
             System.out.println("atomPositions Positions:");
             for (Point2D position : atomPositions) {
                 System.out.println("X: " + position.getX() + ", Y: " + position.getY());
             }
-            setterAtomPos = new ArrayList<>(atomPositions);
-            if (!isExperimenter) {//max final atom check
+            List<Point2D> setterAtomPos = new ArrayList<>(atomPositions);
+            if (isExperimenter == false) {//max final atom check
 //                List<Point2D> atomPositions = collectAtomPositions();
                 if (AtomGenerator.atomCount == 6) {
                     List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
                     sBoard.placeSetterAtoms(setterAtomList);
-                    setterAtomsSet = true;
                     sBoard.printBoard();
 
                     //print the positions
@@ -558,7 +499,7 @@ public class Main extends Application {
                     }
                     gameState.setSetterAtomPositions(atomPositions);
                     gameState.onReadyClicked();
-                    showExperimenterTurnScreen(primaryStage);
+                    showContinueToExperimenterScreen(primaryStage);
                 } else {
                     //alert popup to remind setter to place exactly 6 atoms.
                     Alert readyButtonAlert = new Alert(Alert.AlertType.WARNING);
@@ -568,12 +509,9 @@ public class Main extends Application {
                     readyButtonAlert.setContentText("Please place exactly 6 atoms in the hex board.");
                     readyButtonAlert.showAndWait();
                 }
-            }
+            } else if (isExperimenter) {
 
-
-            else {
-                AtomGenerator.resetAtomCount();
-
+                //eBoard.printBoard();
                 List<Point2D> atomPositionsExperimenter = collectAtomPositions(gridGroup2); //collecting experimenter final atom positions.
                 //gameState.setExpAtomPositions(atomPositionsExperimenter);
                 System.out.println("Experimenter Atom Positions:");
@@ -586,24 +524,50 @@ public class Main extends Application {
                 }
 
 
-                Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter, sBoard);
-                showResults(primaryStage, results);
+                    Alert readyButtonAlert2 = new Alert(Alert.AlertType.WARNING);
+                    readyButtonAlert2.initOwner(primaryStage);
+                    readyButtonAlert2.setTitle("FINISHED GUESSING?");
+                    readyButtonAlert2.setHeaderText("You are about to finish experimenting and reveal the results...🤔");
+                    readyButtonAlert2.setContentText("Place 6 atoms strategically to maximise your score. Placing less than 6 atoms means any missing atoms will be counted as incorrectly placed atoms.");
 
-                gameState.onReadyClicked();
+                    //introducing button types continue and go back for the experimenter screen ready button alert.
+                    ButtonType buttonTypeContinue = new ButtonType("REVEAL RESULTS →", ButtonBar.ButtonData.YES); //setting data to yes for continue
+                    ButtonType buttonTypeGoBack = new ButtonType("← CONTINUE EXPERIMENTING", ButtonBar.ButtonData.NO);//setting data to no for go back
+                    readyButtonAlert2.getButtonTypes().setAll(buttonTypeContinue, buttonTypeGoBack);//adding buttons to the alert
 
-//            else {
-//                //alert popup to remind setter to place exactly 6 atoms.
-//                Alert readyButtonAlert = new Alert(Alert.AlertType.WARNING);
-//                readyButtonAlert.initOwner(primaryStage);
-//                readyButtonAlert.setTitle("ATOMS : Warning");
-//                readyButtonAlert.setHeaderText(">:(");
-//                readyButtonAlert.setContentText("You have less than 6 guesses placed.");
-//                readyButtonAlert.showAndWait();
-//            }
+                    DialogPane dialogPane = readyButtonAlert2.getDialogPane();
+//                    dialogPane.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
+                      dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
+//                    dialogPane.getStylesheets().add(getClass().getResource("com/example/blackbox/style.css").toExternalForm());
+                    dialogPane.lookupButton(buttonTypeContinue).getStyleClass().add("continue-button");
+                    dialogPane.lookupButton(buttonTypeGoBack).getStyleClass().add("go-back-button");
+                    dialogPane.lookupAll("background");
+
+                    readyButtonAlert2.getDialogPane().setMinWidth(520);
+                    readyButtonAlert2.getDialogPane().setMinHeight(200);
+                    readyButtonAlert2.getDialogPane().setPrefWidth(600);
+                    readyButtonAlert2.getDialogPane().setPrefHeight(160);
+
+                    Stage opacity = (Stage) readyButtonAlert2.getDialogPane().getScene().getWindow();
+                    opacity.setOpacity(0.9);
+
+                    Optional<ButtonType> userReadyResult = readyButtonAlert2.showAndWait();
+                if (userReadyResult.isPresent() && userReadyResult.get() == buttonTypeContinue) {
+                    //user chose "Reveal Results", continue to the showResults screen
+                    Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter, sBoard);
+                    showResults(primaryStage, results);
+                    gameState.onReadyClicked();
+                } else {
+                    //user chose "Continue Experimenting" or closed the alert, just close the dialog
+                    readyButtonAlert2.close();
+                }
+
+
             }
-        });
+
+    });
         //some inline CSS for button styling.
-        ready.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;-fx-padding: 10 30");
+        ready.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 20px;-fx-padding: 10 30; -fx-font-weight: bold");
         StackPane.setAlignment(ready, Pos.BOTTOM_CENTER);
         //stack pane margin and alignments.
 //        StackPane.setMargin(ready, new Insets(5, 10, 60, 20));
