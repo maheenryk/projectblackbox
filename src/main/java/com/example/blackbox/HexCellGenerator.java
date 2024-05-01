@@ -22,6 +22,7 @@ import java.util.Map;
 
 
 import static com.example.blackbox.AtomGenerator.*;
+import static com.example.blackbox.Main.BACKGROUND_COLOR;
 
 public class HexCellGenerator {
 
@@ -152,7 +153,7 @@ public class HexCellGenerator {
         hexagon.setFill(Color.BLACK);
         hexagon.setLayoutX(layoutX);
         hexagon.setLayoutY(layoutY);
-        hexagon.setStroke(Color.web("#4242ff"));
+        hexagon.setStroke(BACKGROUND_COLOR);
         hexagon.setStrokeWidth(2);
         hexagon.setStrokeType(StrokeType.INSIDE);
         return hexagon;

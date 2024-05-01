@@ -1,0 +1,54 @@
+/* This css stylesheet is created to further align with separation concerns and adhere to an MVC model.
+While inline CSS is used throughout the UI, this stylesheet deals with concentrated elements
+of the UI that require significant styling.
+*/
+
+
+/* button styling for Ready Button Alerts.*/
+.body{
+    -fx-background-color: blue;
+    -fx-font-size: 100%;
+    -fx-font-family: 'Droid Sans Mono';
+}
+.button {
+    -fx-text-fill: white;
+}
+
+.continue-button {
+    -fx-background-color: black;
+    /*-fx-label-padding: 10px;*/
+    -fx-font-size: 1.25em;
+    -fx-font-family: 'Droid Sans Mono';
+    -fx-font-weight: bold;
+
+}
+
+.go-back-button {
+    -fx-background-color: green;
+    /*-fx-label-padding: 10px;*/
+    -fx-font-size: 1.25em;
+    -fx-font-family: 'Droid Sans Mono';
+    -fx-font-weight: bold;
+
+}
+ .button-bar {
+     -fx-spacing: 50;
+     -fx-alignment: center;
+     /*-fx-background-color: blue;*/
+ }
+
+ .dialog-pane .header-panel {
+     -fx-text-fill: white;
+     -fx-background-color: #957A00;
+     -fx-font-size: 1.25em;
+     -fx-font-weight: bolder;
+ }
+.dialog-pane {
+    -fx-font-family: 'Droid Sans Mono';
+    -fx-background-color: #957A00;
+}
+ /* Style the content area */
+ .dialog-pane .content {
+    -fx-background-color: #957A00;
+     -fx-font-weight: bolder;
+ }
