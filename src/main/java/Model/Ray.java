@@ -47,8 +47,8 @@ public class Ray {
         //call method to make sure every time a ray object is created its path is calculated immediately
 
         this.exitPoint = calculatePath();
-
     }
+
     public boolean isAbsorbed() {
         return this.isAbsorbed;
     }

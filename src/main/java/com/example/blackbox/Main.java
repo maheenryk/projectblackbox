@@ -415,7 +415,7 @@ public class Main extends Application {
 
         //stats label below the score label
         Label statsLabel = new Label(
-                results.get("incorrectAtoms") + " atoms were incorrectly placed.\n" +
+                results.get("correctAtoms") + " atoms were correctly placed.\n" +
                         "Total rays fired: " + results.get("rayCount") + "\n" +
                         "Total ray markers: " + results.get("rayMarkers")
         );

@@ -57,11 +57,22 @@ public class GameState implements ReadyButtonClickedListener {
         int incorrectAtoms = (correctAtoms - experimenterAtoms.size());
         int score = incorrectAtoms * 5;
 
+        int correctlyPlacedAtoms = experimenterAtoms.size();
+
+        if (correctlyPlacedAtoms > 1) {
+            System.out.println(correctlyPlacedAtoms + " atoms were correctly placed.");
+        } else {
+            System.out.println(correctlyPlacedAtoms + " atom was correctly placed.");
+        }
+
+        /*
         if (incorrectAtoms > 1) {
             System.out.println(incorrectAtoms + " atoms were incorrectly placed.");
         } else {
             System.out.println(incorrectAtoms + " atom was incorrectly placed.");
         }
+         */
+
         System.out.println("Total rays fired: " + board.getRayCount());
         System.out.println("Total ray markers: " + board.getRayMarkers());
         score += BlackBoxBoard.rayMarkers;
@@ -69,6 +80,7 @@ public class GameState implements ReadyButtonClickedListener {
         Map<String, Integer> results = new HashMap<>(); //map for storing results
         results.put("score", score);
         //results.put("incorrectAtoms", incorrectAtoms);
+        results.put("correctAtoms", correctlyPlacedAtoms);
         results.put("rayCount", board.getRayCount());
         results.put("rayMarkers", board.getRayMarkers());
 
