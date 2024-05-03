@@ -415,7 +415,7 @@ public class Main extends Application {
 
         //stats label below the score label
         Label statsLabel = new Label(
-                results.get("incorrectAtoms") + " atoms were incorrectly placed.\n" +
+                results.get("correctAtoms") + " atoms were correctly placed.\n" +
                         "Total rays fired: " + results.get("rayCount") + "\n" +
                         "Total ray markers: " + results.get("rayMarkers")
         );
@@ -521,7 +521,7 @@ public class Main extends Application {
 //                readyButtonAlert.setContentText("You have less than 6 guesses placed.");
 //                readyButtonAlert.showAndWait();
 //            }
-             }
+            }
         });
         //some inline CSS for button styling.
         ready.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;-fx-padding: 10 30");

@@ -1,6 +1,5 @@
 package Controller;
 import Model.BlackBoxBoard;
-
 import javafx.geometry.Point2D;
 import utils.ReadyButtonClickedListener;
 
@@ -10,11 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class GameState implements ReadyButtonClickedListener {
     private final List<Point2D> setterAtoms = new ArrayList<>(); //list to store the setter atom positions
     private final List<Point2D> experimenterAtoms = new ArrayList<>(); //list to store experimenter atoms.
-
 
 
 
@@ -22,7 +19,6 @@ public class GameState implements ReadyButtonClickedListener {
         //other new game code here (future sprint)
         System.out.println("New Game!");
     }
-
     private boolean isReadyClicked = false; //set ready button click flag to false.
 
     @Override
@@ -31,9 +27,7 @@ public class GameState implements ReadyButtonClickedListener {
             isReadyClicked = true;
             System.out.println("READY button clicked");
             //call method for beginning experimenter turn here
-            //reset flag here.
-
-
+            //maybe reset flag here.
         }
     }
 
@@ -41,7 +35,6 @@ public class GameState implements ReadyButtonClickedListener {
         this.setterAtoms.clear();
         this.setterAtoms.addAll(positions);
     }
-
     public List<Point2D> getSetterAtomPositions() {
         return this.setterAtoms;
     }
@@ -50,13 +43,13 @@ public class GameState implements ReadyButtonClickedListener {
         this.experimenterAtoms.clear();
         this.experimenterAtoms.addAll(positions);
     }
-
     public List<Point2D> getExperimenterAtoms() {
         return this.experimenterAtoms;
     }
 
 
-    public static Map<String, Integer> calcScore(List<Point2D> setterAtoms, List<Point2D> experimenterAtoms, BlackBoxBoard board) {
+
+    public static Map<String, Integer>  calcScore(List<Point2D> setterAtoms, List<Point2D> experimenterAtoms, BlackBoxBoard board) {
         int correctAtoms = setterAtoms.size();
 
         // only keep in experimenter atoms list the atoms that match with setter's list
@@ -64,11 +57,22 @@ public class GameState implements ReadyButtonClickedListener {
         int incorrectAtoms = (correctAtoms - experimenterAtoms.size());
         int score = incorrectAtoms * 5;
 
+        int correctlyPlacedAtoms = experimenterAtoms.size();
+
+        if (correctlyPlacedAtoms > 1) {
+            System.out.println(correctlyPlacedAtoms + " atoms were correctly placed.");
+        } else {
+            System.out.println(correctlyPlacedAtoms + " atom was correctly placed.");
+        }
+
+        /*
         if (incorrectAtoms > 1) {
             System.out.println(incorrectAtoms + " atoms were incorrectly placed.");
         } else {
             System.out.println(incorrectAtoms + " atom was incorrectly placed.");
         }
+         */
+
         System.out.println("Total rays fired: " + board.getRayCount());
         System.out.println("Total ray markers: " + board.getRayMarkers());
         score += BlackBoxBoard.rayMarkers;
@@ -76,6 +80,7 @@ public class GameState implements ReadyButtonClickedListener {
         Map<String, Integer> results = new HashMap<>(); //map for storing results
         results.put("score", score);
         //results.put("incorrectAtoms", incorrectAtoms);
+        results.put("correctAtoms", correctlyPlacedAtoms);
         results.put("rayCount", board.getRayCount());
         results.put("rayMarkers", board.getRayMarkers());
 
@@ -83,16 +88,13 @@ public class GameState implements ReadyButtonClickedListener {
 
     }
 
-
     //method for beginning experimenter turn.
-    public void resetReadyClicked () {//resetting flag from outside
+    public void resetReadyClicked() {//resetting flag from outside
         isReadyClicked = false;
     }
-
-
 }
 
-
+//method for comparing the atoms of experimnter and setter for scoring purposes:
 
 
 
