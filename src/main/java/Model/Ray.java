@@ -47,8 +47,8 @@ public class Ray {
         //call method to make sure every time a ray object is created its path is calculated immediately
 
         this.exitPoint = calculatePath();
-
     }
+
     public boolean isAbsorbed() {
         return this.isAbsorbed;
     }
@@ -166,7 +166,9 @@ public class Ray {
             // check if ray is on edge of board and break loop if true
             if (hasReachedBoardEdge(currentPosition, dir)) {
                 exitPoint = currentPosition;
-                BlackBoxBoard.rayMarkers += 2;
+                if (!isRayReversed()) {
+                    BlackBoxBoard.rayMarkers += 2;
+                }
                 break;
             }
 

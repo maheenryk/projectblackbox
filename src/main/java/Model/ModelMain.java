@@ -45,7 +45,7 @@ public class ModelMain {
 
         // Define an entry point for the ray. Choose an edge coordinate.
         // Create a ray with the entry point
-        //Ray ray = new Ray(blackBoxBoard, 35);
+        Ray ray = new Ray(blackBoxBoard, 35);
         //Ray.printRayInfo(ray);
 
         // Create a ray with the entry point
