@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeType;
 import javafx.geometry.Point2D;
 import javafx.scene.text.Font;
@@ -167,10 +168,20 @@ public class HexCellGenerator {
                 double centerX = clickedHexagon.getLayoutBounds().getCenterX() + clickedHexagon.getLayoutX();
                 double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
                 Circle atom = createAtom(centerX, centerY);
-                targetGroup.getChildren().add(atom);
+
+                // circles of influence
+                Circle circOfInf = new Circle(centerX, centerY, 70);
+                circOfInf.setFill(Color.TRANSPARENT);
+                circOfInf.setStroke(Color.GOLD);
+                circOfInf.setStrokeWidth(1);
+                circOfInf.getStrokeDashArray().addAll(5d, 5d);
+
+                circOfInf.setStrokeLineCap(StrokeLineCap.ROUND);
+
+                targetGroup.getChildren().addAll(circOfInf, atom);
                 atomCount++;
                 atom.setOnMouseClicked(atomEvent -> {
-                    targetGroup.getChildren().remove(atom);
+                    targetGroup.getChildren().removeAll(circOfInf, atom);
                     atomCount--;
                 });
             }

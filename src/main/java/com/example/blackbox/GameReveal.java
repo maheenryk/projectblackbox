@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.Line;
 import java.util.List;
 import java.util.ArrayList;
@@ -16,7 +17,17 @@ public class GameReveal {
     public static void displayAtom(Point2D position, Group targetGroup) {
         Circle atom = new Circle(position.getX(), position.getY(), 20);
         atom.setFill(Color.RED); //colour for atoms
-        targetGroup.getChildren().add(atom);
+
+
+        Circle circOfInf = new Circle(position.getX(), position.getY(), 70);
+        circOfInf.setFill(Color.TRANSPARENT);
+        circOfInf.setStroke(Color.GOLD);
+        circOfInf.setStrokeWidth(1);
+        circOfInf.getStrokeDashArray().addAll(5d, 5d);
+
+        circOfInf.setStrokeLineCap(StrokeLineCap.ROUND);
+
+        targetGroup.getChildren().addAll(circOfInf, atom);
     }
 
     // Method to reveal all atoms at the end of a game by iterating through setters atoms
