@@ -75,13 +75,16 @@ public class Translation {
         return point3DSetterAtoms;
     }
 
+    public List<Point2D> get2DAtomMatch(List<Point3D> atomPositions) {
+        List<Point2D> point2DSetterAtoms = new ArrayList<>();
 
-    //this section of the code deals with ray translation. ie connecting the UI ray nodes to the ray class in the Model.
-
-
-
-
-
+        for (Map.Entry<Point3D, Point2D> entry : translationMap.entrySet()) {
+            if (atomPositions.contains(entry.getKey())) {
+                point2DSetterAtoms.add(entry.getValue());
+            }
+        }
+        return point2DSetterAtoms;
+    }
 
 }
 

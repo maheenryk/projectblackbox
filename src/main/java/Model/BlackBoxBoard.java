@@ -1,7 +1,11 @@
 package Model;
+import javafx.geometry.Point2D;
+
 import java.util.*;
 
 public class BlackBoxBoard {
+
+    public static List<Point3D> randomAtoms = new ArrayList<>();
 
     /* creating custom Point3D class to make connecting view (JavaFX) and model efficient.
     co-ord mapping shouldn't be done only in JavaFX using Point3D as goes against layer abstraction.
@@ -51,6 +55,7 @@ public class BlackBoxBoard {
     //BB-board constructor
     public BlackBoxBoard() {
         this.board = new LinkedHashMap<>();
+        placeRandomAtoms(6);
         initializeBoard();
     }
 
@@ -179,13 +184,15 @@ public class BlackBoxBoard {
         // create a list from the keys of the board HashMap, which are the valid positions
         List<Point3D> validPoints = new ArrayList<>(board.keySet());
 
+
         // shuffle the list to randomise the order of points
         Collections.shuffle(validPoints);
 
         //we can loop through the shuffled list and take the first numberOfAtoms points to place atoms
         for (int i = 0; i < numberOfAtoms; i++) {
             Point3D point = validPoints.get(i);
-            placeAtom(point);
+            //placeAtom(point);
+            randomAtoms.add(point);
         }
     }
 

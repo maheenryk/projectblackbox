@@ -7,6 +7,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -45,10 +46,9 @@ public class Main extends Application {
     Group gridGroup2 = new Group();
     Group gridGroup3 = new Group();
     BlackBoxBoard sBoard = new BlackBoxBoard(); //setter board instance
-    BlackBoxBoard eBoard = new BlackBoxBoard(); //experimenter board instance
     Translation translation = new Translation(sBoard);
 
-    Translation etranslation = new Translation(eBoard);
+    public static boolean setterAtomsSet = false;
     private Stage window;
     private GameState gameState;
     // private GameState gameState2;
@@ -220,6 +220,7 @@ public class Main extends Application {
     }
 
     private void showGameRevealScreen(Stage primaryStage) {
+
         BorderPane root3 = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
         Scene gameRevealScene = new Scene(root3);
         StackPane centerStackPane3 = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
@@ -399,6 +400,10 @@ public class Main extends Application {
                 "-fx-background-color: white; -fx-text-fill: black; -fx-border-color: black; " +
                 "-fx-border-width: 1px;");
 
+        if (!setterAtomsSet) {
+            sBoard.placeSetterAtoms(BlackBoxBoard.randomAtoms);
+        }
+
         fireRayButton.setOnAction(event -> {
             int rayNumber = RayCircle.getCurrentlyClickedRayNumber();
             if (rayNumber > 0 && rayNumber < 55) {
@@ -543,6 +548,7 @@ public class Main extends Application {
                 if (AtomGenerator.atomCount == 6) {
                     List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
                     sBoard.placeSetterAtoms(setterAtomList);
+                    setterAtomsSet = true;
                     sBoard.printBoard();
 
                     //print the positions
@@ -568,7 +574,6 @@ public class Main extends Application {
             else {
                 AtomGenerator.resetAtomCount();
 
-                //eBoard.printBoard();
                 List<Point2D> atomPositionsExperimenter = collectAtomPositions(gridGroup2); //collecting experimenter final atom positions.
                 //gameState.setExpAtomPositions(atomPositionsExperimenter);
                 System.out.println("Experimenter Atom Positions:");
