@@ -521,8 +521,8 @@ public class Main extends Application {
 //                readyButtonAlert.setContentText("You have less than 6 guesses placed.");
 //                readyButtonAlert.showAndWait();
 //            }
-        }
-    });
+            }
+        });
         //some inline CSS for button styling.
         ready.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;-fx-padding: 10 30");
         StackPane.setAlignment(ready, Pos.BOTTOM_CENTER);

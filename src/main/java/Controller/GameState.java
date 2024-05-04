@@ -16,7 +16,7 @@ public class GameState implements ReadyButtonClickedListener {
 
 
     public void startNewGame() {
-         //other new game code here (future sprint)
+        //other new game code here (future sprint)
         System.out.println("New Game!");
     }
     private boolean isReadyClicked = false; //set ready button click flag to false.
@@ -94,7 +94,7 @@ public class GameState implements ReadyButtonClickedListener {
     }
 }
 
-    //method for comparing the atoms of experimnter and setter for scoring purposes:
+//method for comparing the atoms of experimnter and setter for scoring purposes:
 
 
 
