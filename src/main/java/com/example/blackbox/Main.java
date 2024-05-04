@@ -39,9 +39,11 @@ import static Controller.GameState.calcScore;
 public class Main extends Application {
 
     public static List<Point2D> atomPositions;
+    public static List<Point2D> setterAtomPos;
     public static List<Point2D> expPositions;
     Group gridGroup = new Group();
     Group gridGroup2 = new Group();
+    Group gridGroup3 = new Group();
     BlackBoxBoard sBoard = new BlackBoxBoard(); //setter board instance
     BlackBoxBoard eBoard = new BlackBoxBoard(); //experimenter board instance
     Translation translation = new Translation(sBoard);
@@ -217,6 +219,52 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    private void showGameRevealScreen(Stage primaryStage) {
+        BorderPane root3 = new BorderPane(); //root is BorderPane layout as this is best suited as the base template for our Game UI.
+        Scene gameRevealScene = new Scene(root3);
+        StackPane centerStackPane3 = new StackPane(); //centre container in root is StackPane for main game stage hexagon grid.
+        StackPane buttonsStackPane3 = new StackPane();
+        //group for hex cells so grid can be manipulated as a unit (for layout purposes).
+
+//      centerStackPane.setMinWidth(Region.USE_PREF_SIZE);
+//      centerStackPane.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        BorderPane.setMargin(centerStackPane3, new Insets(0, 0, 0, 100));
+
+        AtomGenerator.resetAtomCount();//resetting atom count
+
+        HexCellGenerator.resetStartingPositions(); /*resetting here is crucial as it directly affects the layout if the static variables,
+        (the startig x and y points) for the hex cells and ray circles are remain shifted from the last call to grid generation.*/
+
+        HexCellGenerator.generateHexCells(gridGroup3);//adding hex cells to group.
+        HexCellGenerator.printHexCellsAndCenters(); //TEST
+        RayCircle.generateRayCircles(gridGroup3); //adding ray circles to same group.
+
+        GameReveal.revealSetterAtoms(setterAtomPos,gridGroup3);
+
+        centerStackPane3.getChildren().add(gridGroup3);
+
+        translation.linkMaps();
+
+        Label reveal = revealTopText();
+        //setting text to the centre in the root top container.
+        VBox topContainer2 = new VBox();
+        topContainer2.getChildren().add(reveal);
+        VBox.setMargin(reveal, new Insets(50, 0, 0, 50));
+        topContainer2.setAlignment(Pos.TOP_CENTER);
+
+
+//        VBox rightPanel = createRightPanel();
+//        root2.setRight(rightPanel);
+
+        root3.setTop(topContainer2);
+        root3.setCenter(centerStackPane3);
+        root3.setStyle("-fx-background-color: black;");
+
+        primaryStage.setScene(gameRevealScene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
+
+    }
     private void showPlayerChoiceScreen(Stage primaryStage, Scene mainGameScene) {
         //label for the name entry prompt
         Label nameLabel = new Label("Enter your name:"); //unecessary for time being. - personal choice.
@@ -312,6 +360,7 @@ public class Main extends Application {
 
         return playerTurn;
     }
+
     private Label generateTopExptText() { //generating the top text for the experimenter screen.
         Label exptTurn = new Label("Experimenter's turn.");
         //css inline styling
@@ -321,6 +370,17 @@ public class Main extends Application {
         BorderPane.setMargin(exptTurn, new Insets(100, 0, 0, 0));
 
         return exptTurn;
+    }
+
+    private Label revealTopText() { //generating the top text for the experimenter screen.
+        Label scoreTxt = new Label("Final Score and Game Reveal");
+        //css inline styling
+        scoreTxt.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 60px;");
+        //borderpane margin and alignment
+        scoreTxt.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        BorderPane.setMargin(scoreTxt, new Insets(100, 0, 0, 0));
+
+        return scoreTxt;
     }
 
     private Label generateSetterInstructions() {
@@ -404,6 +464,7 @@ public class Main extends Application {
     }
 
     public void showResults(Stage primaryStage, Map<String, Integer> results) { //SCREEN TO DISPLAY RESULTS AND stats
+        /*
         StackPane root = new StackPane();
         root.setAlignment(Pos.CENTER);
 
@@ -423,6 +484,8 @@ public class Main extends Application {
         statsLabel.setTextFill(Color.WHITE);
         statsLabel.setOpacity(0);
         statsLabel.setTextAlignment(TextAlignment.CENTER);
+
+        showAtomsButton(root, primaryStage);
 
         //vertical layout for the labels
         VBox labelsBox = new VBox(10, scoreLabel, statsLabel);
@@ -448,11 +511,23 @@ public class Main extends Application {
 
         SequentialTransition sequentialTransition = new SequentialTransition(fadeScore, fadeStats);
         sequentialTransition.play();
+
+         */
+
+        showGameRevealScreen(primaryStage);
     }
 
     private boolean isReadyClicked = false;
 
-
+    public void showAtomsButton(StackPane buttonsStackPane, Stage primaryStage) {
+        Button showAtoms = new Button("Show Atoms");
+        showAtoms.setOnAction(event -> {
+            showGameRevealScreen(primaryStage);
+        });
+        showAtoms.setStyle("-fx-font-family: 'Arial Rounded MT Bold'; -fx-font-size: 20px;-fx-padding: 10 30");
+        StackPane.setAlignment(showAtoms, Pos.BOTTOM_CENTER);
+        buttonsStackPane.getChildren().add(showAtoms);
+    }
     public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage, boolean isExperimenter) {
         Button ready = new Button("READY");
         //event handler for button click
@@ -462,8 +537,8 @@ public class Main extends Application {
             for (Point2D position : atomPositions) {
                 System.out.println("X: " + position.getX() + ", Y: " + position.getY());
             }
-            List<Point2D> setterAtomPos = new ArrayList<>(atomPositions);
-            if (isExperimenter == false) {//max final atom check
+            setterAtomPos = new ArrayList<>(atomPositions);
+            if (!isExperimenter) {//max final atom check
 //                List<Point2D> atomPositions = collectAtomPositions();
                 if (AtomGenerator.atomCount == 6) {
                     List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
@@ -490,7 +565,7 @@ public class Main extends Application {
             }
 
 
-            else if (isExperimenter) {
+            else {
                 AtomGenerator.resetAtomCount();
 
                 //eBoard.printBoard();
@@ -508,7 +583,6 @@ public class Main extends Application {
 
                 Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter, sBoard);
                 showResults(primaryStage, results);
-
 
                 gameState.onReadyClicked();
 
