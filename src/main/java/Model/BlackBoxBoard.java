@@ -55,9 +55,10 @@ public class BlackBoxBoard {
     //BB-board constructor
     public BlackBoxBoard() {
         this.board = new LinkedHashMap<>();
-        placeRandomAtoms(6);
-        initializeBoard();
+        initializeBoard();  // Initialise the board first to ensure all cells are set up
+        placeRandomAtoms(6);  // Then place random atoms
     }
+
 
     // list of edge cells ordered in clockwise order to be used for ray node generation
     // could be turned into a generation loop later on
