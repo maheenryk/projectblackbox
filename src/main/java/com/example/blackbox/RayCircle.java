@@ -13,7 +13,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.List;
@@ -34,6 +33,8 @@ public class RayCircle extends StackPane {
     private boolean colorLocked = false;//flag to lock ray marker colour changes.
     private static int currentColorIndex = 0;  //track the color index
     private static final List<Color> rayMarkerColors = Arrays.asList( //list of unique identifiable colours for ray markers.
+            /*choosing random colour functionality was not an option since we required colours that are easy to see against our
+            background and text colours, and random colour selection posed a risk to that.*/
 
             Color.rgb(0, 140, 82), Color.rgb(255, 97, 48), Color.rgb(227, 0, 235),
             Color.rgb(17, 0, 255), Color.rgb(101, 201, 170), Color.rgb(255, 28, 123),
@@ -56,11 +57,6 @@ public class RayCircle extends StackPane {
         currentColorIndex = (currentColorIndex + 1) % rayMarkerColors.size();  //move to next index, wrap around if at end
         return color;
     }
-
-//    public void setColor(Color color) {
-//        circle.setFill(color);
-//    }
-
 
     RayCircle(double radius, Color fill) {
 
@@ -116,13 +112,6 @@ public class RayCircle extends StackPane {
 
 
     private void addHoverEffect() {
-        //adding a tooltip in the hover effect for ray circles to provide info.
-//        Tooltip tooltip = new Tooltip("ℹ Click on a ray circle to select it. To change ray, simply select a different ray.");
-//        tooltip.setStyle("-fx-font-size: 14; -fx-background-color: #DAA600; -fx-text-fill: white; -fx-opacity: 0.7;-fx-font-family: 'Droid Sans Mono'-fx-font-weight: bold;");
-//        tooltip.setMaxWidth(150);
-//        tooltip.setWrapText(true);
-//        tooltip.setShowDelay(Duration.millis(170));
-//        Tooltip.install(this, tooltip);
 
         this.setOnMouseEntered(event -> {
             if (!colorLocked) {
@@ -132,10 +121,6 @@ public class RayCircle extends StackPane {
                     circle.setFill(clickedHover);
                 }
             }
-//            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
-//                tooltip.hide();
-//            }));
-//            timeline.play();
         });
 
         this.setOnMouseExited(event -> {
@@ -156,10 +141,6 @@ public class RayCircle extends StackPane {
 
     public void setRayText(String text) {
         rayText.setText(text);
-    }
-
-    public Text getRayText() {
-        return rayText;
     }
 
     static void generateRayCircles(Group root) { //method for generating nodes (ray circles)

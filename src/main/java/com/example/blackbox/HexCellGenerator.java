@@ -22,7 +22,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import javafx.scene.control.Tooltip;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -16,7 +16,6 @@ of the UI that require significant styling.
 
 .continue-button {
     -fx-background-color: black;
-    /*-fx-label-padding: 10px;*/
     -fx-font-size: 1.25em;
     -fx-font-family: 'Droid Sans Mono';
     -fx-font-weight: bold;
@@ -25,7 +24,6 @@ of the UI that require significant styling.
 
 .go-back-button {
     -fx-background-color: #bd7a00;
-    /*-fx-label-padding: 10px;*/
     -fx-font-size: 1.25em;
     -fx-font-family: 'Droid Sans Mono';
     -fx-font-weight: bold;
@@ -34,7 +32,6 @@ of the UI that require significant styling.
  .button-bar {
      -fx-spacing: 50;
      -fx-alignment: center;
-     /*-fx-background-color: blue;*/
  }
 
  .dialog-pane .header-panel {
@@ -48,7 +45,6 @@ of the UI that require significant styling.
     -fx-background-color: #1a1a1a;
     -fx-text-fill: #ffffff;
 }
- /* Style the content area */
  .dialog-pane .content {
     -fx-background-color: #1a1a1a;
      -fx-font-weight: bolder;
