@@ -11,6 +11,12 @@ import static Model.Direction.YL;
 import static Model.Direction.ZU;
 import static Model.Direction.ZD;
 
+/**
+ * Represents a ray in the Black Box Board game, which moves through the board from an entry point,
+ * interacting with atoms and changing direction until it either exits or is absorbed.
+ */
+
+
 public class Ray {
     //reference to the game board for path and check for atoms
     private final BlackBoxBoard board;
@@ -34,6 +40,14 @@ public class Ray {
     Direction exitDir;
     Direction Abs = Direction.Absorbed;
 
+    /**
+     * Constructs a Ray object with a specified entry node on the board.
+     * The ray's path is calculated upon creation based on interactions with atoms.
+     *
+     * @param board The game board the ray will interact with.
+     * @param node  The entry node number where the ray enters the board.
+     */
+
     public Ray(BlackBoxBoard board, int node){
 
         this.board = board; //board ref
@@ -49,22 +63,53 @@ public class Ray {
         this.exitPoint = calculatePath();
     }
 
+    /**
+     * Returns true if the ray is absorbed by an atom.
+     *
+     * @return true if absorbed, otherwise false.
+     */
+
     public boolean isAbsorbed() {
         return this.isAbsorbed;
     }
+
+    /**
+     * Returns true if the ray is deflected by 60 degrees.
+     *
+     * @return true if deflected by 60 degrees, otherwise false.
+     */
 
     public boolean isDeflected60() {
         return this.deflected60;
     }
 
+    /**
+     * Returns true if the ray is deflected by 120 degrees.
+     *
+     * @return true if deflected by 120 degrees, otherwise false.
+     */
     public boolean isDeflected120() { return this.deflected120; }
+    /**
+     * Returns true if the ray's direction is reversed.
+     *
+     * @return true if reversed, otherwise false.
+     */
 
     public boolean isRayReversed() { return this.rayReversed; }
 
+    /**
+     * Gets the exit point of the ray if it exits the board.
+     *
+     * @return the exit point as Point3D if it exists.
+     */
     public BlackBoxBoard.Point3D getExitPoint() {
         return exitPoint;
     }
-
+    /**
+     * Gets the entry point of the ray.
+     *
+     * @return the entry point as Point3D.
+     */
     public BlackBoxBoard.Point3D getEntryPoint() {return entryPoint;}
 
     public Direction getDirection() {
@@ -85,7 +130,11 @@ public class Ray {
 
     }
 
-    //calculate path  of ray from entry point (validate whether its edge cell when making a ray object)
+    /**
+     * Calculates the ray's path starting from the entry point, reacting to any atoms encountered.
+     * The path ends when the ray exits the board or is absorbed by an atom.
+     * @return the point at which the ray either exits the board or is absorbed.
+     */
     private BlackBoxBoard.Point3D calculatePath(){
         Direction dir = entryDir;
 
@@ -191,8 +240,14 @@ public class Ray {
     }
 
 
-    // Checking for the presence of atoms at specific positions compared to the rays current position.
-    // Depending on where atoms are present around the ray, the rays direction can  be deflected,absorbed or reversed
+    /**
+     * Determines the new direction of the ray after encountering an atom or reaching the board edge.
+     *
+     * @param position Current position of the ray as Point3D.
+     * @param dir      Current direction of the ray.
+     * @return the new direction after processing interactions at the current position.
+     */
+
     private Direction newPath (BlackBoxBoard.Point3D position, Direction dir) {
 
         rayReversed = false;
@@ -591,7 +646,14 @@ public class Ray {
         return newDir;
     }
 
-    // Method to check if a position is at the edge of the board
+
+    /**
+     * Checks if a given position is at the edge of the board.
+     *
+     * @param position  The ray's current position as Point3D.
+     * @param direction The current direction of the ray.
+     * @return true if the position is at the edge, otherwise false.
+     */
     private boolean hasReachedBoardEdge(BlackBoxBoard.Point3D position, Direction direction) {
 
         int node = RayNode.getNodeNumber(position, direction);
@@ -643,6 +705,11 @@ public class Ray {
         return new BlackBoxBoard.Point3D(x, y, z);
     }
 
+    /**
+     * Outputs detailed information about a ray's path through the board, including entry and exit points.
+     * @param ray The ray object for which information is to be printed.
+     * @return An array containing the entry and exit node numbers.
+     */
     public static int[]  printRayInfo(Ray ray) {
 
         // Print the ray's path
