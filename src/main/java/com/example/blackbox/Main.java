@@ -379,19 +379,19 @@ public class Main extends Application {
         Circle whiteCircle = new Circle(10, Color.WHITE);
         whiteCircle.setStroke(Color.BLACK);
         Label whiteLabel = new Label("REFLECTED");
-        whiteLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
+        whiteLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #ffc967;");
         HBox whiteKey = new HBox(5, whiteCircle, whiteLabel);
 
         //black circle to reflect absorbed ray marker
         Circle blackCircle = new Circle(10, Color.BLACK);
         Label blackLabel = new Label("DIRECT HIT/ABSORBED");
-        blackLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
+        blackLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #ffc967;");
         HBox blackKey = new HBox(5, blackCircle, blackLabel);
 
         //colored pair to reflect two normal ray markers.
         Circle colorCircle = new Circle(10, Color.PINK);
         Label colorLabel = new Label("x2  ENTRY & EXIT POINTS");
-        colorLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
+        colorLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #ffc967;");
         HBox colorKey = new HBox(5, colorCircle, colorLabel);
         Image image = new Image("file:src/main/resources/multicolor.jpeg");
         colorCircle.setFill(new ImagePattern(image));
@@ -399,13 +399,13 @@ public class Main extends Application {
         Circle atoms2Guess = new Circle(10, Color.RED);
         whiteCircle.setStroke(Color.BLACK);
         Label atomLabel = new Label("Atoms to Guess: " + atomPositions.size());
-        atomLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
+        atomLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #ffc967;");
         HBox atomKey = new HBox(5, atoms2Guess, atomLabel);
 
         //combining the hboxes into a vbox to align vertically
         VBox keyBox = new VBox(20, whiteKey, blackKey, colorKey, atomKey);
         keyBox.setStyle("-fx-border-color: black; -fx-border-width: 15; -fx-padding: 8px");
-        keyBox.setBackground(Background.fill(SECONDARY_COLOR));
+        keyBox.setBackground(Background.fill(Color.rgb(23, 23, 23)));
         keyBox.setAlignment(Pos.CENTER);
 
         return keyBox;
