@@ -32,4 +32,5 @@ public class GameReveal {
             displayAtom(position, targetGroup);
         }
     }
+
 }
