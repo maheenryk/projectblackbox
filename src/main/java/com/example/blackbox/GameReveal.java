@@ -36,10 +36,6 @@ public class GameReveal {
             displayAtom(position, targetGroup);
         }
     }
-    // Method to draw a single ray path takes in entry point and exit point to draw the path
-
-
-
 
 
 }
