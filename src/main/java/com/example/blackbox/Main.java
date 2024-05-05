@@ -518,6 +518,7 @@ public class Main extends Application {
                     //alert popup to remind setter to place exactly 6 atoms.
                     Alert readyButtonAlert = new Alert(Alert.AlertType.WARNING);
                     DialogPane dialogPane = readyButtonAlert.getDialogPane();
+                    dialogPane.setId("setterPane"); //custom id for setter alert to style differently in stylesheet.
                     readyButtonAlert.initOwner(primaryStage);
                     readyButtonAlert.setTitle("ATOMS : Warning");
                     readyButtonAlert.setHeaderText("🔴 x6  👾");
