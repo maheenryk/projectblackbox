@@ -5,11 +5,9 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.Line;
 import java.util.List;
-import java.util.ArrayList;
-import Model.Ray;
-import Model.BlackBoxBoard;
+
+
 
 
 public class GameReveal {
@@ -17,8 +15,6 @@ public class GameReveal {
     public static void displayAtom(Point2D position, Group targetGroup) {
         Circle atom = new Circle(position.getX(), position.getY(), 20);
         atom.setFill(Color.RED); //colour for atoms
-
-
         Circle circOfInf = new Circle(position.getX(), position.getY(), 70);
         circOfInf.setFill(Color.TRANSPARENT);
         circOfInf.setStroke(Color.GOLD);
@@ -36,6 +32,4 @@ public class GameReveal {
             displayAtom(position, targetGroup);
         }
     }
-
-
 }
