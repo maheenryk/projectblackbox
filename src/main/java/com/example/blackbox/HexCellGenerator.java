@@ -213,7 +213,7 @@ public class HexCellGenerator {
     private static void addHoverEffectHex(Polygon hexagon) {
         hexagon.setOnMouseEntered(event ->
                 hexagon.setFill(Color.LIGHTGOLDENRODYELLOW));
-                Tooltip tooltip = new Tooltip("ℹ Click on a hex cell to place an atom guess. To remove, click on the atom again. Only 6 atoms or less can be placed as guesses.");
+                Tooltip tooltip = new Tooltip("ℹ Click on a hex cell to place an atom guess. To remove, click on the atom again. Either 4 or 6 atoms can be placed as guesses.");
         tooltip.setStyle("-fx-font-size: 14px; -fx-text-fill: white; -fx-opacity: 0.7;-fx-font-family: 'Droid Sans Mono';-fx-font-weight: bold;");
         tooltip.setMaxWidth(150);
         tooltip.setWrapText(true);
