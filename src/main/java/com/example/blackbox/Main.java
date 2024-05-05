@@ -385,7 +385,7 @@ public class Main extends Application {
         //black circle to reflect absorbed ray marker
         Circle blackCircle = new Circle(10, Color.BLACK);
         Label blackLabel = new Label("DIRECT HIT/ABSORBED");
-        blackLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #ffc967;");
+        blackLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #fac569;");
         HBox blackKey = new HBox(5, blackCircle, blackLabel);
 
         //colored pair to reflect two normal ray markers.
