@@ -12,15 +12,9 @@ import java.util.List;
 
 public class GameReveal {
     // Method to draw the setters  atoms on the board
-    public static void displayAtom(Point2D position, Group targetGroup, boolean isSetterAtoms) {
+    public static void displayAtom(Point2D position, Group targetGroup) {
         Circle atom = new Circle(position.getX(), position.getY(), 20);
         atom.setFill(Color.RED); //colour for atoms
-        if (isSetterAtoms == true){
-            atom.setFill(Color.RED);
-        } else {
-            atom.setFill(Color.BLUEVIOLET);
-        }
-
         Circle circOfInf = new Circle(position.getX(), position.getY(), 70);
         circOfInf.setFill(Color.TRANSPARENT);
         circOfInf.setStroke(Color.GOLD);
@@ -35,7 +29,7 @@ public class GameReveal {
     // Method to reveal all atoms at the end of a game by iterating through setters atoms
     public static void revealSetterAtoms(List<Point2D> atomPositions, Group targetGroup) {
         for (Point2D position : atomPositions) {
-            displayAtom(position, targetGroup, true);
+            displayAtom(position, targetGroup);
         }
     }
 
