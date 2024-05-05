@@ -125,7 +125,7 @@ public class Main extends Application {
         gameState = new GameState();
         StackPane buttonsStackPane = new StackPane();
         isExperimenter = false;
-        generateReadyButton(buttonsStackPane, gameState, primaryStage, false);
+        generateReadyButton(buttonsStackPane, gameState, primaryStage);
         BorderPane.setMargin(buttonsStackPane, new Insets(0, 0, 50, 30));
 
         // Add grid group to center stack pane
@@ -177,7 +177,7 @@ public class Main extends Application {
 
         gameState = new GameState();
         isExperimenter = true;
-        generateReadyButton(buttonsStackPane2, gameState, primaryStage, true);
+        generateReadyButton(buttonsStackPane2, gameState, primaryStage);
         Button fireRayButton = createFireRayButton();
         BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
         buttonsStackPane2.getChildren().add(fireRayButton);
@@ -447,7 +447,7 @@ public class Main extends Application {
 
         //stats label below the score label
         Label statsLabel = new Label(
-                results.get("incorrectAtoms") + " atoms were incorrectly placed.\n" +
+                results.get("correctAtoms") + " atoms were correctly placed.\n" +
                         "Total rays fired: " + results.get("rayCount") + "\n" +
                         "Total ray markers: " + results.get("rayMarkers")
         );
@@ -485,7 +485,7 @@ public class Main extends Application {
     private boolean isReadyClicked = false;
 
 
-    public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage, boolean isExperimenter) {
+    public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage) {
         Button ready = new Button("READY");
         //event handler for button click
         ready.setOnAction(event -> {
@@ -496,7 +496,7 @@ public class Main extends Application {
                 System.out.println("X: " + position.getX() + ", Y: " + position.getY());
             }
             List<Point2D> setterAtomPos = new ArrayList<>(atomPositions);
-            if (isExperimenter == false) {//max final atom check
+            if (!isExperimenter) {//max final atom check
 //                List<Point2D> atomPositions = collectAtomPositions();
                 if (AtomGenerator.atomCount == 6) {
                     List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
@@ -520,7 +520,7 @@ public class Main extends Application {
                     readyButtonAlert.setContentText("Please place exactly 6 atoms in the hex board.");
                     readyButtonAlert.showAndWait();
                 }
-            } else if (isExperimenter) {
+            } else {
 
                 //eBoard.printBoard();
                 List<Point2D> atomPositionsExperimenter = collectAtomPositions(gridGroup2); //collecting experimenter final atom positions.

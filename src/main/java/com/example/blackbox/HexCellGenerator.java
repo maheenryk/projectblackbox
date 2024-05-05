@@ -72,6 +72,7 @@ public class HexCellGenerator {
                 root.getChildren().add(hexagon);
 
                 //-----------------------------------------------------------this section is devtools.
+                /*
                 Text hexIdText = new Text(String.valueOf(hexCellId));
                 hexIdText.setFont(new Font(20));
                 double textWidth = hexIdText.getLayoutBounds().getWidth();
@@ -83,6 +84,7 @@ public class HexCellGenerator {
                 hexIdText.setFill(Color.RED);
 
                 root.getChildren().add(hexIdText);
+                 */
                 //------------------------------------------------------------------------------------------
 
 
@@ -108,6 +110,7 @@ public class HexCellGenerator {
                 root.getChildren().add(hexagon);
 
                 //-----------------------------------------------------------this section is devtools, only for checking the hexCellID.
+                /*
                 Text hexIdText = new Text(String.valueOf(hexCellId));
                 hexIdText.setFont(new Font(20));
                 double textWidth = hexIdText.getLayoutBounds().getWidth();
@@ -119,6 +122,7 @@ public class HexCellGenerator {
                 hexIdText.setFill(Color.RED);
 
                 root.getChildren().add(hexIdText);
+                 */
                 //------------------------------------------------------------------------------------------
 
                 hexCellsMap.put(hexCellId++, center);
