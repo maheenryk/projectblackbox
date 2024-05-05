@@ -82,7 +82,7 @@ public class HexCellGenerator {
                 hexIdText.setY(center.getY() + (textHeight/3));
                 hexIdText.setFill(Color.RED);
 
-//                root.getChildren().add(hexIdText);
+                //root.getChildren().add(hexIdText);
                 //------------------------------------------------------------------------------------------
 
 

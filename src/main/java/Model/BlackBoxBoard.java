@@ -240,6 +240,7 @@ public class BlackBoxBoard {
      */
 
     public void placeRandomAtoms(int numberOfAtoms) {
+        randomAtoms = new ArrayList<>();
         // create a list from the keys of the board HashMap, which are the valid positions
         List<Point3D> validPoints = new ArrayList<>(board.keySet());
 

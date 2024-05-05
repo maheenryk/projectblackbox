@@ -7,6 +7,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -31,13 +32,14 @@ import java.util.*;
 
 import static Controller.GameState.calcScore;
 
-
 public class Main extends Application {
 
     public static List<Point2D> atomPositions;
     public static List<Point2D> expPositions;
+    public static boolean isRandomGame = false;
     Group gridGroup = new Group();
     Group gridGroup2 = new Group();
+    Group gridGroup3 = new Group();
     public static boolean isExperimenter;
     BlackBoxBoard sBoard = new BlackBoxBoard(); //setter board instance
     BlackBoxBoard eBoard = new BlackBoxBoard(); //experimenter board instance
@@ -206,6 +208,16 @@ public class Main extends Application {
         BorderPane.setMargin(rightContainer, new Insets(0, 0, 0, 120));
 
 //        rightContainer2.setPrefSize(150, 150);
+
+        if (atomPositions == null) {
+            sBoard.placeSetterAtoms(BlackBoxBoard.randomAtoms);
+            List<Point2D> temp = Translation.get2DAtomMatch(BlackBoxBoard.randomAtoms);
+            atomPositions = new ArrayList<>();
+            atomPositions.addAll(temp);
+            System.out.println(atomPositions);
+            isRandomGame = true;
+        }
+
         VBox rayMarkerKey = generateRayMarkerKey();
         BorderPane.setAlignment(rayMarkerKey, Pos.TOP_LEFT);
 
@@ -317,6 +329,17 @@ public class Main extends Application {
         return exptTurn;
     }
 
+    private Label atomReveal() { //generating the top text for the experimenter screen.
+        Label exptTurn = new Label("CORRECT ATOM PLACEMENT");
+        //css inline styling
+        exptTurn.setStyle("-fx-font-family:'Droid Sans Mono'; -fx-font-size: 60px; -fx-font-weight: bold; -fx-text-fill: #ffc967");
+        //borderpane margin and alignment
+        exptTurn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        BorderPane.setMargin(exptTurn, new Insets(100, 0, 0, 0));
+
+        return exptTurn;
+    }
+
     private Label generateSetterInstructions() {
         Label instructions = new Label("Please place 4-6 atoms inside your chosen hex cells. " +
                 "After you are finished, click the Ready button below the board.");
@@ -398,7 +421,9 @@ public class Main extends Application {
 
         Circle atoms2Guess = new Circle(10, Color.RED);
         whiteCircle.setStroke(Color.BLACK);
-        Label atomLabel = new Label("Atoms to Guess: " + atomPositions.size());
+        Label atomLabel;
+
+        atomLabel = new Label("Atoms to Guess: " + atomPositions.size());
         atomLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #ffc967;");
         HBox atomKey = new HBox(5, atoms2Guess, atomLabel);
 
@@ -414,6 +439,9 @@ public class Main extends Application {
     public void showResults(Stage primaryStage, Map<String, Integer> results) { //SCREEN TO DISPLAY RESULTS AND stats
         StackPane root = new StackPane();
         root.setAlignment(Pos.CENTER);
+
+        StackPane buttonsStackPane3 = new StackPane();
+        generateShowAtomsButton(buttonsStackPane3, primaryStage);
 
         Label scoreLabel = new Label("Your score is: " + results.get("score"));
         scoreLabel.setStyle("-fx-font-family: 'Droid Sans Mono';-fx-text-fill: #ffc967; -fx-font-size: 40; -fx-font-weight: bold");
@@ -436,7 +464,7 @@ public class Main extends Application {
         VBox labelsBox = new VBox(10, scoreLabel, statsLabel);
         labelsBox.setAlignment(Pos.CENTER);
 
-        root.getChildren().add(labelsBox);
+        root.getChildren().addAll(labelsBox, buttonsStackPane3);
         root.setStyle("-fx-background-color: black;");
 
         Scene resultScene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
@@ -460,15 +488,65 @@ public class Main extends Application {
 
     private boolean isReadyClicked = false;
 
+    public void generateShowAtomsButton(StackPane buttonsStackPane, Stage primaryStage) {
+        Button showAtoms = new Button("Show Atoms");
+
+        showAtoms.setOnAction(actionEvent -> {
+            showGameReveal(primaryStage);
+        });
+
+        showAtoms.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 20px;-fx-padding: 10 30; -fx-font-weight: bold; -fx-background-color: #232323; -fx-text-fill: #ffc967");
+        StackPane.setAlignment(showAtoms, Pos.BOTTOM_CENTER);
+        buttonsStackPane.getChildren().add(showAtoms);
+    }
+
+    public void showGameReveal(Stage primaryStage) {
+
+        AtomGenerator.resetAtomCount();//resetting atom count
+
+        BorderPane root3 = new BorderPane();
+        Scene atomRevealScene = new Scene(root3);
+        StackPane centerStackPane3 = new StackPane();
+
+        BorderPane.setMargin(centerStackPane3, new Insets(0, 0, 0, 100));
+
+        HexCellGenerator.resetStartingPositions();
+
+        HexCellGenerator.generateHexCells(gridGroup3);//adding hex cells to group.
+        HexCellGenerator.printHexCellsAndCenters(); //TEST
+        RayCircle.generateRayCircles(gridGroup3); //adding ray circles to same group.
+
+        GameReveal.revealSetterAtoms(atomPositions, gridGroup3);
+
+        centerStackPane3.getChildren().add(gridGroup3);
+
+        Label atomReveal = atomReveal();
+        //setting text to the centre in the root top container.
+        VBox topContainer2 = new VBox();
+        topContainer2.getChildren().add(atomReveal);
+        VBox.setMargin(atomReveal, new Insets(50, 0, 0, 50));
+        topContainer2.setAlignment(Pos.TOP_CENTER);
+
+        root3.setTop(topContainer2);
+        root3.setCenter(centerStackPane3);
+        root3.setStyle("-fx-background-color: black;");
+
+        primaryStage.setScene(atomRevealScene);
+        primaryStage.setFullScreen(true);
+        primaryStage.show();
+    }
+
 
     public void generateReadyButton(StackPane buttonsStackPane, ReadyButtonClickedListener listener, Stage primaryStage) {
         Button ready = new Button("READY");
         //event handler for button click
         ready.setOnAction(event -> {
-            atomPositions = collectAtomPositions(gridGroup);//collecting the final atom positions (setter) in list of Point2D objects.
-            System.out.println("atomPositions Positions:");
-            for (Point2D position : atomPositions) {
-                System.out.println("X: " + position.getX() + ", Y: " + position.getY());
+            if (!isRandomGame) {
+                atomPositions = collectAtomPositions(gridGroup);//collecting the final atom positions (setter) in list of Point2D objects.
+                System.out.println("atomPositions Positions:");
+                for (Point2D position : atomPositions) {
+                    System.out.println("X: " + position.getX() + ", Y: " + position.getY());
+                }
             }
             List<Point2D> setterAtomPos = new ArrayList<>(atomPositions);
             if (!isExperimenter) {//max final atom check
@@ -526,7 +604,14 @@ public class Main extends Application {
                     readyButtonAlert2.initOwner(primaryStage);
                     readyButtonAlert2.setTitle("FINISHED GUESSING?");
                     readyButtonAlert2.setHeaderText("YOU ARE ABOUT TO FINISH EXPERIMENTING AND REVEAL THE RESULTS...🤔");
-                    readyButtonAlert2.setContentText("PLACE " + atomPositions.size() + " ATOMS STRATEGICALLY TO MAXIMISE YOUR SCORE. PLACING LESS OR MORE THAN THAT MEANS ANY MISSING OR EXTRA ATOMS WILL BE COUNTED AS INCORRECTLY PLACED ATOMS.");
+                    int atomCount = 0;
+                    if (isRandomGame) {
+                        atomCount = 6;
+                    }
+                    else {
+                        atomCount = atomPositions.size();
+                    }
+                    readyButtonAlert2.setContentText("PLACE " + atomCount + " ATOMS STRATEGICALLY TO MAXIMISE YOUR SCORE. ANY MISSING OR EXTRA ATOMS WILL BE COUNTED AS INCORRECTLY PLACED ATOMS.");
 
                     //introducing button types continue and go back for the experimenter screen ready button alert.
                     ButtonType buttonTypeContinue = new ButtonType("REVEAL RESULTS →", ButtonBar.ButtonData.YES); //setting data to yes for continue
@@ -552,7 +637,7 @@ public class Main extends Application {
                     Optional<ButtonType> userReadyResult = readyButtonAlert2.showAndWait();
                 if (userReadyResult.isPresent() && userReadyResult.get() == buttonTypeContinue) {
                     //user chose "Reveal Results", continue to the showResults screen
-                    Map<String, Integer> results = calcScore(setterAtomPos, atomPositionsExperimenter, sBoard);
+                    Map<String, Integer> results = calcScore(atomPositions, atomPositionsExperimenter, sBoard);
                     showResults(primaryStage, results);
                     gameState.onReadyClicked();
                 } else {

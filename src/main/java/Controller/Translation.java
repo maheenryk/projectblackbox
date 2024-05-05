@@ -20,7 +20,7 @@ public class Translation {
     // This section of the code deals with hex cell and atom connection.
 
     private BlackBoxBoard blackBoxBoard;
-    private Map<Point3D, Point2D> translationMap;
+    private static Map<Point3D, Point2D> translationMap;
 
     public Translation(BlackBoxBoard blackBoxBoard) {
         this.blackBoxBoard = blackBoxBoard;
@@ -75,7 +75,7 @@ public class Translation {
         return point3DSetterAtoms;
     }
 
-    public List<Point2D> get2DAtomMatch(List<Point3D> atomPositions) {
+    public static List<Point2D> get2DAtomMatch(List<Point3D> atomPositions) {
         List<Point2D> point2DSetterAtoms = new ArrayList<>();
 
         for (Map.Entry<Point3D, Point2D> entry : translationMap.entrySet()) {
