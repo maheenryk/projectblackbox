@@ -6,7 +6,7 @@ of the UI that require significant styling.
 
 /* button styling for Ready Button Alerts.*/
 .body{
-    -fx-background-color: blue;
+    -fx-background-color: #ffc967;
     -fx-font-size: 100%;
     -fx-font-family: 'Droid Sans Mono';
 }
@@ -24,7 +24,7 @@ of the UI that require significant styling.
 }
 
 .go-back-button {
-    -fx-background-color: green;
+    -fx-background-color: #bd7a00;
     /*-fx-label-padding: 10px;*/
     -fx-font-size: 1.25em;
     -fx-font-family: 'Droid Sans Mono';
@@ -39,18 +39,18 @@ of the UI that require significant styling.
 
  .dialog-pane .header-panel {
      -fx-text-fill: white;
-     -fx-background-color: #957A00;
+     -fx-background-color: #ffc967;
      -fx-font-size: 1.25em;
      -fx-font-weight: bolder;
  }
 .dialog-pane {
     -fx-font-family: 'Droid Sans Mono';
-    -fx-background-color: #957A00;
-    -fx-text-fill: white;
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #ffffff;
 }
  /* Style the content area */
  .dialog-pane .content {
-    -fx-background-color: #957A00;
+    -fx-background-color: #1a1a1a;
      -fx-font-weight: bolder;
      -fx-text-fill: white;
      -fx-font-size: 1.25em;

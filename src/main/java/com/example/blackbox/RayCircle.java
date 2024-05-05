@@ -35,11 +35,11 @@ public class RayCircle extends StackPane {
     private static int currentColorIndex = 0;  //track the color index
     private static final List<Color> rayMarkerColors = Arrays.asList( //list of unique identifiable colours for ray markers.
 
-            Color.rgb(0, 140, 86), Color.rgb(255, 200, 0), Color.rgb(227, 0, 235),
-            Color.rgb(255, 102, 51), Color.rgb(101, 201, 170), Color.rgb(255, 157, 0),
+            Color.rgb(0, 140, 82), Color.rgb(255, 97, 48), Color.rgb(227, 0, 235),
+            Color.rgb(17, 0, 255), Color.rgb(101, 201, 170), Color.rgb(255, 28, 123),
             Color.rgb(149, 0, 207),Color.rgb(136, 181, 45),Color.rgb(99, 69, 196),
-            Color.rgb(255, 120, 187),Color.rgb(159, 192, 209),Color.rgb(255, 184, 122),
-            Color.rgb(179, 255, 0),Color.rgb(53, 70, 110),Color.rgb(255, 25, 94),
+            Color.rgb(255, 120, 187),Color.rgb(23, 209, 255),Color.rgb(4, 255, 0),
+            Color.rgb(163, 180, 255),Color.rgb(53, 70, 110),Color.rgb(255, 149, 0),
             Color.rgb(255, 221, 69),Color.rgb(86, 105, 92),Color.rgb(32, 36, 46),
             Color.rgb(148, 108, 0),Color.rgb(148, 64, 0), Color.rgb(82, 8, 0),
             Color.rgb(171, 70, 100),Color.rgb(0, 145, 128),Color.rgb(66, 27, 0),
