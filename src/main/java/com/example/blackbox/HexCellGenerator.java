@@ -185,10 +185,24 @@ public class HexCellGenerator {
 
                 circOfInf.setStrokeLineCap(StrokeLineCap.ROUND);
 
-                targetGroup.getChildren().addAll(circOfInf, atom);
+                if (!Main.isExperimenter) {
+                    targetGroup.getChildren().addAll(circOfInf, atom);
+                }
+                // circles of influence
+
+                else {
+                    targetGroup.getChildren().add(atom);
+                }
+
                 atomCount++;
                 atom.setOnMouseClicked(atomEvent -> {
-                    targetGroup.getChildren().removeAll(circOfInf, atom);
+                    if (!Main.isExperimenter) {
+                        targetGroup.getChildren().removeAll(circOfInf, atom);
+                    }
+
+                    else {
+                        targetGroup.getChildren().remove(atom);
+                    }
                     atomCount--;
                 });
             }
