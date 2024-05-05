@@ -426,8 +426,14 @@ public class Main extends Application {
         Image image = new Image("file:src/main/resources/multicolor.jpeg");
         colorCircle.setFill(new ImagePattern(image));
 
+        Circle atoms2Guess = new Circle(10, Color.RED);
+        atoms2Guess.setStroke(Color.RED);
+        Label atomLabel = new Label("Atoms to Guess: " + atomPositions.size());
+        atomLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: black;");
+        HBox atomKey = new HBox(5, atoms2Guess, atomLabel);
+
         //combining the hboxes into a vbox to align vertically
-        VBox keyBox = new VBox(8, whiteKey, blackKey, colorKey);
+        VBox keyBox = new VBox(8, whiteKey, blackKey, colorKey, atomKey);
         keyBox.setStyle("-fx-border-color: black; -fx-border-width: 15; -fx-padding: 8px");
         keyBox.setBackground(Background.fill(SECONDARY_COLOR));
         keyBox.setAlignment(Pos.CENTER);
@@ -490,7 +496,7 @@ public class Main extends Application {
         //event handler for button click
         ready.setOnAction(event -> {
             System.out.println(" &&&& &&&&& &&&&&&& READY CLICKED  &&&&&&&& &&&&& &&&&&& &&&&&& &&&&&&&");
-            List<Point2D> atomPositions = collectAtomPositions(gridGroup);//collecting the final atom positions (setter) in list of Point2D objects.
+            atomPositions = collectAtomPositions(gridGroup);//collecting the final atom positions (setter) in list of Point2D objects.
             System.out.println("atomPositions Positions:");
             for (Point2D position : atomPositions) {
                 System.out.println("X: " + position.getX() + ", Y: " + position.getY());
@@ -498,7 +504,7 @@ public class Main extends Application {
             List<Point2D> setterAtomPos = new ArrayList<>(atomPositions);
             if (!isExperimenter) {//max final atom check
 //                List<Point2D> atomPositions = collectAtomPositions();
-                if (AtomGenerator.atomCount == 6) {
+                if (AtomGenerator.atomCount >= 4) {
                     List<BlackBoxBoard.Point3D> setterAtomList = translation.get3DAtomMatch(atomPositions);
                     sBoard.placeSetterAtoms(setterAtomList);
                     sBoard.printBoard();
@@ -517,7 +523,7 @@ public class Main extends Application {
                     readyButtonAlert.initOwner(primaryStage);
                     readyButtonAlert.setTitle("ATOMS : Warning");
                     readyButtonAlert.setHeaderText(">:(");
-                    readyButtonAlert.setContentText("Please place exactly 6 atoms in the hex board.");
+                    readyButtonAlert.setContentText("Please place 4 to 6 atoms in the board.");
                     readyButtonAlert.showAndWait();
                 }
             } else {
@@ -539,7 +545,7 @@ public class Main extends Application {
                     readyButtonAlert2.initOwner(primaryStage);
                     readyButtonAlert2.setTitle("FINISHED GUESSING?");
                     readyButtonAlert2.setHeaderText("YOU ARE ABOUT TO FINISH EXPERIMENTING AND REVEAL THE RESULTS...🤔");
-                    readyButtonAlert2.setContentText("PLACE 6 ATOMS STRATEGICALLY TO MAXIMISE YOUR SCORE. PLACING LESS THAN 6 ATOMS MEANS ANY MISSING ATOMS WILL BE COUNTED AS INCORRECTLY PLACED ATOMS.");
+                    readyButtonAlert2.setContentText("PLACE " + atomPositions.size() + " ATOMS STRATEGICALLY TO MAXIMISE YOUR SCORE. PLACING LESS THAN OR MORE THAN THAT MEANS ANY MISSING OR EXTRA ATOMS WILL BE COUNTED AS INCORRECTLY PLACED ATOMS.");
 
                     //introducing button types continue and go back for the experimenter screen ready button alert.
                     ButtonType buttonTypeContinue = new ButtonType("REVEAL RESULTS →", ButtonBar.ButtonData.YES); //setting data to yes for continue
