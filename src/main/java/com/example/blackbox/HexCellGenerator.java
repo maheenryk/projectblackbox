@@ -8,7 +8,10 @@
 package com.example.blackbox;
 
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -18,6 +21,9 @@ import javafx.scene.shape.StrokeType;
 import javafx.geometry.Point2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+import javafx.scene.control.Tooltip;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -191,7 +197,18 @@ public class HexCellGenerator {
 
 
     private static void addHoverEffectHex(Polygon hexagon) {
-        hexagon.setOnMouseEntered(event -> hexagon.setFill(Color.LIGHTGOLDENRODYELLOW));
+        hexagon.setOnMouseEntered(event ->
+                hexagon.setFill(Color.LIGHTGOLDENRODYELLOW));
+                Tooltip tooltip = new Tooltip("ℹ Click on a hex cell to place an atom guess. To remove, click on the atom again. Only 6 atoms or less can be placed as guesses.");
+        tooltip.setStyle("-fx-font-size: 14px; -fx-text-fill: white; -fx-opacity: 0.7;-fx-font-family: 'Droid Sans Mono';-fx-font-weight: bold;");
+        tooltip.setMaxWidth(150);
+        tooltip.setWrapText(true);
+        tooltip.setShowDelay(Duration.millis(170));
+        Tooltip.install(hexagon, tooltip);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
+            tooltip.hide();
+        }));
+        timeline.play();
         hexagon.setOnMouseExited(event -> hexagon.setFill(Color.BLACK));
     }
 

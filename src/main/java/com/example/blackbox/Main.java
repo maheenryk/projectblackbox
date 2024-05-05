@@ -286,7 +286,7 @@ public class Main extends Application {
 
 
     private Label generateTopText() {
-        Label playerTurn = new Label("Setter's turn.");
+        Label playerTurn = new Label("SETTER'S TURN.");
         //css inline styling
         playerTurn.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 60px;");
         //borderpane margin and alignment
@@ -321,7 +321,14 @@ public class Main extends Application {
         fireRayButton.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 18px; " +
                 "-fx-background-color: #F6DE90; -fx-text-fill: black; -fx-border-color: black; " +
                 "-fx-border-width: 4px; -fx-font-weight: bold; -fx-border-radius: 2px; -fx-padding: 14px;");
+
         fireRayButton.setAlignment(Pos.BASELINE_CENTER);
+        Tooltip tooltip = new Tooltip("ℹ Click on this button to fire a ray and refer to the ray marker key to analyse the result.");
+        tooltip.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-opacity: 0.7;");
+        tooltip.setMaxWidth(150);
+        tooltip.setWrapText(true);
+        tooltip.setShowDelay(Duration.millis(170));
+        Tooltip.install(fireRayButton, tooltip);
 
 
         fireRayButton.setOnAction(event -> {
@@ -527,8 +534,8 @@ public class Main extends Application {
                     Alert readyButtonAlert2 = new Alert(Alert.AlertType.WARNING);
                     readyButtonAlert2.initOwner(primaryStage);
                     readyButtonAlert2.setTitle("FINISHED GUESSING?");
-                    readyButtonAlert2.setHeaderText("You are about to finish experimenting and reveal the results...🤔");
-                    readyButtonAlert2.setContentText("Place 6 atoms strategically to maximise your score. Placing less than 6 atoms means any missing atoms will be counted as incorrectly placed atoms.");
+                    readyButtonAlert2.setHeaderText("YOU ARE ABOUT TO FINISH EXPERIMENTING AND REVEAL THE RESULTS...🤔");
+                    readyButtonAlert2.setContentText("PLACE 6 ATOMS STRATEGICALLY TO MAXIMISE YOUR SCORE. PLACING LESS THAN 6 ATOMS MEANS ANY MISSING ATOMS WILL BE COUNTED AS INCORRECTLY PLACED ATOMS.");
 
                     //introducing button types continue and go back for the experimenter screen ready button alert.
                     ButtonType buttonTypeContinue = new ButtonType("REVEAL RESULTS →", ButtonBar.ButtonData.YES); //setting data to yes for continue

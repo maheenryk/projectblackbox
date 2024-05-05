@@ -75,12 +75,24 @@ public class RayCircle extends StackPane {
         rayText = new Text();
         rayText.setFont(Font.font("Roboto Slab", 12));
         rayText.setFill(Color.WHITE);
+        rayText.setStyle("-fx-font-family: 'Droid Sans Mono';-fx-font-weight: bold;");
 
         addHoverEffect();
         addClickEffect();
 
         // adding circle and text to StackPane
         getChildren().addAll(circle, rayText);
+
+        Tooltip tooltip = new Tooltip("ℹ Click on a ray circle to select it. To change ray, simply select a different ray.");
+        tooltip.setStyle("-fx-font-size: 16px; -fx-text-fill: white; -fx-opacity: 0.7;");
+        tooltip.setMaxWidth(150);
+        tooltip.setWrapText(true);
+        tooltip.setShowDelay(Duration.millis(170));
+        Tooltip.install(rayText, tooltip);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
+            tooltip.hide();
+        }));
+        timeline.play();
     }
 
 
@@ -102,12 +114,12 @@ public class RayCircle extends StackPane {
 
     private void addHoverEffect() {
         //adding a tooltip in the hover effect for ray circles to provide info.
-        Tooltip tooltip = new Tooltip("ℹ Click on a ray circle to select it. To change ray, simply select a different ray.");
-        tooltip.setStyle("-fx-font-size: 14; -fx-background-color: #DAA600; -fx-text-fill: white; -fx-opacity: 0.7;");
-        tooltip.setMaxWidth(150);
-        tooltip.setWrapText(true);
-        tooltip.setShowDelay(Duration.millis(170));
-        Tooltip.install(this, tooltip);
+//        Tooltip tooltip = new Tooltip("ℹ Click on a ray circle to select it. To change ray, simply select a different ray.");
+//        tooltip.setStyle("-fx-font-size: 14; -fx-background-color: #DAA600; -fx-text-fill: white; -fx-opacity: 0.7;-fx-font-family: 'Droid Sans Mono'-fx-font-weight: bold;");
+//        tooltip.setMaxWidth(150);
+//        tooltip.setWrapText(true);
+//        tooltip.setShowDelay(Duration.millis(170));
+//        Tooltip.install(this, tooltip);
 
         this.setOnMouseEntered(event -> {
             if (!colorLocked) {
@@ -117,10 +129,10 @@ public class RayCircle extends StackPane {
                     circle.setFill(clickedHover);
                 }
             }
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
-                tooltip.hide();
-            }));
-            timeline.play();
+//            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
+//                tooltip.hide();
+//            }));
+//            timeline.play();
         });
 
         this.setOnMouseExited(event -> {

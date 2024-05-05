@@ -46,9 +46,11 @@ of the UI that require significant styling.
 .dialog-pane {
     -fx-font-family: 'Droid Sans Mono';
     -fx-background-color: #957A00;
+    -fx-text-fill: white;
 }
  /* Style the content area */
  .dialog-pane .content {
     -fx-background-color: #957A00;
      -fx-font-weight: bolder;
+     -fx-text-fill: white;
  }
