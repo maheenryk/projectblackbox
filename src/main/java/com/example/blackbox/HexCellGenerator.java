@@ -176,19 +176,31 @@ public class HexCellGenerator {
                 double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
                 Circle atom = createAtom(centerX, centerY);
 
-                // circles of influence
                 Circle circOfInf = new Circle(centerX, centerY, 70);
                 circOfInf.setFill(Color.TRANSPARENT);
                 circOfInf.setStroke(Color.GOLD);
                 circOfInf.setStrokeWidth(1);
                 circOfInf.getStrokeDashArray().addAll(5d, 5d);
-
                 circOfInf.setStrokeLineCap(StrokeLineCap.ROUND);
 
-                targetGroup.getChildren().addAll(circOfInf, atom);
+                if (!Main.isExperimenter) {
+                    targetGroup.getChildren().addAll(circOfInf, atom);
+                }
+                // circles of influence
+
+                else {
+                    targetGroup.getChildren().add(atom);
+                }
+
                 atomCount++;
                 atom.setOnMouseClicked(atomEvent -> {
-                    targetGroup.getChildren().removeAll(circOfInf, atom);
+                    if (!Main.isExperimenter) {
+                        targetGroup.getChildren().removeAll(circOfInf, atom);
+                    }
+
+                    else {
+                        targetGroup.getChildren().remove(atom);
+                    }
                     atomCount--;
                 });
             }

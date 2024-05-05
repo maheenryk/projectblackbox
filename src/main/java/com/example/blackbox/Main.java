@@ -35,6 +35,8 @@ public class Main extends Application {
 
     public static List<Point2D> atomPositions;
     public static List<Point2D> expPositions;
+
+    public static boolean isExperimenter;
     Group gridGroup = new Group();
     Group gridGroup2 = new Group();
     BlackBoxBoard sBoard = new BlackBoxBoard(); //setter board instance
@@ -122,6 +124,7 @@ public class Main extends Application {
         // Generate game state and ready button
         gameState = new GameState();
         StackPane buttonsStackPane = new StackPane();
+        isExperimenter = false;
         generateReadyButton(buttonsStackPane, gameState, primaryStage, false);
         BorderPane.setMargin(buttonsStackPane, new Insets(0, 0, 50, 30));
 
@@ -173,6 +176,7 @@ public class Main extends Application {
         RayCircle.generateRayCircles(gridGroup2); //adding ray circles to same group.
 
         gameState = new GameState();
+        isExperimenter = true;
         generateReadyButton(buttonsStackPane2, gameState, primaryStage, true);
         Button fireRayButton = createFireRayButton();
         BorderPane.setMargin(buttonsStackPane2, new Insets(0, 0, 50, 30));
