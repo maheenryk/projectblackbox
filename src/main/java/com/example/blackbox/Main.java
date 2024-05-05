@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -50,9 +51,8 @@ public class Main extends Application {
     public static final Color SECONDARY_COLOR = Color.DARKGRAY;
 
 
-//    private Stage window;
+
     private GameState gameState;
-    // private GameState gameState2;
     public static void main(String[] args) {
         launch(args);
     }
@@ -84,14 +84,24 @@ public class Main extends Application {
                 "-fx-font-weight: 800; " +
                 "-fx-font-style: oblique; ");
 
+        //adding logo to start screen
+        //adding the image from path
+        Image logo = new Image("/maveboxlogo.png");
+        // creating the image view
+        ImageView imageView = new ImageView(logo);
+        imageView.setFitWidth(200);
+        imageView.setPreserveRatio(true);//preserving ratio of imageview
+
+
 
         VBox layout = new VBox(20);
-        layout.getChildren().addAll(welcomeMessage, startButton);
+        layout.getChildren().addAll(imageView, welcomeMessage, startButton);
         layout.setAlignment(Pos.CENTER);
         VBox.setMargin(welcomeMessage, new Insets(50, 100, 40, 100));
         VBox.setMargin(startButton, new Insets(60, 100, 40, 100));
         Scene startScene = new Scene(layout, 300, 250);
         layout.setStyle("-fx-background-color: black;");
+
 
         startButton.setOnAction(e -> {
             Scene mainGameScene = createMainGameScene(primaryStage);
@@ -254,7 +264,7 @@ public class Main extends Application {
 
     //this method handles displaying the intermediate screen between the setter finishing their turn and the experimenter starting their turn.
     private void showContinueToExperimenterScreen(Stage primaryStage) {
-        Label chosenAtomsLabel = new Label("You have chosen your atoms!");
+        Label chosenAtomsLabel = new Label("You have chosen your atoms! ");
         chosenAtomsLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-weight: bold; -fx-font-size: 60;-fx-text-fill: #ffc967");
 //        chosenAtomsLabel.setTextFill(Color.WHITE);
 
@@ -364,43 +374,6 @@ public class Main extends Application {
         return fireRayButton;
     }
 
-
-//    private Text generateExperimenterInstructions() {
-//        Text instructionsExpt = new Text("YOU CAN CHOOSE A RAY BY SELECTING ON IT. THE CHOSEN RAY CAN BE CHANGED BY SIMPLY CLICKING ON THE RAY YOU WOULD LIKE TO CHOOSE INSTEAD." +
-//                "WHEN YOU WANT TO FIRE THE RAY, CLICK THE [FIRE RAY] BUTTON BELOW. THE RESULTS OF YOUR RAY WILL BE SHOWN IN RAY MARKERS, INDICATED BY THE CHANGING COLOUR OF THE RAY NODES.");
-//        instructionsExpt.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px;");
-//        instructionsExpt.setWrappingWidth(200);
-//        instructionsExpt.maxWidth(150);
-//        instructionsExpt.setTextAlignment(TextAlignment.CENTER);
-//        StackPane exptpane = new StackPane(instructionsExpt);
-//        exptpane.setPadding(new Insets(50,50,50,50));
-//        instructionsExpt.setFill(SECONDARY_COLOR);
-//        return instructionsExpt;
-//    }
-
-//    public void start(Stage primaryStage) {
-//
-//        Button infoButton = new Button("ℹ");
-//        infoButton.setStyle("-fx-font-size: 18;");
-//
-//
-//        Label infoLabel = new Label("YOU CAN CHOOSE A RAY BY SELECTING ON IT. THE CHOSEN RAY CAN BE CHANGED BY SIMPLY CLICKING ON THE RAY YOU WOULD LIKE TO CHOOSE INSTEAD." +
-//                "WHEN YOU WANT TO FIRE THE RAY, CLICK THE [FIRE RAY] BUTTON BELOW. THE RESULTS OF YOUR RAY WILL BE SHOWN IN RAY MARKERS, INDICATED BY THE CHANGING COLOUR OF THE RAY NODE");
-//        infoLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px;");
-//        VBox popupContent = new VBox(10);
-//        popupContent.getChildren().add(infoLabel);
-//        popupContent.setAlignment(Pos.CENTER);
-//
-//        Stage popupStage = new Stage();
-//        popupStage.setScene(new Scene(popupLayout, 200, 100));
-//
-//
-//        infoButton.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                popupStage.show();
-//            }
-//        });
     private VBox generateRayMarkerKey() {
         //white circle to represent reflected ray marker
         Circle whiteCircle = new Circle(10, Color.WHITE);
@@ -430,7 +403,7 @@ public class Main extends Application {
         HBox atomKey = new HBox(5, atoms2Guess, atomLabel);
 
         //combining the hboxes into a vbox to align vertically
-        VBox keyBox = new VBox(8, whiteKey, blackKey, colorKey, atomKey);
+        VBox keyBox = new VBox(20, whiteKey, blackKey, colorKey, atomKey);
         keyBox.setStyle("-fx-border-color: black; -fx-border-width: 15; -fx-padding: 8px");
         keyBox.setBackground(Background.fill(SECONDARY_COLOR));
         keyBox.setAlignment(Pos.CENTER);
