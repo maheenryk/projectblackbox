@@ -72,7 +72,6 @@ public class HexCellGenerator {
                 root.getChildren().add(hexagon);
 
                 //-----------------------------------------------------------this section is devtools.
-                /*
                 Text hexIdText = new Text(String.valueOf(hexCellId));
                 hexIdText.setFont(new Font(20));
                 double textWidth = hexIdText.getLayoutBounds().getWidth();
@@ -83,8 +82,7 @@ public class HexCellGenerator {
                 hexIdText.setY(center.getY() + (textHeight/3));
                 hexIdText.setFill(Color.RED);
 
-                root.getChildren().add(hexIdText);
-                 */
+//                root.getChildren().add(hexIdText);
                 //------------------------------------------------------------------------------------------
 
 
@@ -110,7 +108,6 @@ public class HexCellGenerator {
                 root.getChildren().add(hexagon);
 
                 //-----------------------------------------------------------this section is devtools, only for checking the hexCellID.
-                /*
                 Text hexIdText = new Text(String.valueOf(hexCellId));
                 hexIdText.setFont(new Font(20));
                 double textWidth = hexIdText.getLayoutBounds().getWidth();
@@ -121,8 +118,7 @@ public class HexCellGenerator {
                 hexIdText.setY(center.getY() + (textHeight/3));
                 hexIdText.setFill(Color.RED);
 
-                root.getChildren().add(hexIdText);
-                 */
+                //root.getChildren().add(hexIdText);
                 //------------------------------------------------------------------------------------------
 
                 hexCellsMap.put(hexCellId++, center);
@@ -180,31 +176,19 @@ public class HexCellGenerator {
                 double centerY = clickedHexagon.getLayoutBounds().getCenterY() + clickedHexagon.getLayoutY();
                 Circle atom = createAtom(centerX, centerY);
 
+                // circles of influence
                 Circle circOfInf = new Circle(centerX, centerY, 70);
                 circOfInf.setFill(Color.TRANSPARENT);
                 circOfInf.setStroke(Color.GOLD);
                 circOfInf.setStrokeWidth(1);
                 circOfInf.getStrokeDashArray().addAll(5d, 5d);
+
                 circOfInf.setStrokeLineCap(StrokeLineCap.ROUND);
 
-                if (!Main.isExperimenter) {
-                    targetGroup.getChildren().addAll(circOfInf, atom);
-                }
-                // circles of influence
-
-                else {
-                    targetGroup.getChildren().add(atom);
-                }
-
+                targetGroup.getChildren().addAll(circOfInf, atom);
                 atomCount++;
                 atom.setOnMouseClicked(atomEvent -> {
-                    if (!Main.isExperimenter) {
-                        targetGroup.getChildren().removeAll(circOfInf, atom);
-                    }
-
-                    else {
-                        targetGroup.getChildren().remove(atom);
-                    }
+                    targetGroup.getChildren().removeAll(circOfInf, atom);
                     atomCount--;
                 });
             }

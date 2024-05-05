@@ -53,4 +53,5 @@ of the UI that require significant styling.
     -fx-background-color: #957A00;
      -fx-font-weight: bolder;
      -fx-text-fill: white;
+     -fx-font-size: 1.25em;
  }

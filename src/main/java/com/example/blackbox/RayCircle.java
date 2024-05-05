@@ -57,9 +57,9 @@ public class RayCircle extends StackPane {
         return color;
     }
 
-    public void setColor(Color color) {
-        circle.setFill(color);
-    }
+//    public void setColor(Color color) {
+//        circle.setFill(color);
+//    }
 
 
     RayCircle(double radius, Color fill) {
@@ -76,6 +76,7 @@ public class RayCircle extends StackPane {
         rayText.setFont(Font.font("Roboto Slab", 12));
         rayText.setFill(Color.WHITE);
         rayText.setStyle("-fx-font-family: 'Droid Sans Mono';-fx-font-weight: bold;");
+
 
         addHoverEffect();
         addClickEffect();
@@ -98,17 +99,19 @@ public class RayCircle extends StackPane {
 
 
     private void addClickEffect() {
-        this.setOnMouseClicked(event -> {
-            if (currentlyClicked != null) {
-                if (!currentlyClicked.colorLocked) {
-                    currentlyClicked.circle.setFill(currentlyClicked.originalColor);
+        if(Main.isEBoard == true) {
+            this.setOnMouseClicked(event -> {
+                if (currentlyClicked != null) {
+                    if (!currentlyClicked.colorLocked) {
+                        currentlyClicked.circle.setFill(currentlyClicked.originalColor);
+                    }
                 }
-            }
-            currentlyClicked = this;
-            if (!colorLocked) {
-                circle.setFill(clickedColor);
-            }
-        });
+                currentlyClicked = this;
+                if (!colorLocked) {
+                    circle.setFill(clickedColor);
+                }
+            });
+        }
     }
 
 
