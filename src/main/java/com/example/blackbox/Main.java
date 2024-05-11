@@ -397,7 +397,7 @@ public class Main extends Application {
         Label colorLabel = new Label("x2  ENTRY & EXIT POINTS");
         colorLabel.setStyle("-fx-font-family: 'Droid Sans Mono'; -fx-font-size: 16px; -fx-text-fill: #ffc967;");
         HBox colorKey = new HBox(5, colorCircle, colorLabel);
-        Image image = new Image("file:src/main/resources/multicolor.jpeg");
+        Image image = new Image("/multicolor.jpeg");
         colorCircle.setFill(new ImagePattern(image));
 
         Circle atoms2Guess = new Circle(10, Color.RED);
@@ -481,6 +481,7 @@ public class Main extends Application {
         buttonsStackPane.getChildren().add(showAtoms);
     }
 
+    // Final screen to show the actual correct placement of atoms
     public void showGameReveal(Stage primaryStage) {
 
         AtomGenerator.resetAtomCount();//resetting atom count

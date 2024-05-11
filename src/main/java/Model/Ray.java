@@ -35,6 +35,7 @@ public class Ray {
 
     private boolean rayReversed;
 
+
     Direction newDir;
     Direction entryDir;
     Direction exitDir;
@@ -55,9 +56,9 @@ public class Ray {
         this.entryDir = RayNode.getRevDir(Objects.requireNonNull(RayNode.getNodeDirection(node)));
         this.path = new ArrayList<>();
         this.isAbsorbed = false; //at the start ray is not absorbed
-        this.deflected60 = false;
-        this.deflected120 = false;
-        this.rayReversed = false;
+        rayReversed = false;
+        deflected60 = false;
+        deflected120 = false;
         //call method to make sure every time a ray object is created its path is calculated immediately
 
         this.exitPoint = calculatePath();
@@ -249,10 +250,6 @@ public class Ray {
      */
 
     private Direction newPath (BlackBoxBoard.Point3D position, Direction dir) {
-
-        rayReversed = false;
-        deflected60 = false;
-        deflected120 = false;
 
         int CIx = position.x;
         int CIy = position.y;

@@ -1,0 +1,26 @@
+launch the game using by running any of the .bat files. 
+
+you will be brought to a screen, click start game.
+
+now you can choose whether to play with another person, or have the computer generate atoms for you to guess.
+
+If you choose setter, you can place 4 to 6 atoms and give the computer to the other person who can then try
+and guess where you placed the atoms.
+
+If you choose experimenter, the computer will randomly generate atoms for you to guess.
+
+the reason that there are 3 different .bat files is because the game doesn't have the functionality to 
+pick how many atoms you want to guess as experimenter when playing with random atoms, so each of the 
+bat files and its corresponding number launches a different version of the file with varying atoms. 
+
+for example, running run4.bat and selecting experimenter will generate 4 atoms for you to guess.
+
+when the game starts, you can set atoms by clicking on the hexagon cells, and delete atoms by clicking
+on the atom you no longer want. you can fire rays by clicking on any ray node, the little circles on the 
+edge of the cells, and click the "Fire Ray" button. Depending on the path of the ray, you will be able to 
+see the exit point, if there is one, by the newly colored pair of ray nodes. You can refer to the color key
+at the right of the board for the other ray outcomes. 
+
+When you are finished guessing, click ready to see the results.
+
+Happy gaming!
